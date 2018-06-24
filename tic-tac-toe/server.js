@@ -61,6 +61,10 @@ class Room {
         //TODO
         //remove the player from this.players
     }
+    reset(){
+        //TODO
+        //reset game state
+    }
 
 }
 
@@ -73,7 +77,7 @@ class Player {
     };
     joinRoom(roomName){
         if(this.room !== null){
-            client.leave(this.room.name);
+            this.leaveRoom();
             this.room = null;
         }
         let room = rooms.find(room => room.name === roomName);
@@ -85,11 +89,22 @@ class Player {
         else {
             this.room = room;
         }
+        this.room.playerJoined(this);
         client.join(this.room.name);
     }
     leaveRoom(){
+        this.room.playerLeft(this);
         client.leave(this.room.name);
         this.room = null;
+    }
+    pickTeam(team){
+        this.team = team;
+        //should set this.team to either 'X' or 'O'
+    }
+    pushedSquares(newSquares){
+        if(this.team === this.room.currentPlayer){
+            this.room.receivedSquares(newSquares);
+        }
     }
 }
 
