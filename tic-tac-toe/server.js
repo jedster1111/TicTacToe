@@ -4,6 +4,8 @@ const port = 8000;
 io.listen(port);
 console.log('listening on port ', port);
 
+let rooms = [];
+
 class Room {
     constructor(name, player) 
     {
@@ -16,14 +18,13 @@ class Room {
     receivedSquares(newSquares) {
         //TODO
         //Handle receiving new squares from a player.
-        //Call thisRoom.squares(newSquares) to handle
+        //Call thisRoom.squares = newSquares to handle
         //all game logic based on squares.
         //Push data to players in this room
     }
     set squares(newSquares) {
-        this.squares = newSquares;
         let result = this.calculateWinner();
-        if (result === 'X' || result === 'O' || result === 'Draw'){
+        if (result === 'X' || result === 'O' || result === 'draw'){
             //There's a WINNER or a DRAW
             this.currentPlayer = null;
             this.winner = result;
@@ -48,7 +49,17 @@ class Room {
         //TODO
         //pushes this room's data to EVERY connected player in room
     }
+    calculateWinner(){
+        //TODO
+        //Return X, O, draw, or null
+    }
 
+}
+
+class Player {
+    constructor(){
+
+    }
 }
 
 io.on('connection', client => {
@@ -56,3 +67,5 @@ io.on('connection', client => {
     client.emit("hello");
     client.on("disconnect", ()=> console.log("Client disconnected"));
 });
+
+console.log(new Room('jed','test'));
