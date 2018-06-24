@@ -53,12 +53,43 @@ class Room {
         //TODO
         //Return X, O, draw, or null
     }
+    playerJoined(player){
+        //TODO
+        //add the new player to the this.players
+    }
+    playerLeft(player){
+        //TODO
+        //remove the player from this.players
+    }
 
 }
 
 class Player {
-    constructor(){
-
+    constructor(socket){
+        client = socket;
+        name = null;
+        room = null;
+        team = null;
+    };
+    joinRoom(roomName){
+        if(this.room !== null){
+            client.leave(this.room.name);
+            this.room = null;
+        }
+        let room = rooms.find(room => room.name === roomName);
+        if(!room){
+            room = new Room(roomName,this);
+            rooms.push(room);
+            this.room = room;
+        }
+        else {
+            this.room = room;
+        }
+        client.join(this.room.name);
+    }
+    leaveRoom(){
+        client.leave(this.room.name);
+        this.room = null;
     }
 }
 
