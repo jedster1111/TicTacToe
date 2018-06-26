@@ -109,6 +109,12 @@ class Room {
         if (i !== -1) {
             this.players.splice(i, 1);
         }
+        if (this.players.length === 0){
+            let i = rooms.indexOf(this);
+            if(i !== -1){
+                rooms.splice(i,1);
+            }
+        }
     }
     reset(){
         //TODO
@@ -144,9 +150,11 @@ class Player {
         this.client.join(this.room.name);
     }
     leaveRoom(){
-        this.room.playerLeft(this);
-        this.client.leave(this.room.name);
-        this.room = null;
+        if(this.room){
+            this.room.playerLeft(this);
+            this.client.leave(this.room.name);
+            this.room = null;
+        }
     }
     resetRoom(){
         this.room.reset();

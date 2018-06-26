@@ -21,8 +21,9 @@ class App extends Component {
     socket.emit('join-room', 'testRoom');
     socket.emit('set-team','X');
     socket.emit('new-square', 0);
-    socket.emit('set-team', 'O');
+    socket.emit('set-team', null);
     socket.emit('new-square', 1);
+    setInterval(()=>socket.emit('leave-room'),10000);
 
   });
 
