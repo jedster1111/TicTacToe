@@ -99,6 +99,10 @@ class Room {
     playerLeft(player){
         //TODO
         //remove the player from this.players
+        const i = this.players.indexOf(player);
+        if (i !== -1) {
+            this.players.splice(i, 1);
+        }
     }
     reset(){
         //TODO
@@ -151,12 +155,14 @@ io.on('connection', client => {
     console.log("New client connected");
     allPlayers.push(new Player(client));
     client.emit("hello");
-    //console.log(allPlayers);
+    console.log(allPlayers);
     client.on("disconnect", ()=> {
         console.log("Client disconnected");
         const i = allPlayers.findIndex(p => p.client === client);
-        allPlayers.splice(i, 1);
-        //console.log(allPlayers);
+        if(i !== -1){
+            allPlayers.splice(i, 1);
+        }
+        console.log(allPlayers);
     });
 });
 
