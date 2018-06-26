@@ -192,18 +192,12 @@ function clientDisconnect(client, player) {
 io.on('connection', client => {
     let player = new Player(client);
     clientConnect(client, player);
-    //client sets name
-    client.on('set-name', (name) => {player.setName(name);});
-    //client joins room
-    client.on('join-room', (roomName) => {player.joinRoom(roomName);});
-    //client picks team
-    client.on('set-team', (team) => {player.setTeam(team);});
-    //client sends squares
+    client.on('set-name', (name) => {player.setName(name)});
+    client.on('join-room', (roomName) => {player.joinRoom(roomName)});
+    client.on('set-team', (team) => {player.setTeam(team)});
     client.on('new-square', (newSquare) => {player.pushedSquare(newSquare);});
-    //client resets game
-    client.on('reset-game', () => {player.resetRoom();});
-    //client leaves room
-    client.on('leave-room', () => {player.leaveRoom();});
+    client.on('reset-game', () => {player.resetRoom()});
+    client.on('leave-room', () => {player.leaveRoom()});
 
     client.on("disconnect", ()=> {    
         clientDisconnect(client, player);
