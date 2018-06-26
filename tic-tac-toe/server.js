@@ -80,7 +80,7 @@ class Room {
     calculateWinner(squares){
         //TODO
         let winningLines = this.calculateWinningLines(squares);
-        console.log(winningLines);
+        //console.log(winningLines);
         let result;
         if(winningLines.length === 0){
             // no winner it was either a draw or game continues
