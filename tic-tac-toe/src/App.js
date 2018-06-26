@@ -15,7 +15,12 @@ class App extends Component {
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
 
-    socket.on("hello", () => console.log("I made contact"));
+  socket.on("hello", () => {
+    console.log('we made contact!');
+    socket.emit('set-name', 'jed');
+    socket.emit('join-room', 'testRoom');
+  });
+
   }
 
 

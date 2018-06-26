@@ -18,13 +18,12 @@ class Room {
        this.turnNumber = 0;
     }
     receivedSquares(newSquares) {
-        //TODO
         //Handle receiving new squares from a player.
-        //Call thisRoom.squares = newSquares to handle
-        //all game logic based on squares.
-        //Push data to players in this room
+        this.squares = newSquares;
+        this.pushData();
     }
     set squares(newSquares) {
+        this.turnNumber++;
         let result = this.calculateWinner(newSquares);
         if (result === 'X' || result === 'O' || result === 'draw'){
             //There's a WINNER or a DRAW
@@ -42,7 +41,7 @@ class Room {
         let data = 
         {
             squares: this.squares,
-            players: this.players,
+            players: this.players.map(player => player.name),
             currentPlayer: this.currentPlayer,
             winner: this.winner,
         };
@@ -96,7 +95,7 @@ class Room {
         //TODO
         //add the new player to the this.players
         this.players.push(player);
-        io.to(this.name).emit('updatedPlayer', this);
+        io.to(this.name).emit('game-data', this.data);
     }
     playerLeft(player){
         //TODO
@@ -109,10 +108,12 @@ class Room {
     reset(){
         //TODO
         //reset game state
+        this.squares = Array(9).fill(null);
+        this.currentPlayer = 'X';
+        this.turnNumber = 0;
     }
 
 }
-
 class Player {
     constructor(socket){
         this.client = socket;
@@ -133,18 +134,24 @@ class Player {
         }
         else {
             this.room = room;
+            this.room.playerJoined(this);
         }
-        this.room.playerJoined(this);
-        client.join(this.room.name);
+        this.client.join(this.room.name);
     }
     leaveRoom(){
         this.room.playerLeft(this);
-        client.leave(this.room.name);
+        this.client.leave(this.room.name);
         this.room = null;
     }
-    pickTeam(team){
+    resetRoom(){
+        this.room.reset();
+    }
+    setName(name){
+        this.name = name;
+    }
+    setTeam(team){
         this.team = team;
-        //should set this.team to either 'X' or 'O'
+        //should set this.team to either 'X' or 'O' or null
     }
     pushedSquares(newSquares){
         if(this.team === this.room.currentPlayer){
@@ -152,19 +159,44 @@ class Player {
         }
     }
 }
+function clientConnect(client, player) {
+    console.log("New client connected");   
+    allPlayers.push(player);
+    client.emit('hello');
+    //console.log(allPlayers.map(player => player.name));
+}
+function clientDisconnect(client, player) {
+    console.log("Client disconnected");
+    const i = allPlayers.findIndex(p => p.client === client);
+    if (i !== -1) {
+        allPlayers.splice(i, 1);
+    }
+    player.leaveRoom();
+    //console.log(allPlayers.map(player => player.name));
+}
 
 io.on('connection', client => {
-    console.log("New client connected");
-    allPlayers.push(new Player(client));
-    client.emit("hello");
-    console.log(allPlayers);
-    client.on("disconnect", ()=> {
-        console.log("Client disconnected");
-        const i = allPlayers.findIndex(p => p.client === client);
-        if(i !== -1){
-            allPlayers.splice(i, 1);
-        }
-        console.log(allPlayers);
+    let player = new Player(client);
+    clientConnect(client, player);
+    //client sets name
+    client.on('set-name', (name) => {player.setName(name);});
+    //client joins room
+    client.on('join-room', (roomName) => {player.joinRoom(roomName);});
+    //client picks team
+    client.on('set-team', (team) => {player.setTeam(team);});
+    //client sends squares
+    client.on('new-squares', (newSquares) => {player.pushedSquares(newSquares);});
+    //client resets game
+    client.on('reset-game', () => {player.resetRoom();});
+    //client leaves room
+    client.on('leave-room', () => {player.leaveRoom();});
+
+    client.on("disconnect", ()=> {    
+        clientDisconnect(client, player);
     });
 });
 
+setInterval(()=>{
+    console.log(allPlayers.map(player => player.name));
+    console.log(rooms);
+}, 5000);
