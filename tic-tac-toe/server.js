@@ -5,7 +5,7 @@ io.listen(port);
 console.log('listening on port ', port);
 
 let rooms = [];
-let players = [];
+let allPlayers = [];
 
 class Room {
     constructor(name, player) 
@@ -15,6 +15,7 @@ class Room {
        this.squares = Array(9).fill(null);
        this.currentPlayer = 'X';
        this.winner = null;
+       this.turnNumber = 0;
     }
     receivedSquares(newSquares) {
         //TODO
@@ -52,9 +53,7 @@ class Room {
         //pushes this room's data to EVERY connected player in room
         io.to(this.name).emit('game-data', this.data);
     }
-    calculateWinner(squares){
-        //TODO
-        //Return X, O, draw, or null
+    calculateWinningLines(squares){
         const lines = [
             [0, 1, 2],
             [3, 4, 5],
@@ -65,18 +64,37 @@ class Room {
             [0, 4, 8],
             [2, 4, 6],
         ];
+        let winningLines = [];
         for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
             if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-              //return lines[i];
               winningLines.push(lines[i]);
               //console.log(winningLines);
             }
         }
+        return winningLines;
+    }
+    calculateWinner(squares){
+        //TODO
+        let winningLines = this.calculateWinningLines(squares);
+        let result;
+        if(!winningLines){
+            // no winner and no draw so return null
+            return result = null;
+        }
+        else if(!winningLines && this.turnNumber === 9){
+            // no winner and there have been 9 turns then return 'draw'
+            return result = 'draw';
+        }
+        else{
+            return this.currentPlayer;
+        }
+        //Return X, O, draw, or null
     }
     playerJoined(player){
         //TODO
         //add the new player to the this.players
+        this.players.push(player);
     }
     playerLeft(player){
         //TODO
@@ -131,12 +149,14 @@ class Player {
 
 io.on('connection', client => {
     console.log("New client connected");
-    players.push(new Player(client));
+    allPlayers.push(new Player(client));
     client.emit("hello");
+    //console.log(allPlayers);
     client.on("disconnect", ()=> {
         console.log("Client disconnected");
-        const i = players.findIndex(p => p.client === client);
-        players.splice(i, 1);
+        const i = allPlayers.findIndex(p => p.client === client);
+        allPlayers.splice(i, 1);
+        //console.log(allPlayers);
     });
 });
 
