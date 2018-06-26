@@ -5,6 +5,7 @@ io.listen(port);
 console.log('listening on port ', port);
 
 let rooms = [];
+let players = [];
 
 class Room {
     constructor(name, player) 
@@ -23,7 +24,7 @@ class Room {
         //Push data to players in this room
     }
     set squares(newSquares) {
-        let result = this.calculateWinner();
+        let result = this.calculateWinner(newSquares);
         if (result === 'X' || result === 'O' || result === 'draw'){
             //There's a WINNER or a DRAW
             this.currentPlayer = null;
@@ -31,9 +32,10 @@ class Room {
         }
         else {
             //Game continues
-            this.currentPlayer = (this.currentPlayer = 'X') ? 'O' : 'X';
+            this.currentPlayer = (this.currentPlayer === 'X') ? 'O' : 'X';
         }
     }
+    
     get data() {
         //getter allows me to access thisRoom.data to get data object
         let data = 
@@ -48,10 +50,29 @@ class Room {
     pushData() {
         //TODO
         //pushes this room's data to EVERY connected player in room
+        io.to(this.name).emit('game-data', this.data);
     }
-    calculateWinner(){
+    calculateWinner(squares){
         //TODO
         //Return X, O, draw, or null
+        const lines = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+        for (let i = 0; i < lines.length; i++) {
+            const [a, b, c] = lines[i];
+            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+              //return lines[i];
+              winningLines.push(lines[i]);
+              //console.log(winningLines);
+            }
+        }
     }
     playerJoined(player){
         //TODO
@@ -70,10 +91,10 @@ class Room {
 
 class Player {
     constructor(socket){
-        client = socket;
-        name = null;
-        room = null;
-        team = null;
+        this.client = socket;
+        this.name = null;
+        this.room = null;
+        this.team = null;
     };
     joinRoom(roomName){
         if(this.room !== null){
@@ -110,8 +131,12 @@ class Player {
 
 io.on('connection', client => {
     console.log("New client connected");
+    players.push(new Player(client));
     client.emit("hello");
-    client.on("disconnect", ()=> console.log("Client disconnected"));
+    client.on("disconnect", ()=> {
+        console.log("Client disconnected");
+        const i = players.findIndex(p => p.client === client);
+        players.splice(i, 1);
+    });
 });
 
-console.log(new Room('jed','test'));
