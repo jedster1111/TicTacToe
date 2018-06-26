@@ -19,6 +19,9 @@ class App extends Component {
     console.log('we made contact!');
     socket.emit('set-name', 'jed');
     socket.emit('join-room', 'testRoom');
+    socket.emit('set-team','X');
+    socket.emit('new-square', 1);
+    //socket.emit('new-squares',(['X','O',null,null,null,null,null,null,null]));
   });
 
   }

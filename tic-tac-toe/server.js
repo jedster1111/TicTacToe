@@ -17,14 +17,17 @@ class Room {
        this.winner = null;
        this.turnNumber = 0;
     }
-    receivedSquares(newSquares) {
+    receivedSquare(newSquare) {
         //Handle receiving new squares from a player.
-        this.squares = newSquares;
-        this.pushData();
+        if(this.squares[newSquare] === null){
+            this.setSquares(newSquare);
+            this.pushData();
+        }
     }
-    set squares(newSquares) {
+    setSquares(newSquare) {
+        this.squares[newSquare] = this.currentPlayer;
         this.turnNumber++;
-        let result = this.calculateWinner(newSquares);
+        let result = this.calculateWinner(this.squares);
         if (result === 'X' || result === 'O' || result === 'draw'){
             //There's a WINNER or a DRAW
             this.currentPlayer = null;
@@ -34,6 +37,7 @@ class Room {
             //Game continues
             this.currentPlayer = (this.currentPlayer === 'X') ? 'O' : 'X';
         }
+        
     }
     
     get data() {
@@ -76,8 +80,9 @@ class Room {
     calculateWinner(squares){
         //TODO
         let winningLines = this.calculateWinningLines(squares);
+        console.log(winningLines);
         let result;
-        if(!winningLines){
+        if(winningLines.length === 0){
             // no winner it was either a draw or game continues
             if(this.turnNumber === 9){
                 return result = 'draw';
@@ -153,9 +158,9 @@ class Player {
         this.team = team;
         //should set this.team to either 'X' or 'O' or null
     }
-    pushedSquares(newSquares){
+    pushedSquare(newSquare){
         if(this.team === this.room.currentPlayer){
-            this.room.receivedSquares(newSquares);
+            this.room.receivedSquare(newSquare);
         }
     }
 }
@@ -185,7 +190,7 @@ io.on('connection', client => {
     //client picks team
     client.on('set-team', (team) => {player.setTeam(team);});
     //client sends squares
-    client.on('new-squares', (newSquares) => {player.pushedSquares(newSquares);});
+    client.on('new-square', (newSquare) => {player.pushedSquare(newSquare);});
     //client resets game
     client.on('reset-game', () => {player.resetRoom();});
     //client leaves room
@@ -197,6 +202,6 @@ io.on('connection', client => {
 });
 
 setInterval(()=>{
-    console.log(allPlayers.map(player => player.name));
+    console.log(allPlayers.map(player => player.team));
     console.log(rooms);
 }, 5000);
