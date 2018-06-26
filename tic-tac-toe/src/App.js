@@ -23,9 +23,8 @@ class App extends Component {
     socket.emit('new-square', 0);
     socket.emit('set-team', null);
     socket.emit('new-square', 1);
-    setInterval(()=>socket.emit('leave-room'),10000);
-
   });
+  socket.on('game-data',(data) => console.log(data));
 
   }
 

@@ -100,7 +100,7 @@ class Room {
         //TODO
         //add the new player to the this.players
         this.players.push(player);
-        io.to(this.name).emit('game-data', this.data);
+        this.pushData();
     }
     playerLeft(player){
         //TODO
@@ -115,6 +115,7 @@ class Room {
                 rooms.splice(i,1);
             }
         }
+        this.pushData();
     }
     reset(){
         //TODO
@@ -210,6 +211,6 @@ io.on('connection', client => {
 });
 
 setInterval(()=>{
-    console.log(allPlayers.map(player => player.team));
+    console.log(allPlayers.map(player => player.name));
     console.log(rooms);
 }, 5000);
