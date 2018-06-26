@@ -79,12 +79,13 @@ class Room {
         let winningLines = this.calculateWinningLines(squares);
         let result;
         if(!winningLines){
-            // no winner and no draw so return null
-            return result = null;
-        }
-        else if(!winningLines && this.turnNumber === 9){
-            // no winner and there have been 9 turns then return 'draw'
-            return result = 'draw';
+            // no winner it was either a draw or game continues
+            if(this.turnNumber === 9){
+                return result = 'draw';
+            }
+            else{
+                return result = null;
+            }
         }
         else{
             return this.currentPlayer;
@@ -95,6 +96,7 @@ class Room {
         //TODO
         //add the new player to the this.players
         this.players.push(player);
+        io.to(this.name).emit('updatedPlayer', this);
     }
     playerLeft(player){
         //TODO
