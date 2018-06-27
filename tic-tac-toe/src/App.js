@@ -75,12 +75,10 @@ class GameContainer extends Component{
   }
   handlePlayerNameSubmit(e) {
     e.preventDefault();
-    console.log(this.state.playerName);
     this.state.socket.emit('set-name', this.state.playerName);
   }
   handleRoomNameSubmit(e) {
     e.preventDefault();
-    console.log(this.state.roomName);
     this.state.socket.emit('join-room', this.state.roomName);
   }
   render(){

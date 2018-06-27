@@ -125,14 +125,15 @@ class Player {
     constructor(socket) {
         this.client = socket;
         this.name = null;
-        this.room = null;
+        this.room = {};
         this.team = null;
     };
     joinRoom(roomName) {
         if (roomName !== '') {
-            if (this.room !== null) {
+            //if (this.room !== null) {
+            if(!(Object.keys(this.room).length === 0 && this.room.constructor === Object)){
                 this.leaveRoom();
-                this.room = null;
+                this.room = {};
             }
             let room = rooms.find(room => room.name === roomName);
             if (!room) {
@@ -151,17 +152,19 @@ class Player {
         }
     }
     leaveRoom() {
-        if (this.room) {
+        if (!(Object.keys(this.room).length === 0 && this.room.constructor === Object)) {
             this.client.leave(this.room.name);
             this.room.playerLeft(this);
-            this.room = null;
+            this.room = {};
         }
     }
     resetRoom() {
         this.room.reset();
     }
     setName(name) {
-        this.name = name;
+        if(name){
+            this.name = name;
+        }
     }
     setTeam(team) {
         this.team = team;
@@ -204,7 +207,9 @@ io.on('connection', client => {
         player.setName(name)
     });
     client.on('join-room', (roomName) => {
-        player.joinRoom(roomName)
+        if(player.room.name !== roomName){
+            player.joinRoom(roomName);
+        }
     });
     client.on('set-team', (team) => {
         player.setTeam(team)
