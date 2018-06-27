@@ -129,7 +129,7 @@ class Player {
         this.team = null;
     };
     joinRoom(roomName) {
-        if (roomName !== '') {
+        if (roomName !== '' && this.room.name !== roomName) {
             //if (this.room !== null) {
             if(!(Object.keys(this.room).length === 0 && this.room.constructor === Object)){
                 this.leaveRoom();
@@ -207,9 +207,7 @@ io.on('connection', client => {
         player.setName(name)
     });
     client.on('join-room', (roomName) => {
-        if(player.room.name !== roomName){
-            player.joinRoom(roomName);
-        }
+        player.joinRoom(roomName);
     });
     client.on('set-team', (team) => {
         player.setTeam(team)
