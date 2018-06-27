@@ -15,6 +15,7 @@ class Room {
         this.currentPlayer = 'X';
         this.winner = null;
         this.turnNumber = 0;
+        this.pushData();
     }
     receivedSquare(newSquare) {
         //Handle receiving new squares from a player.
@@ -106,6 +107,7 @@ class Room {
             let i = rooms.indexOf(this);
             if (i !== -1) {
                 rooms.splice(i, 1);
+                emitRooms();
             }
         }
         this.pushData();
@@ -134,21 +136,24 @@ class Player {
             }
             let room = rooms.find(room => room.name === roomName);
             if (!room) {
+                this.client.join(roomName);
                 room = new Room(roomName, this);
                 rooms.push(room);
                 this.room = room;
-                io.emit('rooms', rooms.map(room => room.name));
+                emitRooms();
+                //this.client.join(this.room.name);
             } else {
                 this.room = room;
+                this.client.join(this.room.name);
                 this.room.playerJoined(this);
             }
-            this.client.join(this.room.name);
+
         }
     }
     leaveRoom() {
         if (this.room) {
-            this.room.playerLeft(this);
             this.client.leave(this.room.name);
+            this.room.playerLeft(this);
             this.room = null;
         }
     }
@@ -169,6 +174,10 @@ class Player {
             }
         }
     }
+}
+
+function emitRooms() {
+    io.emit('rooms', rooms.map(room => room.name));
 }
 
 function clientConnect(client, player) {
