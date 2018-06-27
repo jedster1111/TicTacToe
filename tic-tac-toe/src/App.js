@@ -17,7 +17,7 @@ class App extends Component {
 
   socket.on("hello", (rooms) => {
     console.log('we made contact!' + rooms);
-    socket.emit('set-name', 3);
+    socket.emit('set-name', 'jed');
     socket.emit('join-room', 'testRoom');
     socket.emit('set-team','X');
     socket.emit('new-square', 0);
