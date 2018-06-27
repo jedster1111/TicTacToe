@@ -37,9 +37,7 @@ class Room {
             //Game continues
             this.currentPlayer = (this.currentPlayer === 'X') ? 'O' : 'X';
         }
-        
     }
-    
     get data() {
         //getter allows me to access thisRoom.data to get data object
         let data = 
@@ -134,21 +132,24 @@ class Player {
         this.team = null;
     };
     joinRoom(roomName){
-        if(this.room !== null){
-            this.leaveRoom();
-            this.room = null;
+        if(roomName !== ''){
+            if(this.room !== null){
+                this.leaveRoom();
+                this.room = null;
+            }
+            let room = rooms.find(room => room.name === roomName);
+            if(!room){
+                room = new Room(roomName,this);
+                rooms.push(room);
+                this.room = room;
+                io.emit('rooms', rooms.map(room => room.name));
+            }
+            else {
+                this.room = room;
+                this.room.playerJoined(this);
+            }
+            this.client.join(this.room.name);
         }
-        let room = rooms.find(room => room.name === roomName);
-        if(!room){
-            room = new Room(roomName,this);
-            rooms.push(room);
-            this.room = room;
-        }
-        else {
-            this.room = room;
-            this.room.playerJoined(this);
-        }
-        this.client.join(this.room.name);
     }
     leaveRoom(){
         if(this.room){
@@ -168,15 +169,17 @@ class Player {
         //should set this.team to either 'X' or 'O' or null
     }
     pushedSquare(newSquare){
-        if(this.team === this.room.currentPlayer){
-            this.room.receivedSquare(newSquare);
+        if(this.room !== null){
+            if(this.team === this.room.currentPlayer){
+                this.room.receivedSquare(newSquare);
+            }
         }
     }
 }
 function clientConnect(client, player) {
     console.log("New client connected");   
     allPlayers.push(player);
-    client.emit('hello');
+    client.emit('hello', rooms.map(room => room.name));
     //console.log(allPlayers.map(player => player.name));
 }
 function clientDisconnect(client, player) {
