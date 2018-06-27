@@ -8,18 +8,17 @@ let rooms = [];
 let allPlayers = [];
 
 class Room {
-    constructor(name, player) 
-    {
-       this.name = name;
-       this.players = [player];
-       this.squares = Array(9).fill(null);
-       this.currentPlayer = 'X';
-       this.winner = null;
-       this.turnNumber = 0;
+    constructor(name, player) {
+        this.name = name;
+        this.players = [player];
+        this.squares = Array(9).fill(null);
+        this.currentPlayer = 'X';
+        this.winner = null;
+        this.turnNumber = 0;
     }
     receivedSquare(newSquare) {
         //Handle receiving new squares from a player.
-        if(this.squares[newSquare] === null){
+        if (this.squares[newSquare] === null) {
             this.setSquares(newSquare);
             this.pushData();
         }
@@ -28,20 +27,18 @@ class Room {
         this.squares[newSquare] = this.currentPlayer;
         this.turnNumber++;
         let result = this.calculateWinner(this.squares);
-        if (result === 'X' || result === 'O' || result === 'draw'){
+        if (result === 'X' || result === 'O' || result === 'draw') {
             //There's a WINNER or a DRAW
             this.currentPlayer = null;
             this.winner = result;
-        }
-        else {
+        } else {
             //Game continues
             this.currentPlayer = (this.currentPlayer === 'X') ? 'O' : 'X';
         }
     }
     get data() {
         //getter allows me to access thisRoom.data to get data object
-        let data = 
-        {
+        let data = {
             squares: this.squares,
             players: this.players.map(player => player.name),
             currentPlayer: this.currentPlayer,
@@ -54,7 +51,7 @@ class Room {
         //pushes this room's data to EVERY connected player in room
         io.to(this.name).emit('game-data', this.data);
     }
-    calculateWinningLines(squares){
+    calculateWinningLines(squares) {
         const lines = [
             [0, 1, 2],
             [3, 4, 5],
@@ -69,53 +66,51 @@ class Room {
         for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
             if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-              winningLines.push(lines[i]);
-              //console.log(winningLines);
+                winningLines.push(lines[i]);
+                //console.log(winningLines);
             }
         }
         return winningLines;
     }
-    calculateWinner(squares){
+    calculateWinner(squares) {
         //TODO
         let winningLines = this.calculateWinningLines(squares);
         //console.log(winningLines);
         let result;
-        if(winningLines.length === 0){
+        if (winningLines.length === 0) {
             // no winner it was either a draw or game continues
-            if(this.turnNumber === 9){
+            if (this.turnNumber === 9) {
                 return result = 'draw';
-            }
-            else{
+            } else {
                 return result = null;
             }
-        }
-        else{
+        } else {
             return this.currentPlayer;
         }
         //Return X, O, draw, or null
     }
-    playerJoined(player){
+    playerJoined(player) {
         //TODO
         //add the new player to the this.players
         this.players.push(player);
         this.pushData();
     }
-    playerLeft(player){
+    playerLeft(player) {
         //TODO
         //remove the player from this.players
         const i = this.players.indexOf(player);
         if (i !== -1) {
             this.players.splice(i, 1);
         }
-        if (this.players.length === 0){
+        if (this.players.length === 0) {
             let i = rooms.indexOf(this);
-            if(i !== -1){
-                rooms.splice(i,1);
+            if (i !== -1) {
+                rooms.splice(i, 1);
             }
         }
         this.pushData();
     }
-    reset(){
+    reset() {
         //TODO
         //reset game state
         this.squares = Array(9).fill(null);
@@ -125,63 +120,64 @@ class Room {
 
 }
 class Player {
-    constructor(socket){
+    constructor(socket) {
         this.client = socket;
         this.name = null;
         this.room = null;
         this.team = null;
     };
-    joinRoom(roomName){
-        if(roomName !== ''){
-            if(this.room !== null){
+    joinRoom(roomName) {
+        if (roomName !== '') {
+            if (this.room !== null) {
                 this.leaveRoom();
                 this.room = null;
             }
             let room = rooms.find(room => room.name === roomName);
-            if(!room){
-                room = new Room(roomName,this);
+            if (!room) {
+                room = new Room(roomName, this);
                 rooms.push(room);
                 this.room = room;
                 io.emit('rooms', rooms.map(room => room.name));
-            }
-            else {
+            } else {
                 this.room = room;
                 this.room.playerJoined(this);
             }
             this.client.join(this.room.name);
         }
     }
-    leaveRoom(){
-        if(this.room){
+    leaveRoom() {
+        if (this.room) {
             this.room.playerLeft(this);
             this.client.leave(this.room.name);
             this.room = null;
         }
     }
-    resetRoom(){
+    resetRoom() {
         this.room.reset();
     }
-    setName(name){
+    setName(name) {
         this.name = name;
     }
-    setTeam(team){
+    setTeam(team) {
         this.team = team;
         //should set this.team to either 'X' or 'O' or null
     }
-    pushedSquare(newSquare){
-        if(this.room !== null){
-            if(this.team === this.room.currentPlayer){
+    pushedSquare(newSquare) {
+        if (this.room !== null) {
+            if (this.team === this.room.currentPlayer) {
                 this.room.receivedSquare(newSquare);
             }
         }
     }
 }
+
 function clientConnect(client, player) {
-    console.log("New client connected");   
+    console.log("New client connected");
     allPlayers.push(player);
     client.emit('hello', rooms.map(room => room.name));
     //console.log(allPlayers.map(player => player.name));
 }
+
 function clientDisconnect(client, player) {
     console.log("Client disconnected");
     const i = allPlayers.findIndex(p => p.client === client);
@@ -195,19 +191,31 @@ function clientDisconnect(client, player) {
 io.on('connection', client => {
     let player = new Player(client);
     clientConnect(client, player);
-    client.on('set-name', (name) => {player.setName(name)});
-    client.on('join-room', (roomName) => {player.joinRoom(roomName)});
-    client.on('set-team', (team) => {player.setTeam(team)});
-    client.on('new-square', (newSquare) => {player.pushedSquare(newSquare);});
-    client.on('reset-game', () => {player.resetRoom()});
-    client.on('leave-room', () => {player.leaveRoom()});
+    client.on('set-name', (name) => {
+        player.setName(name)
+    });
+    client.on('join-room', (roomName) => {
+        player.joinRoom(roomName)
+    });
+    client.on('set-team', (team) => {
+        player.setTeam(team)
+    });
+    client.on('new-square', (newSquare) => {
+        player.pushedSquare(newSquare);
+    });
+    client.on('reset-game', () => {
+        player.resetRoom()
+    });
+    client.on('leave-room', () => {
+        player.leaveRoom()
+    });
 
-    client.on("disconnect", ()=> {    
+    client.on("disconnect", () => {
         clientDisconnect(client, player);
     });
 });
 
-setInterval(()=>{
+setInterval(() => {
     console.log(allPlayers.map(player => player.name));
     console.log(rooms);
 }, 5000);
