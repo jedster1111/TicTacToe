@@ -1,5 +1,5 @@
-Run react app with: npm start
-run socket server with: nodemon server
+Run react app with: npm start<br>
+run socket server with: nodemon server<br>
 Both will automatically restart when you make changes to files.
 
 ********
