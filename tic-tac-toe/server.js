@@ -37,11 +37,20 @@ class Room {
             this.currentPlayer = (this.currentPlayer === 'X') ? 'O' : 'X';
         }
     }
+    get playerData() {
+        let playerData = this.players.map((player) => {
+                return(
+                    {name: player.name, team: player.team}
+                );
+            }
+        );
+        return playerData;
+    }
     get data() {
-        //getter allows me to access thisRoom.data to get data object
+        //getter allows me to access thisRoom.data to get data object    
         let data = {
             squares: this.squares,
-            players: this.players.map(player => player.name),
+            players: this.playerData,
             currentPlayer: this.currentPlayer,
             winner: this.winner,
         };

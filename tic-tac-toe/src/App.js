@@ -56,6 +56,45 @@ const NameAndRoomInput = (props) => (
       </div>
 )
 
+const Square = (props) => (
+  <button className = "square" onClick={props.onClick}>
+    {props.value}
+  </button>
+)
+
+class Board extends Component{
+  renderSquare = (i) => {
+    return (
+      <Square 
+        value = {this.props.squares[i]}
+        key = {i}
+        onClick = {this.props.onClick(i)}
+      />
+    );
+  }
+  createTable = () => {
+    let rows = [];
+    for(let i=0; i<3; i++){
+      let columns = [];
+      for(let j=0; j<3; j++){
+        columns.push(this.renderSquare(j+(i*3)));
+      }
+      rows.push(
+        <div className="board-row" key={i}>
+          {columns}
+        </div>
+      );
+    }
+    return rows;
+  }
+  render(){
+    return(
+      <div>
+        {this.createTable()}
+      </div>
+    );
+  }
+}
 
 class GameContainer extends Component{
   constructor(props){
