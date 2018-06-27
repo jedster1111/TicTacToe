@@ -31,6 +31,31 @@ const SingleInput = (props) => (
   </div>
 );
 
+const NameAndRoomInput = (props) => (
+  <div>
+        <form onSubmit={props.handlePlayerNameSubmit}>
+          <h5>Player Name Input</h5>
+          <SingleInput 
+            title = {'Player Name'}
+            name = {'playerName'}
+            controlFunc = {props.handlePlayerNameChange}
+            content={props.playerName}
+            placeholder={'Enter your player name'}
+          />
+        </form>
+        <form onSubmit={props.handleRoomNameSubmit}>
+          <h5>Room Name Input</h5>
+          <SingleInput 
+            title = {'Room Name'}
+            name = {'roomName'}
+            controlFunc = {props.handleRoomNameChange}
+            content= {props.roomName}
+            placeholder={'Enter your room name'}
+          />
+        </form>
+      </div>
+)
+
 
 class GameContainer extends Component{
   constructor(props){
@@ -85,26 +110,14 @@ class GameContainer extends Component{
     return(
       <div>
         <RoomList rooms = {this.state.rooms} />
-        <form onSubmit={this.handlePlayerNameSubmit}>
-          <h5>Player Name Input</h5>
-          <SingleInput 
-            title = {'Player Name'}
-            name = {'playerName'}
-            controlFunc = {this.handlePlayerNameChange}
-            content={this.state.playerName}
-            placeholder={'Enter your player name'}
-          />
-        </form>
-        <form onSubmit={this.handleRoomNameSubmit}>
-          <h5>Room Name Input</h5>
-          <SingleInput 
-            title = {'Room Name'}
-            name = {'roomName'}
-            controlFunc = {this.handleRoomNameChange}
-            content={this.state.roomName}
-            placeholder={'Enter your room name'}
-          />
-        </form>
+        <NameAndRoomInput
+          handlePlayerNameChange = {this.handlePlayerNameChange}
+          handlePlayerNameSubmit = {this.handlePlayerNameSubmit}
+          playerName = {this.state.playerName}
+          handleRoomNameChange = {this.handleRoomNameChange}
+          handleRoomNameSubmit = {this.handleRoomNameSubmit}
+          roomName = {this.state.roomName}
+        />
       </div>
     );
   }

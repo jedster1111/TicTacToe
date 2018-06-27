@@ -181,7 +181,7 @@ class Player {
 
 function emitRooms() {
     io.emit('rooms', rooms.map(room => room.name));
-}
+}   
 
 function clientConnect(client, player) {
     console.log("New client connected");
