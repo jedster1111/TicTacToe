@@ -138,18 +138,29 @@ class Player {
         this.team = null;
     };
     get data () {
-        let data = {
+        let roomName;
+        if(typeof this.room.name === "undefined"){
+            roomName = null;
+        }
+        else{
+            roomName = this.room.name;
+        }
+        const data = {
             name: this.name,
-            roomName: this.room.name,
+            roomName: roomName,
             team: this.team,
         };
         return data;
+    }
+    emitData () {
+        this.client.emit('player-data', this.data);
     }
     joinRoom(roomName) {
         if (roomName !== '' && this.room.name !== roomName) {
             //if (this.room !== null) {
             if(!(Object.keys(this.room).length === 0 && this.room.constructor === Object)){
-                this.leaveRoom();
+                this.client.leave(this.room.name);
+                this.room.playerLeft(this);
                 this.room = {};
             }
             let room = rooms.find(room => room.name === roomName);
@@ -159,13 +170,12 @@ class Player {
                 rooms.push(room);
                 this.room = room;
                 emitRooms();
-                //this.client.join(this.room.name);
             } else {
                 this.room = room;
                 this.client.join(this.room.name);
                 this.room.playerJoined(this);
             }
-
+            this.emitData();
         }
     }
     leaveRoom() {
@@ -173,18 +183,21 @@ class Player {
             this.client.leave(this.room.name);
             this.room.playerLeft(this);
             this.room = {};
+            this.emitData();
         }
     }
     resetRoom() {
         this.room.reset();
     }
     setName(name) {
-        if(name){
+        if(name && name !== this.name){
             this.name = name;
+            this.emitData();
         }
     }
     setTeam(team) {
         this.team = team;
+        this.emitData();
         //should set this.team to either 'X' or 'O' or null
     }
     pushedSquare(newSquare) {

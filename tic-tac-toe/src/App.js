@@ -131,7 +131,6 @@ class GameContainer extends Component{
       this.setState({ playerData });
     });
     socket.on('rooms', (rooms) =>{
-      console.log('received new rooms');
       this.setState({ rooms });
     });
     this.setState({ socket });
