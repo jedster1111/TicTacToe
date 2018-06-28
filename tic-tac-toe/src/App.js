@@ -55,6 +55,22 @@ const NameAndRoomInput = (props) => (
       </div>
 )
 
+const TeamToggle = (props) => (
+  <div>
+    <button onClick={() => props.onClick('X')}>X</button>
+    <button onClick={() => props.onClick('O')}>O</button>
+    <button onClick={() => props.onClick(null)}>Spectate</button>
+  </div>
+)
+
+class GameInfo extends Component{
+  render(){
+    return(
+      <TeamToggle onClick={this.props.onClick}/>
+    )
+  }
+}
+
 const Square = (props) => (
   <button className = "square" onClick={props.onClick}>
     {props.value}
@@ -111,6 +127,7 @@ class GameContainer extends Component{
     this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
     this.handleRoomNameSubmit = this.handleRoomNameSubmit.bind(this);
     this.handleSquareClick = this.handleSquareClick.bind(this);
+    this.handleTeamToggleClick = this.handleTeamToggleClick.bind(this);
   }
   componentDidMount(){
     this.initSocket();
@@ -151,7 +168,10 @@ class GameContainer extends Component{
     this.state.socket.emit('join-room', this.state.roomName);
   }
   handleSquareClick(i) {
-    console.log(i);
+    this.state.socket.emit('new-square', i);
+  }
+  handleTeamToggleClick(team) {
+    this.state.socket.emit('set-team', team);
   }
 
   render(){
@@ -167,7 +187,10 @@ class GameContainer extends Component{
           handleRoomNameSubmit = {this.handleRoomNameSubmit}
           roomName = {this.state.roomName}
         />
+        <div>
         <Board squares = {squares} onClick = {this.handleSquareClick}/>
+        <GameInfo onClick ={this.handleTeamToggleClick} />
+        </div>
       </div>
     );
   }

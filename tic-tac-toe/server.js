@@ -152,13 +152,16 @@ class Player {
         };
         return data;
     }
+    get isInRoom (){
+        return (!(Object.keys(this.room).length === 0 && this.room.constructor === Object));
+    }
     emitData () {
         this.client.emit('player-data', this.data);
     }
     joinRoom(roomName) {
         if (roomName !== '' && this.room.name !== roomName) {
             //if (this.room !== null) {
-            if(!(Object.keys(this.room).length === 0 && this.room.constructor === Object)){
+            if(this.isInRoom){
                 this.client.leave(this.room.name);
                 this.room.playerLeft(this);
                 this.room = {};
@@ -179,7 +182,7 @@ class Player {
         }
     }
     leaveRoom() {
-        if (!(Object.keys(this.room).length === 0 && this.room.constructor === Object)) {
+        if (this.isInRoom) {
             this.client.leave(this.room.name);
             this.room.playerLeft(this);
             this.room = {};
