@@ -4,68 +4,83 @@ import socketIOClient from "socket.io-client";
 
 function RoomList(props){
   if(Array.isArray(props.rooms) && props.rooms.length !== 0){
-    return(
+    return (
       <ul>
         {props.rooms.map(room => <li key = {room}>{room}</li>)}
       </ul>
     );
   }
   else{
-    return(
+    return (
       <h1>No rooms yet</h1>
     );
   }
 }
-const SingleInput = (props) => (
-  <div>
-    <label>{props.title}</label>
-    <input
-      name={props.name}
-      type="text"
-      value={props.content}
-      onChange={props.controlFunc}
-      placeholder={props.placeholder}
-    />
-    <input type="submit" value="Submit" />
-  </div>
-);
+function SingleInput(props) {
+  return (
+    <div>
+      <label>{props.title}</label>
+      <input
+        name={props.name}
+        type="text"
+        value={props.content}
+        onChange={props.controlFunc}
+        placeholder={props.placeholder}
+      />
+      <input type="submit" value="Submit" />
+    </div>
+  );
+}
 
-const NameAndRoomInput = (props) => (
-  <div>
-        <form onSubmit={props.handlePlayerNameSubmit}>
-          <h5>Player Name Input</h5>
-          <SingleInput 
-            title = {'Player Name'}
-            name = {'playerName'}
-            controlFunc = {props.handlePlayerNameChange}
-            content={props.playerName}
-            placeholder={'Enter your player name'}
-          />
-        </form>
-        <form onSubmit={props.handleRoomNameSubmit}>
-          <h5>Room Name Input</h5>
-          <SingleInput 
-            title = {'Room Name'}
-            name = {'roomName'}
-            controlFunc = {props.handleRoomNameChange}
-            content= {props.roomName}
-            placeholder={'Enter your room name'}
-          />
-        </form>
-      </div>
-)
 
-const TeamToggle = (props) => (
-  <div>
-    <button onClick={() => props.onClick('X')}>X</button>
-    <button onClick={() => props.onClick('O')}>O</button>
-    <button onClick={() => props.onClick(null)}>Spectate</button>
-  </div>
-)
+function NameAndRoomInput(props){
+  return (
+    <div>
+      <form onSubmit={props.handlePlayerNameSubmit}>
+        <h5>Player Name Input</h5>
+        <SingleInput 
+          title = {'Player Name'}
+          name = {'playerName'}
+          controlFunc = {props.handlePlayerNameChange}
+          content={props.playerName}
+          placeholder={'Enter your player name'}
+        />
+      </form>
+      <form onSubmit={props.handleRoomNameSubmit}>
+        <h5>Room Name Input</h5>
+        <SingleInput 
+          title = {'Room Name'}
+          name = {'roomName'}
+          controlFunc = {props.handleRoomNameChange}
+          content= {props.roomName}
+          placeholder={'Enter your room name'}
+        />
+      </form>
+    </div>
+  );
+}
+
+function TeamToggle(props){
+  return (
+    <div>
+      <button onClick={() => props.onClick('X')}>X</button>
+      <button onClick={() => props.onClick('O')}>O</button>
+      <button onClick={() => props.onClick(null)}>Spectate</button>
+    </div>
+  );
+}
+
+function PlayersDisplay(props){
+  return (
+    <div>
+
+    </div>
+  );
+}
 
 class GameInfo extends Component{
   render(){
-    return(
+    return (
       <div>
         <TeamToggle onClick={this.props.onTeamToggleClick}/>
         <button onClick={()=>this.props.onResetClick()}>Reset Room</button>
@@ -78,11 +93,13 @@ class GameInfo extends Component{
   }
 }
 
-const Square = (props) => (
-  <button className = "square" onClick={props.onClick}>
-    {props.value}
-  </button>
-)
+function Square(props){
+  return (
+    <button className = "square" onClick={props.onClick}>
+      {props.value}
+    </button>
+  );
+}
 
 class Board extends Component{
   renderSquare = (i) => {
@@ -110,7 +127,7 @@ class Board extends Component{
     return rows;
   }
   render(){
-    return(
+    return (
       <div>
         {this.createTable()}
       </div>
@@ -192,7 +209,7 @@ class GameContainer extends Component{
 
   render(){
     let squares = this.state.roomData.squares;
-    return(
+    return (
       <div>
         <RoomList rooms = {this.state.rooms} />
         <NameAndRoomInput
