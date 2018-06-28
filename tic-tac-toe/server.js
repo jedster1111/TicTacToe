@@ -137,6 +137,14 @@ class Player {
         this.room = {};
         this.team = null;
     };
+    get data () {
+        let data = {
+            name: this.name,
+            roomName: this.room.name,
+            team: this.team,
+        };
+        return data;
+    }
     joinRoom(roomName) {
         if (roomName !== '' && this.room.name !== roomName) {
             //if (this.room !== null) {

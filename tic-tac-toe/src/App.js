@@ -15,7 +15,6 @@ function RoomList(props){
       <h1>No rooms yet</h1>
     );
   }
-  
 }
 const SingleInput = (props) => (
   <div>
@@ -68,7 +67,7 @@ class Board extends Component{
       <Square 
         value = {this.props.squares[i]}
         key = {i}
-        onClick = {this.props.onClick(i)}
+        onClick = {() => this.props.onClick(i)}
       />
     );
   }
@@ -104,12 +103,14 @@ class GameContainer extends Component{
       endpoint: "http://127.0.0.1:8000",
       playerName: '',
       roomName: '',
+      roomData: {squares: Array(9).fill(null)},
       socket: null,
     };
     this.handlePlayerNameChange = this.handlePlayerNameChange.bind(this);
     this.handlePlayerNameSubmit = this.handlePlayerNameSubmit.bind(this);
     this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
     this.handleRoomNameSubmit = this.handleRoomNameSubmit.bind(this);
+    this.handleSquareClick = this.handleSquareClick.bind(this);
   }
   componentDidMount(){
     this.initSocket();
@@ -121,8 +122,13 @@ class GameContainer extends Component{
       console.log('we made contact!');
       this.setState({ rooms });
     });
-    socket.on('game-data', (data) => {
-      console.log(data);
+    socket.on('game-data', (roomData) => {
+      console.log(roomData);
+      this.setState({ roomData });
+    });
+    socket.on('player-data', (playerData) => {
+      console.log(playerData);
+      this.setState({ playerData });
     });
     socket.on('rooms', (rooms) =>{
       console.log('received new rooms');
@@ -145,7 +151,12 @@ class GameContainer extends Component{
     e.preventDefault();
     this.state.socket.emit('join-room', this.state.roomName);
   }
+  handleSquareClick(i) {
+    console.log(i);
+  }
+
   render(){
+    let squares = this.state.roomData.squares;
     return(
       <div>
         <RoomList rooms = {this.state.rooms} />
@@ -157,6 +168,7 @@ class GameContainer extends Component{
           handleRoomNameSubmit = {this.handleRoomNameSubmit}
           roomName = {this.state.roomName}
         />
+        <Board squares = {squares} onClick = {this.handleSquareClick}/>
       </div>
     );
   }
