@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import socketIOClient from "socket.io-client";
 
-function RoomList(props){
+const RoomList = (props) => {
   if(Array.isArray(props.rooms) && props.rooms.length !== 0){
     return (
       <ul>
@@ -16,67 +16,59 @@ function RoomList(props){
     );
   }
 }
-function SingleInput(props) {
-  return (
-    <div>
-      <label>{props.title}</label>
-      <input
-        name={props.name}
-        type="text"
-        value={props.content}
-        onChange={props.controlFunc}
-        placeholder={props.placeholder}
+const SingleInput = (props) => (
+  <div>
+    <label>{props.title}</label>
+    <input
+      name={props.name}
+      type="text"
+      value={props.content}
+      onChange={props.controlFunc}
+      placeholder={props.placeholder}
+    />
+    <input type="submit" value="Submit" />
+  </div>
+)
+
+
+const NameAndRoomInput = (props) => (
+  <div>
+    <form onSubmit={props.handlePlayerNameSubmit}>
+      <h5>Player Name Input</h5>
+      <SingleInput 
+        title = {'Player Name'}
+        name = {'playerName'}
+        controlFunc = {props.handlePlayerNameChange}
+        content={props.playerName}
+        placeholder={'Enter your player name'}
       />
-      <input type="submit" value="Submit" />
-    </div>
-  );
-}
+    </form>
+    <form onSubmit={props.handleRoomNameSubmit}>
+      <h5>Room Name Input</h5>
+      <SingleInput 
+        title = {'Room Name'}
+        name = {'roomName'}
+        controlFunc = {props.handleRoomNameChange}
+        content= {props.roomName}
+        placeholder={'Enter your room name'}
+      />
+    </form>
+  </div>
+)
 
+const TeamToggle = (props) => (
+  <div>
+    <button onClick={() => props.onClick('X')}>X</button>
+    <button onClick={() => props.onClick('O')}>O</button>
+    <button onClick={() => props.onClick(null)}>Spectate</button>
+  </div>
+)
 
-function NameAndRoomInput(props){
-  return (
-    <div>
-      <form onSubmit={props.handlePlayerNameSubmit}>
-        <h5>Player Name Input</h5>
-        <SingleInput 
-          title = {'Player Name'}
-          name = {'playerName'}
-          controlFunc = {props.handlePlayerNameChange}
-          content={props.playerName}
-          placeholder={'Enter your player name'}
-        />
-      </form>
-      <form onSubmit={props.handleRoomNameSubmit}>
-        <h5>Room Name Input</h5>
-        <SingleInput 
-          title = {'Room Name'}
-          name = {'roomName'}
-          controlFunc = {props.handleRoomNameChange}
-          content= {props.roomName}
-          placeholder={'Enter your room name'}
-        />
-      </form>
-    </div>
-  );
-}
-
-function TeamToggle(props){
-  return (
-    <div>
-      <button onClick={() => props.onClick('X')}>X</button>
-      <button onClick={() => props.onClick('O')}>O</button>
-      <button onClick={() => props.onClick(null)}>Spectate</button>
-    </div>
-  );
-}
-
-function PlayersDisplay(props){
-  return (
+const PlayersDisplay = (props) => (
     <div>
 
     </div>
-  );
-}
+)
 
 class GameInfo extends Component{
   render(){
@@ -93,13 +85,11 @@ class GameInfo extends Component{
   }
 }
 
-function Square(props){
-  return (
+const Square = (props) => (
     <button className = "square" onClick={props.onClick}>
       {props.value}
     </button>
-  );
-}
+)
 
 class Board extends Component{
   renderSquare = (i) => {
