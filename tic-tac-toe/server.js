@@ -57,7 +57,6 @@ class Room {
         return data;
     }
     pushData() {
-        //TODO
         //pushes this room's data to EVERY connected player in room
         io.to(this.name).emit('game-data', this.data);
     }
@@ -100,13 +99,11 @@ class Room {
         //Return X, O, draw, or null
     }
     playerJoined(player) {
-        //TODO
         //add the new player to the this.players
         this.players.push(player);
         this.pushData();
     }
     playerLeft(player) {
-        //TODO
         //remove the player from this.players
         const i = this.players.indexOf(player);
         if (i !== -1) {
@@ -158,6 +155,12 @@ class Player {
     emitData () {
         this.client.emit('player-data', this.data);
     }
+    emitDataToPlayers () {
+        if(this.isInRoom){
+            console.log('thishappened');
+            this.room.pushData();
+        }
+    }
     joinRoom(roomName) {
         if (roomName !== '' && this.room.name !== roomName) {
             //if (this.room !== null) {
@@ -196,11 +199,15 @@ class Player {
         if(name && name !== this.name){
             this.name = name;
             this.emitData();
+            this.emitDataToPlayers();
         }
     }
     setTeam(team) {
-        this.team = team;
-        this.emitData();
+        if(this.team !== team){
+            this.team = team;
+            this.emitData();
+            this.emitDataToPlayers();
+        }
         //should set this.team to either 'X' or 'O' or null
     }
     pushedSquare(newSquare) {
