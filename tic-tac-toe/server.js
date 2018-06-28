@@ -136,7 +136,7 @@ class Player {
     };
     get data () {
         let roomName;
-        if(typeof this.room.name === "undefined"){
+        if(this.room.name === undefined){
             roomName = null;
         }
         else{
