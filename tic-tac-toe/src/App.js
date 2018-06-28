@@ -66,7 +66,12 @@ const TeamToggle = (props) => (
 class GameInfo extends Component{
   render(){
     return(
-      <TeamToggle onClick={this.props.onClick}/>
+      <div>
+        <TeamToggle onClick={this.props.onClick}/>
+        <div>You are in room: {this.props.player.roomName}</div>
+        <div>It is {this.props.room.currentPlayer}'s turn</div>
+        <div>The winner is: {this.props.room.winner}</div>
+      </div>
     )
   }
 }
@@ -119,6 +124,7 @@ class GameContainer extends Component{
       endpoint: "http://127.0.0.1:8000",
       playerName: '',
       roomName: '',
+      playerData: {},
       roomData: {squares: Array(9).fill(null)},
       socket: null,
     };
@@ -189,7 +195,7 @@ class GameContainer extends Component{
         />
         <div>
         <Board squares = {squares} onClick = {this.handleSquareClick}/>
-        <GameInfo onClick ={this.handleTeamToggleClick} />
+        <GameInfo player={this.state.playerData} room={this.state.roomData} onClick={this.handleTeamToggleClick} />
         </div>
       </div>
     );
