@@ -1,3 +1,4 @@
+To install node modules run: npm install<br>
 Run react app with: npm start<br>
 Run socket server with: nodemon server<br>
 Both will automatically restart when you make changes to files.
