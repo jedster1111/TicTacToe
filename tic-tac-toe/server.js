@@ -40,7 +40,7 @@ class Room {
     get playerData() {
         let playerData = this.players.map((player) => {
                 return(
-                    {name: player.name, team: player.team}
+                    {name: player.name, team: player.team, id: player.client.id}
                 );
             }
         );
@@ -127,9 +127,9 @@ class Room {
 class Player {
     constructor(socket) {
         this.client = socket;
-        this.name = null;
+        this.name = '';
         this.room = {};
-        this.team = null;
+        this.team = '';
     };
     get data () {
         let roomName;
@@ -140,6 +140,7 @@ class Player {
             roomName = this.room.name;
         }
         const data = {
+            id: this.client.id,
             name: this.name,
             roomName: roomName,
             team: this.team,
@@ -189,7 +190,7 @@ class Player {
         }
     }
     resetRoom() {
-        if(this.isInRoom){
+        if(this.isInRoom && this.room.turnNumber !==0){
             this.room.reset();
         }
     }
@@ -225,6 +226,7 @@ function clientConnect(client, player) {
     console.log("New client connected");
     allPlayers.push(player);
     client.emit('hello', rooms.map(room => room.name));
+    player.emitData();
 }
 
 function clientDisconnect(client, player) {

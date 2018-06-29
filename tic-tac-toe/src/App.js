@@ -60,15 +60,57 @@ const TeamToggle = (props) => (
   <div>
     <button onClick={() => props.onClick('X')}>X</button>
     <button onClick={() => props.onClick('O')}>O</button>
-    <button onClick={() => props.onClick(null)}>Spectate</button>
+    <button onClick={() => props.onClick('')}>Spectate</button>
   </div>
 )
 
-const PlayersDisplay = (props) => (
-    <div>
+const TeamList = (props) => (
+    props.team.map(player => <li key={player.id}>{player.name}</li>)
+);
 
+const PlayersDisplay = (props) => {
+  let player = props.player;
+  let XTeam = []; 
+  let OTeam = [];
+  let noTeam = [];
+  if(props.players.length > 0){
+    XTeam = props.players.filter(player => player.team === 'X');
+    OTeam = props.players.filter(player => player.team === 'O');
+    noTeam = props.players.filter(player => player.team === '');
+  }
+  else{
+    switch(player.team){
+      case 'X':
+        XTeam.push(player)
+        break;
+      case 'O':
+        OTeam.push(player)
+        break;
+      case '':
+        noTeam.push(player)
+        break;
+      default:
+        console.log('Invalid team');
+        break;
+    }
+  }
+  return(
+    <div>
+      X players
+      <ul>
+        <TeamList team={XTeam} />
+      </ul>
+      O players
+      <ul>
+        <TeamList team={OTeam} />
+      </ul>
+      Spectators
+      <ul>
+        <TeamList team={noTeam} />
+      </ul>
     </div>
-)
+  );
+}
 
 class GameInfo extends Component{
   render(){
@@ -80,8 +122,9 @@ class GameInfo extends Component{
         <div>You are in room: {this.props.player.roomName}</div>
         <div>It is {this.props.room.currentPlayer}'s turn</div>
         <div>The winner is: {this.props.room.winner}</div>
+        <PlayersDisplay player={this.props.player} players={this.props.room.players} />
       </div>
-    )
+    );
   }
 }
 
@@ -133,8 +176,8 @@ class GameContainer extends Component{
       endpoint: "http://127.0.0.1:8000",
       playerName: '',
       roomName: '',
-      playerData: {},
-      roomData: {squares: Array(9).fill(null)},
+      playerData: {name: null, roomName: null, team: '', id: ''},
+      roomData: {squares: Array(9).fill(null), players: [], currentPlayer: null, winner: null},
       socket: null,
     };
     this.handlePlayerNameChange = this.handlePlayerNameChange.bind(this);
@@ -198,7 +241,7 @@ class GameContainer extends Component{
   }
 
   render(){
-    let squares = this.state.roomData.squares;
+    const squares = this.state.roomData.squares;
     return (
       <div>
         <RoomList rooms = {this.state.rooms} />
