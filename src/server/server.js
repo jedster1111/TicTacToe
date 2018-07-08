@@ -1,21 +1,13 @@
-const express = require('express');
 const path = require('path');
+const express = require('express');
 const app = express();
-const io = require('socket.io')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+const PORT = process.env.PORT || 3000;
 
-const appPort = 3000;
-const socketPort = 8000;
-
-app.use(express.static(path.join(__dirname, 'build')));
-app.get('/', function(req,res){
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-//enable next line to switch to deployment mode
-app.listen(appPort);
-io.listen(socketPort);
-console.log('listening on appPort ', appPort)
-console.log('listening on socketPort ', socketPort);
+//const socketPort = 8000;
+app.use(express.static(path.join(__dirname, '../../build')));
+app.get('/', (req, res, next) => res.sendFile(__dirname + './index.html'));
 
 let rooms = [];
 let allPlayers = [];
@@ -282,3 +274,5 @@ setInterval(() => {
     console.log(allPlayers.map(player => player.name));
     console.log(rooms);
 }, 5000);
+
+server.listen(PORT);
