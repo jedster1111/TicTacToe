@@ -130,6 +130,7 @@ class Room {
         this.squares = Array(9).fill(null);
         this.currentPlayer = 'X';
         this.turnNumber = 0;
+        this.winner = null;
         this.pushData();
     }
 
