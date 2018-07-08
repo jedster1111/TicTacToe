@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import socketIOClient from "socket.io-client";
+import io from "socket.io-client";
 
 const RoomList = (props) => {
   if(Array.isArray(props.rooms) && props.rooms.length !== 0){
@@ -173,7 +173,6 @@ class GameContainer extends Component{
     super(props);
     this.state = {
       response: false,
-      endpoint: "http://192.168.1.159:3000",
       playerName: '',
       roomName: '',
       playerData: {name: null, roomName: null, team: '', id: ''},
@@ -193,8 +192,7 @@ class GameContainer extends Component{
     this.initSocket();
   }
   initSocket = () => {
-    const { endpoint } = this.state;
-    const socket = socketIOClient();
+    const socket = io();
     socket.on("hello", (rooms) => {
       console.log('we made contact!');
       this.setState({ rooms });
