@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import io from "socket.io-client";
 
+const DEV = true;
+
 const RoomList = (props) => {
   if(Array.isArray(props.rooms) && props.rooms.length !== 0){
     return (
@@ -172,6 +174,7 @@ class GameContainer extends Component{
   constructor(props){
     super(props);
     this.state = {
+      isConnected: false,
       response: false,
       playerName: '',
       roomName: '',
@@ -192,10 +195,15 @@ class GameContainer extends Component{
     this.initSocket();
   }
   initSocket = () => {
-    const socket = io();
+    let socket;
+    if(!DEV){
+      socket = io();
+    } else {
+      socket = io("http://192.168.1.159:8000/")
+    }
     socket.on("hello", (rooms) => {
       console.log('we made contact!');
-      this.setState({ rooms });
+      this.setState({ rooms, isConnected: true });
     });
     socket.on('game-data', (roomData) => {
       console.log(roomData);
@@ -208,8 +216,11 @@ class GameContainer extends Component{
     socket.on('rooms', (rooms) =>{
       this.setState({ rooms });
     });
-    this.setState({ socket });
-    }
+    socket.on('disconnect', () => {
+      console.log('disconnected!!!');
+      this.setState({ socket, isConnected: false });
+    });
+  }
 
   handlePlayerNameChange(e) {
     this.setState({ playerName: e.target.value });
@@ -239,8 +250,7 @@ class GameContainer extends Component{
   }
 
   renderIsConnected() {
-    if(this.state.socket){
-      const isConnected = this.state.socket.connected;
+      const isConnected = this.state.isConnected;
       let isConnectedText;
       if(isConnected){
         isConnectedText =
@@ -250,7 +260,6 @@ class GameContainer extends Component{
           <div>DISCONNECTED</div>;
       }
       return isConnectedText;
-    }
   }
 
   render(){

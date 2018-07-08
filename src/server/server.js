@@ -1,17 +1,26 @@
+const DEV = true;
+
 const path = require('path');
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 //const socketPort = 8000;
-app.use(express.static(path.join(__dirname, '../../build')));
-app.get('/', (req, res) =>
-    res.sendFile(path.join(__dirname, '../../build/index.html'))
-);
+if(!DEV){
+    app.use(express.static(path.join(__dirname, '../../build')));
+    app.get('/', (req, res) =>
+        res.sendFile(path.join(__dirname, '../../build/index.html'))
+    );
+} else {
+    app.use(express.static(path.join(__dirname, '../../build')));
+    app.get('/', (req, res) =>
+        res.send({ response: "I am alive"}).status(200)
+    );
+}
 
-
+server.listen(PORT);
 console.log('listening on port', PORT);
 
 let rooms = [];
@@ -281,4 +290,3 @@ setInterval(() => {
     console.log(rooms);
 }, 5000);
 
-server.listen(PORT);
