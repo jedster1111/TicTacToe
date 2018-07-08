@@ -11,6 +11,7 @@ app.get('/', function(req,res){
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+//enable next line to switch to deployment mode
 app.listen(appPort);
 io.listen(socketPort);
 console.log('listening on appPort ', appPort)
