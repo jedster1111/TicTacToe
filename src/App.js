@@ -173,7 +173,7 @@ class GameContainer extends Component{
     super(props);
     this.state = {
       response: false,
-      endpoint: "http://192.168.1.159:3000",
+      endpoint: "https://192.168.1.159:3000",
       playerName: '',
       roomName: '',
       playerData: {name: null, roomName: null, team: '', id: ''},
