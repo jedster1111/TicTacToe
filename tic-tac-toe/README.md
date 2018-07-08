@@ -2,7 +2,7 @@ In App.js in class GameContainer you'll need to change endpoint to your local ip
 Need to have node.js installed (https://nodejs.org/en/)<br>
 To install node modules run: npm install<br>
 Run react app with: npm start<br>
-Run socket server with: nodemon server<br>
+Run socket server with: nodemon server  or  with: node server if you don't want it to automatically restart<br>
 Both will automatically restart when you make changes to files.
 
 ********
