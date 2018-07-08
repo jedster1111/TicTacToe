@@ -173,7 +173,7 @@ class GameContainer extends Component{
     super(props);
     this.state = {
       response: false,
-      endpoint: "https://192.168.1.159:3000",
+      endpoint: "http://192.168.1.159:3000",
       playerName: '',
       roomName: '',
       playerData: {name: null, roomName: null, team: '', id: ''},
@@ -194,7 +194,7 @@ class GameContainer extends Component{
   }
   initSocket = () => {
     const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
+    const socket = socketIOClient();
     socket.on("hello", (rooms) => {
       console.log('we made contact!');
       this.setState({ rooms });
