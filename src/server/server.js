@@ -1,4 +1,4 @@
-const DEV = true;
+const DEV = false;
 
 const path = require('path');
 const express = require('express');

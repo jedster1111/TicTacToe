@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import io from "socket.io-client";
 
-const DEV = true;
+const DEV = false;
 
 const RoomList = (props) => {
   if(Array.isArray(props.rooms) && props.rooms.length !== 0){
