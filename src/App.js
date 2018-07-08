@@ -238,10 +238,26 @@ class GameContainer extends Component{
     this.state.socket.emit('leave-room');
   }
 
+  renderIsConnected() {
+    if(this.state.socket){
+      const isConnected = this.state.socket.connected;
+      let isConnectedText;
+      if(isConnected){
+        isConnectedText =
+          <div>You are connected</div>;
+      } else{
+        isConnectedText =
+          <div>DISCONNECTED</div>;
+      }
+      return isConnectedText;
+    }
+  }
+
   render(){
     const squares = this.state.roomData.squares;
     return (
       <div>
+        {this.renderIsConnected()}
         <RoomList rooms = {this.state.rooms} />
         <NameAndRoomInput
           handlePlayerNameChange = {this.handlePlayerNameChange}
