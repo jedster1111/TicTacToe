@@ -1,9 +1,10 @@
-In App.js in class GameContainer you'll need to change endpoint to your local ip address rather than mine<br>
+In App.js and server.js set DEV to true while running locally.<br>
 Need to have node.js installed (https://nodejs.org/en/)<br>
 To install node modules run: npm install<br>
 Run react app with: npm start<br>
-Run socket server with: nodemon server  or  with: node server if you don't want it to automatically restart<br>
-Both will automatically restart when you make changes to files.
+Run socket server with: nodemon src/server/server  or  with: node src/server/server if you don't want it to automatically restart<br>
+To build run: npm run build <br>
+To upload to heroku run: git push heroku master
 
 ********
 
