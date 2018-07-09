@@ -199,7 +199,7 @@ class GameContainer extends Component{
     if(!DEV){
       socket = io();
     } else {
-      socket = io("http://192.168.1.159:8000/")
+      socket = io("http://192.168.1.159:8000/");
     }
     socket.on("hello", (rooms) => {
       console.log('we made contact!');
@@ -218,8 +218,9 @@ class GameContainer extends Component{
     });
     socket.on('disconnect', () => {
       console.log('disconnected!!!');
-      this.setState({ socket, isConnected: false });
+      this.setState({ isConnected: false });
     });
+    this.setState({socket});
   }
 
   handlePlayerNameChange(e) {
