@@ -198,7 +198,7 @@ class GameContainer extends Component{
   initSocket = () => {
     let socket;
     if(ENVIRONMENT === 'development'){
-      socket = io("http://192.168.1.159:8000/");
+      socket = io("http://localhost:8000/");
     } else {
       socket = io();
     }
