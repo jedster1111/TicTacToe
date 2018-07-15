@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import io from "socket.io-client";
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
-console.log(ENVIRONMENT);
+//console.log(ENVIRONMENT);
 (ENVIRONMENT === 'development') && console.log("You are running in DEV mode");
 
 const RoomList = (props) => {

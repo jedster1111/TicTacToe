@@ -6,7 +6,7 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const PORT = process.env.PORT || 8000;
-console.log(ENVIRONMENT);
+//console.log(ENVIRONMENT);
 (ENVIRONMENT === 'development') && console.log("You are running in dev mode");
 
 //const socketPort = 8000;
