@@ -1,5 +1,5 @@
 //require('dotenv').config();
-const ENVIRONMENT = process.env.REACT_APP_ENV || 'DEV';
+const ENVIRONMENT = process.env.NODE_ENV || 'development';
 const path = require('path');
 const express = require('express');
 const app = express();
@@ -7,10 +7,10 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const PORT = process.env.PORT || 8000;
 console.log(ENVIRONMENT);
-(ENVIRONMENT === 'DEV') && console.log("You are running in dev mode");
+(ENVIRONMENT === 'development') && console.log("You are running in dev mode");
 
 //const socketPort = 8000;
-if(ENVIRONMENT === 'DEV'){
+if(ENVIRONMENT === 'development'){
     app.use(express.static(path.join(__dirname, '../../build')));
     app.get('/', (req, res) =>
         res.send({ response: "I am alive"}).status(200)

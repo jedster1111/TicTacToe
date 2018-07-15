@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import io from "socket.io-client";
-const ENVIRONMENT = process.env.REACT_APP_ENV || 'DEV';
+const ENVIRONMENT = process.env.NODE_ENV || 'development';
 console.log(ENVIRONMENT);
-(ENVIRONMENT === 'DEV') && console.log("You are running in DEV mode");
+(ENVIRONMENT === 'development') && console.log("You are running in DEV mode");
 
 const RoomList = (props) => {
   if(Array.isArray(props.rooms) && props.rooms.length !== 0){
@@ -197,7 +197,7 @@ class GameContainer extends Component{
   }
   initSocket = () => {
     let socket;
-    if(ENVIRONMENT === 'DEV'){
+    if(ENVIRONMENT === 'development'){
       socket = io("http://192.168.1.159:8000/");
     } else {
       socket = io();
