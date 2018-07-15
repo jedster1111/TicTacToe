@@ -1,11 +1,12 @@
-const DEV = false;
-
+require('dotenv').config();
+const DEV = process.env.REACT_APP_DEV || false;
 const path = require('path');
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const PORT = process.env.PORT || 8000;
+DEV && console.log("You are running in dev mode");
 
 //const socketPort = 8000;
 if(!DEV){

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import io from "socket.io-client";
-
-const DEV = false;
+const DEV = process.env.REACT_APP_DEV || false;
+DEV && console.log("You are running in DEV mode");
 
 const RoomList = (props) => {
   if(Array.isArray(props.rooms) && props.rooms.length !== 0){
