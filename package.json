@@ -15,7 +15,8 @@
     "heroku-postbuild": "npm install && npm run build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start-server": "nodemon src/server/server"
   },
   "devDependencies": {
     "concurrently": "^3.6.0",
