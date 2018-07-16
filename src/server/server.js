@@ -287,8 +287,8 @@ io.on('connection', client => {
     });
 });
 
-ENVIRONMENT === 'development' && setInterval(() => {
-    console.log(allPlayers.map(player => player.name));
-    console.log(rooms);
-}, 5000);
+//ENVIRONMENT === 'development' && setInterval(() => {
+//    console.log(allPlayers.map(player => player.name));
+//    console.log(rooms);
+//}, 5000);
 

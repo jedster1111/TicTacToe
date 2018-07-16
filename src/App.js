@@ -19,21 +19,26 @@ const RoomList = (props) => {
     );
   }
 }
-const SingleInput = (props) => (
-  <div>
-    <label>{props.title}</label>
-    <input
-      name={props.name}
-      type="text"
-      value={props.content}
-      onChange={props.controlFunc}
-      placeholder={props.placeholder}
-    />
-    <input type="submit" value="Submit" />
-  </div>
-)
-
-
+const SingleInput = (props) => {
+  let classes = 'single-input-text-box';
+  if(props.classes){
+    classes += ' ' + props.classes;
+  }
+  return(
+    <React.Fragment>
+      <input
+        name={props.name}
+        type="text"
+        value={props.content}
+        onChange={props.controlFunc}
+        placeholder={props.placeholder}
+        className={classes}
+        autoComplete='off'
+      />
+      <input type="submit" value="Submit" className = 'single-input-submit-button'/>
+    </React.Fragment>
+  )
+}
 const NameAndRoomInput = (props) => (
   <div>
     <form onSubmit={props.handlePlayerNameSubmit}>
@@ -58,7 +63,6 @@ const NameAndRoomInput = (props) => (
     </form>
   </div>
 )
-
 const TeamToggle = (props) => (
   <div>
     <button onClick={() => props.onClick('X')}>X</button>
@@ -66,11 +70,9 @@ const TeamToggle = (props) => (
     <button onClick={() => props.onClick('')}>Spectate</button>
   </div>
 )
-
 const TeamList = (props) => (
     props.team.map(player => <li key={player.id}>{player.name}</li>)
 );
-
 const PlayersDisplay = (props) => {
   let player = props.player;
   let XTeam = []; 
@@ -171,6 +173,21 @@ class Board extends Component{
   }
 }
 
+const NameInput = (props) => (
+  <div className = "name-input-container">
+    <form onSubmit={props.handlePlayerNameSubmit} className='name-input-form'>
+      <SingleInput 
+        classes = ''
+        title = 'Player Name'
+        name='name'
+        controlFunc = {props.handlePlayerNameChange}
+        content={props.playerName}
+        placeholder={'Enter a name!'}
+      />
+    </form>
+  </div>
+)
+
 class GameContainer extends Component{
   constructor(props){
     super(props);
@@ -179,7 +196,7 @@ class GameContainer extends Component{
       response: false,
       playerName: '',
       roomName: '',
-      playerData: {name: null, roomName: null, team: '', id: ''},
+      playerData: {name: '', roomName: null, team: '', id: ''},
       roomData: {squares: Array(9).fill(null), players: [], currentPlayer: null, winner: null},
       socket: null,
     };
@@ -223,7 +240,6 @@ class GameContainer extends Component{
     });
     this.setState({socket});
   }
-
   handlePlayerNameChange(e) {
     this.setState({ playerName: e.target.value });
   }
@@ -250,7 +266,6 @@ class GameContainer extends Component{
   handleLeaveRoomClick() {
     this.state.socket.emit('leave-room');
   }
-
   renderIsConnected() {
       const isConnected = this.state.isConnected;
       let isConnectedText;
@@ -263,30 +278,41 @@ class GameContainer extends Component{
       }
       return isConnectedText;
   }
-
   render(){
     const squares = this.state.roomData.squares;
+    const isConnected = this.renderIsConnected();
+    const isName = this.state.playerData.name !== '';
     return (
       <div>
-        {this.renderIsConnected()}
-        <RoomList rooms = {this.state.rooms} />
-        <NameAndRoomInput
-          handlePlayerNameChange = {this.handlePlayerNameChange}
-          handlePlayerNameSubmit = {this.handlePlayerNameSubmit}
-          playerName = {this.state.playerName}
-          handleRoomNameChange = {this.handleRoomNameChange}
-          handleRoomNameSubmit = {this.handleRoomNameSubmit}
-          roomName = {this.state.roomName}
-        />
         <div>
-        <Board squares = {squares} onClick = {this.handleSquareClick}/>
-        <GameInfo
-          player={this.state.playerData}
-          room={this.state.roomData}
-          onTeamToggleClick={this.handleTeamToggleClick}
-          onResetClick={this.handleResetClick}
-          onLeaveRoomClick={this.handleLeaveRoomClick}
-        />
+          <NameInput
+            isName = {isName} 
+            handlePlayerNameChange = {this.handlePlayerNameChange}
+            handlePlayerNameSubmit = {this.handlePlayerNameSubmit}
+            playerName={this.state.playerName}
+          />
+        </div>
+        <div>
+          {isConnected}
+          <RoomList rooms = {this.state.rooms} />
+          <NameAndRoomInput
+            handlePlayerNameChange = {this.handlePlayerNameChange}
+            handlePlayerNameSubmit = {this.handlePlayerNameSubmit}
+            playerName = {this.state.playerName}
+            handleRoomNameChange = {this.handleRoomNameChange}
+            handleRoomNameSubmit = {this.handleRoomNameSubmit}
+            roomName = {this.state.roomName}
+          />
+          <div>
+            <Board squares = {squares} onClick = {this.handleSquareClick}/>
+            <GameInfo
+              player={this.state.playerData}
+              room={this.state.roomData}
+              onTeamToggleClick={this.handleTeamToggleClick}
+              onResetClick={this.handleResetClick}
+              onLeaveRoomClick={this.handleLeaveRoomClick}
+            />
+          </div>
         </div>
       </div>
     );

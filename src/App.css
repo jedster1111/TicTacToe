@@ -1,28 +1,50 @@
-.App {
+.name-input-container {
+  display: flex;
+  width: 65%;
+  padding: 20px 0px;
+  margin: 10px auto;
+  background-color: greenyellow;
+  justify-content: center;
+  border-radius: 10px;
+}
+.name-input-form {
+  width: 95%;
+}
+.name-input-form input{
+  border:none;
+  outline: none;
+  box-shadow: 0 0 1px 1px black; 
+  border-radius: 7px;
+}
+.name-input-form .single-input-text-box {
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+  display: block;
+  width:85%;
+  padding: 5px 0;
+  margin: 0 auto;
   text-align: center;
 }
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.name-input-form .single-input-text-box:focus {
+  outline-offset: 0;
+  box-shadow: 0 0 0 1.5px black;
+}
+.name-input-form .single-input-submit-button {
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  display: block;
+  width:45%;
+  padding: 5px 0;
+  margin: 6px auto;
+  font-size: 14px;
+  text-decoration: none;
+  background-color: #fff;
+}
+.name-input-form .single-input-submit-button:hover {
+  background-color: lightgoldenrodyellow;
+  box-shadow: 0 0 0 1.5px;
+}
+.single-input-label {
+  margin-right: 5px;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
