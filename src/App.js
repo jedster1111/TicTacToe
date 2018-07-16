@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import io from "socket.io-client";
+import {Transition, animated} from 'react-spring';
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 //console.log(ENVIRONMENT);
 (ENVIRONMENT === 'development') && console.log("You are running in DEV mode");
@@ -20,9 +21,11 @@ const RoomList = (props) => {
   }
 }
 const SingleInput = (props) => {
-  let classes = 'single-input-text-box';
+  let inputClass = 'single-input-text-box';
+  let submitClass = 'single-input-submit-button';
   if(props.classes){
-    classes += ' ' + props.classes;
+    inputClass += ' ' + props.classes;
+    submitClass += ' ' + props.classes;
   }
   return(
     <React.Fragment>
@@ -32,10 +35,10 @@ const SingleInput = (props) => {
         value={props.content}
         onChange={props.controlFunc}
         placeholder={props.placeholder}
-        className={classes}
+        className={inputClass}
         autoComplete='off'
       />
-      <input type="submit" value="Submit" className = 'single-input-submit-button'/>
+      <input type="submit" value="Submit" className = {submitClass}/>
     </React.Fragment>
   )
 }
@@ -173,20 +176,27 @@ class Board extends Component{
   }
 }
 
-const NameInput = (props) => (
-  <div className = "name-input-container">
-    <form onSubmit={props.handlePlayerNameSubmit} className='name-input-form'>
-      <SingleInput 
-        classes = ''
-        title = 'Player Name'
-        name='name'
-        controlFunc = {props.handlePlayerNameChange}
-        content={props.playerName}
-        placeholder={'Enter a name!'}
-      />
-    </form>
-  </div>
-)
+const NameInput = (props) => {
+  const {isName} = props;
+  const inputClass = isName ? 'name' : 'no-name';
+  const containerClass = 'name-input-container ' + (isName ? 'name' : 'no-name');
+  const formClass = 'name-input-form ' + (isName ? 'name' : 'no-name');
+  return(
+    <div className = {containerClass}>
+      <form onSubmit={props.handlePlayerNameSubmit} className={formClass}>
+        <SingleInput 
+          classes = {inputClass}
+          title = 'Player Name'
+          name='name'
+          controlFunc = {props.handlePlayerNameChange}
+          content={props.playerName}
+          placeholder={'Enter a name!'}
+        />
+      </form>
+    </div>
+  )
+}
+
 
 class GameContainer extends Component{
   constructor(props){

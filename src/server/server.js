@@ -264,10 +264,10 @@ io.on('connection', client => {
     let player = new Player(client);
     clientConnect(client, player);
     client.on('set-name', (name) => {
-        player.setName(name)
+        player.setName(name.trim())
     });
     client.on('join-room', (roomName) => {
-        player.joinRoom(roomName);
+        player.joinRoom(roomName.trim());
     });
     client.on('set-team', (team) => {
         player.setTeam(team)

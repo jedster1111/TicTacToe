@@ -7,6 +7,9 @@
   justify-content: center;
   border-radius: 10px;
 }
+.name-input-container.name{
+  background-color: red;
+}
 .name-input-form {
   width: 95%;
 }
