@@ -1,7 +1,6 @@
 Need to have node.js installed (https://nodejs.org/en/)<br>
 To install node modules run: npm install<br>
-Run react app with: npm start<br>
-Run socket server with: npm run start-server<br>
+To start server and react app just need to run: npm start <br>
 To build run: npm run build <br>
 To upload to heroku run: git push heroku master
 
