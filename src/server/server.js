@@ -1,11 +1,11 @@
-//require('dotenv').config();
-const ENVIRONMENT = process.env.NODE_ENV || 'development';
 const path = require('path');
 const express = require('express');
+const ENVIRONMENT = process.env.NODE_ENV || 'development';
+const PORT = process.env.PORT || 8000;
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const PORT = process.env.PORT || 8000;
+
 //console.log(ENVIRONMENT);
 (ENVIRONMENT === 'development') && console.log("You are running in dev mode");
 
