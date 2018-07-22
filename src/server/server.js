@@ -1,7 +1,7 @@
 //require('dotenv').config();
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
-const path = require('path');
-const express = require('express');
+import { join } from 'path';
+import express, { static } from 'express';
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
@@ -11,14 +11,14 @@ const PORT = process.env.PORT || 8000;
 
 //const socketPort = 8000;
 if(ENVIRONMENT === 'development'){
-    app.use(express.static(path.join(__dirname, '../../build')));
+    app.use(static(join(__dirname, '../../build')));
     app.get('/', (req, res) =>
         res.send({ response: "I am alive"}).status(200)
     );
 } else {
-    app.use(express.static(path.join(__dirname, '../../build')));
+    app.use(static(join(__dirname, '../../build')));
     app.get('/', (req, res) =>
-        res.sendFile(path.join(__dirname, '../../build/index.html'))
+        res.sendFile(join(__dirname, '../../build/index.html'))
     );
 }
 
