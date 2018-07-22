@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import io from "socket.io-client";
+import os from "os";
 import {Transition, animated} from 'react-spring';
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 //console.log(ENVIRONMENT);
@@ -225,7 +226,9 @@ class GameContainer extends Component{
   initSocket = () => {
     let socket;
     if(ENVIRONMENT === 'development'){
-      socket = io("http://localhost:8000/");
+      let LOCALIP = process.env.REACT_APP_LOCAL_IP || 'localhost';
+      console.log(LOCALIP);
+      socket = io(`http://${LOCALIP}:8000`);
     } else {
       socket = io();
     }
