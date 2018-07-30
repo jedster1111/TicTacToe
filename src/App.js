@@ -1,25 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './App.css';
 import io from "socket.io-client";
-import os from "os";
 import {Transition, animated} from 'react-spring';
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 //console.log(ENVIRONMENT);
 (ENVIRONMENT === 'development') && console.log("You are running in DEV mode");
 
 const RoomList = (props) => {
+  let roomList;
   if(Array.isArray(props.rooms) && props.rooms.length !== 0){
-    return (
+    roomList =
       <ul>
         {props.rooms.map(room => <li key = {room}>{room}</li>)}
       </ul>
-    );
   }
   else{
-    return (
+    roomList = 
       <h1>No rooms yet</h1>
-    );
   }
+  return roomList;
 }
 const SingleInput = (props) => {
   let inputClass = 'single-input-text-box';
@@ -178,32 +177,63 @@ class Board extends Component{
 }
 
 const NameInput = (props) => {
-  const {isName} = props;
-  const inputClass = isName ? 'name' : 'no-name';
-  const containerClass = 'name-input-container ' + (isName ? 'name' : 'no-name');
-  const formClass = 'name-input-form ' + (isName ? 'name' : 'no-name');
+  const {playerNameConfirmed, isChangingName} = props;
+  const inputClass = playerNameConfirmed ? 'name' : 'no-name';
+  const containerClass = 'input-container ' + (playerNameConfirmed ? 'name' : 'no-name');
+  const formClass = 'input-form ' + (playerNameConfirmed ? 'name' : 'no-name');
   return(
     <div className = {containerClass}>
-      <form onSubmit={props.handlePlayerNameSubmit} className={formClass}>
-        <SingleInput 
+      {isChangingName ?
+        <form onSubmit={props.handlePlayerNameSubmit} className={formClass}>
+          <SingleInput 
+            classes = {inputClass}
+            title = 'Player Name'
+            name='name'
+            controlFunc = {props.handlePlayerNameChange}
+            content={props.playerName}
+            placeholder={'Enter a name!'}
+          />
+        </form>
+      :
+        <span className='input-container name-confirmed'>
+          <div>
+            Your name is {playerNameConfirmed}!
+          </div>
+          <div>
+            <button onClick={props.handleIsChangeNameToggle}>Change name</button>
+          </div>
+        </span>
+      }
+    </div>
+  )
+}
+const RoomInput = (props) => {
+  const {roomNameConfirmed} = props;
+  const inputClass = roomNameConfirmed ? 'room' : 'no-room';
+  const containerClass = 'input-container ' + (roomNameConfirmed ? 'room' : 'no-room');
+  const formClass = 'input-form ' + (roomNameConfirmed ? 'room' : 'no-room');
+  return(
+    <div className={containerClass}>
+      <form onSubmit={props.handleRoomNameSubmit} className={formClass}>
+        <SingleInput
           classes = {inputClass}
-          title = 'Player Name'
-          name='name'
-          controlFunc = {props.handlePlayerNameChange}
-          content={props.playerName}
-          placeholder={'Enter a name!'}
+          title = 'Room Name'
+          name = 'roomName'
+          controlFunc = {props.handleRoomNameChange}
+          content = {props.roomName}
+          placeholder = {'Enter a room!'}
         />
       </form>
     </div>
   )
 }
 
-
 class GameContainer extends Component{
   constructor(props){
     super(props);
     this.state = {
       isConnected: false,
+      isChangingName: true,
       response: false,
       playerName: '',
       roomName: '',
@@ -213,6 +243,7 @@ class GameContainer extends Component{
     };
     this.handlePlayerNameChange = this.handlePlayerNameChange.bind(this);
     this.handlePlayerNameSubmit = this.handlePlayerNameSubmit.bind(this);
+    this.handleIsChangeNameToggle = this.handleIsChangeNameToggle.bind(this);
     this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
     this.handleRoomNameSubmit = this.handleRoomNameSubmit.bind(this);
     this.handleSquareClick = this.handleSquareClick.bind(this);
@@ -256,12 +287,17 @@ class GameContainer extends Component{
   handlePlayerNameChange(e) {
     this.setState({ playerName: e.target.value });
   }
+  handleIsChangeNameToggle() {
+    this.setState({isChangingName: true})
+  }
   handleRoomNameChange(e) {
     this.setState({ roomName: e.target.value });
   }
   handlePlayerNameSubmit(e) {
     e.preventDefault();
-    this.state.socket.emit('set-name', this.state.playerName);
+    this.state.socket.emit('set-name', this.state.playerName, () => {
+      this.setState({isChangingName: false})
+    });
   }
   handleRoomNameSubmit(e) {
     e.preventDefault();
@@ -294,20 +330,34 @@ class GameContainer extends Component{
   render(){
     const squares = this.state.roomData.squares;
     const isConnected = this.renderIsConnected();
-    const isName = this.state.playerData.name !== '';
+    const playerNameConfirmed = this.state.playerData.name;
+    const roomNameConfirmed = this.state.playerData.roomName;
+    const {isChangingName} = this.state;
     return (
-      <div>
-        <div>
+      <Fragment>
+        <div className='game-container'>
           <NameInput
-            isName = {isName} 
+            playerNameConfirmed = {playerNameConfirmed}
+            isChangingName = {isChangingName} 
             handlePlayerNameChange = {this.handlePlayerNameChange}
             handlePlayerNameSubmit = {this.handlePlayerNameSubmit}
+            handleIsChangeNameToggle = {this.handleIsChangeNameToggle}
             playerName={this.state.playerName}
           />
+          {
+            playerNameConfirmed &&
+            <RoomInput
+            roomNameConfirmed = {roomNameConfirmed}
+            handleRoomNameChange = {this.handleRoomNameChange}
+            handleRoomNameSubmit = {this.handleRoomNameSubmit}
+            roomName = {this.state.roomName}
+          />}
         </div>
+
+        
         <div>
           {isConnected}
-          <RoomList rooms = {this.state.rooms} />
+          <RoomList rooms={this.state.rooms} />
           <NameAndRoomInput
             handlePlayerNameChange = {this.handlePlayerNameChange}
             handlePlayerNameSubmit = {this.handlePlayerNameSubmit}
@@ -327,7 +377,7 @@ class GameContainer extends Component{
             />
           </div>
         </div>
-      </div>
+      </Fragment>
     );
   }
 }
@@ -335,9 +385,7 @@ class GameContainer extends Component{
 class App extends Component {
   render() {
     return (
-      <div>
         <GameContainer />
-      </div>
     );
   }
 }

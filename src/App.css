@@ -1,25 +1,31 @@
-.name-input-container {
+.game-container{
+  display:flex;
+  justify-content: center;
+}
+.input-container {
   display: flex;
   width: 65%;
   padding: 20px 0px;
-  margin: 10px auto;
+  margin: 10px 5px;
   background-color: greenyellow;
   justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   border-radius: 10px;
 }
-.name-input-container.name{
+.input-container.name{
   background-color: red;
 }
-.name-input-form {
+.input-form {
   width: 95%;
 }
-.name-input-form input{
+.input-form input{
   border:none;
   outline: none;
   box-shadow: 0 0 1px 1px black; 
   border-radius: 7px;
 }
-.name-input-form .single-input-text-box {
+.input-form .single-input-text-box {
   -webkit-transition: all 0.4s;
   transition: all 0.4s;
   display: block;
@@ -28,11 +34,11 @@
   margin: 0 auto;
   text-align: center;
 }
-.name-input-form .single-input-text-box:focus {
+.input-form .single-input-text-box:focus {
   outline-offset: 0;
   box-shadow: 0 0 0 1.5px black;
 }
-.name-input-form .single-input-submit-button {
+.input-form .single-input-submit-button {
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
   display: block;
@@ -43,11 +49,14 @@
   text-decoration: none;
   background-color: #fff;
 }
-.name-input-form .single-input-submit-button:hover {
+.input-form .single-input-submit-button:hover {
   background-color: lightgoldenrodyellow;
   box-shadow: 0 0 0 1.5px;
 }
 .single-input-label {
   margin-right: 5px;
 }
-
+.input-container.name-confirmed {
+  background-color: lightblue;
+  padding: 7px 5px;
+}
