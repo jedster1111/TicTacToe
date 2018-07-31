@@ -1,6 +1,6 @@
 .game-container{
   display:flex;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 .input-container {
@@ -29,8 +29,8 @@
   border-radius: 7px;
 }
 .input-form .single-input-text-box {
-  -webkit-transition: all 0.4s;
-  transition: all 0.4s;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
   display: block;
   width:85%;
   padding: 5px 0;
@@ -66,4 +66,7 @@
   background-color: lightcyan;
   padding: 7px 5px;
   min-width: 250px;
+}
+.confirmed-room{
+  color: red;
 }

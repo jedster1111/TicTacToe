@@ -6,20 +6,6 @@ const ENVIRONMENT = process.env.NODE_ENV || 'development';
 //console.log(ENVIRONMENT);
 (ENVIRONMENT === 'development') && console.log("You are running in DEV mode");
 
-const RoomList = (props) => {
-  let roomList;
-  if(Array.isArray(props.rooms) && props.rooms.length !== 0){
-    roomList =
-      <ul>
-        {props.rooms.map(room => <li key = {room}>{room}</li>)}
-      </ul>
-  }
-  else{
-    roomList = 
-      <h1>No rooms yet</h1>
-  }
-  return roomList;
-}
 const SingleInput = (props) => {
   let inputClass = 'single-input-text-box';
   let submitClass = 'single-input-submit-button';
@@ -211,8 +197,28 @@ const NameInput = (props) => {
     </div>
   )
 }
+const RoomList = (props) => {
+  let roomList;
+  if(Array.isArray(props.rooms) && props.rooms.length !== 0){
+    roomList =
+      props.rooms.map(room => {
+        const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room' : '';
+        return(
+          <div key={room} className={buttonClass}>
+            {room} <button onClick={(e)=>props.handleJoinRoomClick(e, room)}>Join</button>
+          </div>
+        )
+      })
+      
+  }
+  else{
+    roomList = 
+      <h1>No rooms yet</h1>
+  }
+  return roomList;
+}
 const RoomInput = (props) => {
-  const {roomNameConfirmed} = props;
+  const {roomNameConfirmed, rooms} = props;
   const inputClass = roomNameConfirmed ? 'room' : 'no-room';
   const containerClass = 'input-container ' + (roomNameConfirmed ? 'room' : 'no-room');
   const formClass = 'input-form ' + (roomNameConfirmed ? 'room' : 'no-room');
@@ -227,7 +233,8 @@ const RoomInput = (props) => {
           content = {props.roomName}
           placeholder = {'Enter a room!'}
         />
-        <RoomList rooms={props.rooms} />
+        <RoomList rooms={rooms} roomNameConfirmed={roomNameConfirmed} handleJoinRoomClick={props.handleJoinRoomClick} />
+        {roomNameConfirmed && <div>You are in {roomNameConfirmed}</div>}
       </form>
     </div>
   )
@@ -252,6 +259,7 @@ class GameContainer extends Component{
     this.handleIsChangeNameFalse = this.handleIsChangeNameFalse.bind(this);
     this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
     this.handleRoomNameSubmit = this.handleRoomNameSubmit.bind(this);
+    this.handleJoinRoomClick = this.handleJoinRoomClick.bind(this);
     this.handleSquareClick = this.handleSquareClick.bind(this);
     this.handleTeamToggleClick = this.handleTeamToggleClick.bind(this);
     this.handleResetClick = this.handleResetClick.bind(this);
@@ -286,7 +294,8 @@ class GameContainer extends Component{
     });
     socket.on('disconnect', () => {
       console.log('disconnected!!!');
-      this.setState({ isConnected: false });
+      this.setState({ isConnected: false, playerName: '', roomName: '' });
+      this.handleIsChangeName();
     });
     this.setState({socket});
   }
@@ -306,7 +315,7 @@ class GameContainer extends Component{
     e.preventDefault();
     const {playerName, playerData} = this.state;
     const playerNameTrimmed = playerName.trim().replace(/\s{2,}/g,' ').replace(/^\s+/g,'');
-    if(playerNameTrimmed !== playerData.name && playerName !== ''){
+    if(playerNameTrimmed !== playerData.name && playerNameTrimmed !== ''){
       this.state.socket.emit('set-name', playerNameTrimmed, () => {
         this.setState({isChangingName: false, playerName: playerNameTrimmed})
       });
@@ -316,7 +325,19 @@ class GameContainer extends Component{
   }
   handleRoomNameSubmit(e) {
     e.preventDefault();
-    this.state.socket.emit('join-room', this.state.roomName);
+    const { roomName, playerData } = this.state;
+    const roomNameTrimmed = roomName.trim().replace(/\s{2,}/g, ' ').replace(/^\s+/g, '');
+    if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== '') {
+      this.state.socket.emit('join-room', roomNameTrimmed);
+    }
+  }
+  handleJoinRoomClick(e, name) {
+    e.preventDefault();
+    const {playerData} = this.state;
+    const roomNameTrimmed = name.trim().replace(/\s{2,}/g, ' ').replace(/^\s+/g, '');
+    if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== '') {
+      this.state.socket.emit('join-room', roomNameTrimmed);
+    }
   }
   handleSquareClick(i) {
     this.state.socket.emit('new-square', i);
@@ -366,6 +387,7 @@ class GameContainer extends Component{
               roomNameConfirmed = {roomNameConfirmed}
               handleRoomNameChange = {this.handleRoomNameChange}
               handleRoomNameSubmit = {this.handleRoomNameSubmit}
+              handleJoinRoomClick = {this.handleJoinRoomClick}
               roomName = {this.state.roomName}
               rooms = {this.state.rooms}
           />}

@@ -264,11 +264,11 @@ io.on('connection', client => {
     let player = new Player(client);
     clientConnect(client, player);
     client.on('set-name', (name, setState) => {
-        player.setName(name.trim().replace(/\s+/g,' '));
+        player.setName(name.trim().replace(/\s{2,}/g,' '));
         setState && (name !== '') && setState();
     });
     client.on('join-room', (roomName) => {
-        player.joinRoom(roomName.trim());
+        player.joinRoom(roomName.trim().replace(/\s{2,}/g,' '));
     });
     client.on('set-team', (team) => {
         player.setTeam(team)
