@@ -37,6 +37,7 @@ const SingleInput = (props) => {
         placeholder={props.placeholder}
         className={inputClass}
         autoComplete='off'
+        maxLength={30}
       />
       <input type="submit" value="Submit" className = {submitClass}/>
     </React.Fragment>
@@ -226,6 +227,7 @@ const RoomInput = (props) => {
           content = {props.roomName}
           placeholder = {'Enter a room!'}
         />
+        <RoomList rooms={props.rooms} />
       </form>
     </div>
   )
@@ -289,7 +291,7 @@ class GameContainer extends Component{
     this.setState({socket});
   }
   handlePlayerNameChange(e) {
-    this.setState({ playerName: e.target.value });
+    this.setState({ playerName: e.target.value.replace(/\s{2,}/g,' ').replace(/^\s+/g,'') });
   }
   handleIsChangeName() {
     this.setState({isChangingName: true})
@@ -298,12 +300,12 @@ class GameContainer extends Component{
     this.setState(({playerData}) => ({isChangingName: false, playerName: playerData.name}));
   }
   handleRoomNameChange(e) {
-    this.setState({ roomName: e.target.value });
+    this.setState({ roomName: e.target.value.replace(/\s{2,}/g,' ').replace(/^\s+/g,'') });
   }
   handlePlayerNameSubmit(e) {
     e.preventDefault();
     const {playerName, playerData} = this.state;
-    const playerNameTrimmed = playerName.trim().replace(/\s+/g,' ');
+    const playerNameTrimmed = playerName.trim().replace(/\s{2,}/g,' ').replace(/^\s+/g,'');
     if(playerNameTrimmed !== playerData.name && playerName !== ''){
       this.state.socket.emit('set-name', playerNameTrimmed, () => {
         this.setState({isChangingName: false, playerName: playerNameTrimmed})
@@ -361,10 +363,11 @@ class GameContainer extends Component{
           {
             playerNameConfirmed &&
             <RoomInput
-            roomNameConfirmed = {roomNameConfirmed}
-            handleRoomNameChange = {this.handleRoomNameChange}
-            handleRoomNameSubmit = {this.handleRoomNameSubmit}
-            roomName = {this.state.roomName}
+              roomNameConfirmed = {roomNameConfirmed}
+              handleRoomNameChange = {this.handleRoomNameChange}
+              handleRoomNameSubmit = {this.handleRoomNameSubmit}
+              roomName = {this.state.roomName}
+              rooms = {this.state.rooms}
           />}
         </div>
 
