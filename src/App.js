@@ -194,7 +194,7 @@ const NameInput = (props) => {
             placeholder={'Enter a name!'}
           />
           {playerNameConfirmed !== '' && 
-            <button type='button' className='name-input-button leave' onClick={props.handleIsChangeNameFalse}>Leave</button>
+            <button type='button' className='name-input-button leave' onClick={props.handleIsChangeNameFalse}>Discard Changes</button>
           }
         </form>
       :
@@ -295,17 +295,18 @@ class GameContainer extends Component{
     this.setState({isChangingName: true})
   }
   handleIsChangeNameFalse() {
-    this.setState({isChangingName: false})
+    this.setState(({playerData}) => ({isChangingName: false, playerName: playerData.name}));
   }
   handleRoomNameChange(e) {
     this.setState({ roomName: e.target.value });
   }
   handlePlayerNameSubmit(e) {
-    const {playerName, playerData} = this.state;
     e.preventDefault();
-    if(playerName !== playerData.name && playerName !== ''){
-      this.state.socket.emit('set-name', this.state.playerName, () => {
-        this.setState({isChangingName: false})
+    const {playerName, playerData} = this.state;
+    const playerNameTrimmed = playerName.trim().replace(/\s+/g,' ');
+    if(playerNameTrimmed !== playerData.name && playerName !== ''){
+      this.state.socket.emit('set-name', playerNameTrimmed, () => {
+        this.setState({isChangingName: false, playerName: playerNameTrimmed})
       });
     } else {
       console.log('name is empty or the same')

@@ -263,9 +263,9 @@ function clientDisconnect(client, player) {
 io.on('connection', client => {
     let player = new Player(client);
     clientConnect(client, player);
-    client.on('set-name', (name, callback) => {
-        player.setName(name.trim());
-        callback && (name !== '') && callback();
+    client.on('set-name', (name, setState) => {
+        player.setName(name.trim().replace(/\s+/g,' '));
+        setState && (name !== '') && setState();
     });
     client.on('join-room', (roomName) => {
         player.joinRoom(roomName.trim());
