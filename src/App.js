@@ -185,14 +185,14 @@ const NameInput = (props) => {
           }
         </form>
       :
-        <span className='input-container name-confirmed'>
+        <Fragment>
           <div>
             Your name is: {playerNameConfirmed}
           </div>
           <div className='input-form'>
             <button className='name-input-button' onClick={props.handleIsChangeName}>Change name</button>
           </div>
-        </span>
+        </Fragment>
       }
     </div>
   )
@@ -202,7 +202,7 @@ const RoomList = (props) => {
   if(Array.isArray(props.rooms) && props.rooms.length !== 0){
     roomList =
       props.rooms.map(room => {
-        const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room' : '';
+        const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
         return(
           <div key={room} className={buttonClass}>
             {room} <button onClick={(e)=>props.handleJoinRoomClick(e, room)}>Join</button>

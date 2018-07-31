@@ -67,6 +67,24 @@
   padding: 7px 5px;
   min-width: 250px;
 }
+.room-list{
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  padding: 6px 4px;
+  
+  background-color: lightyellow;
+  border-radius: 7px;
+}
+.room-list button{
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  border-radius: 4px;
+  background-color: lightgrey;
+}
+.room-list button:hover{
+  background-color: rgb(35, 133, 194)
+}
 .confirmed-room{
-  color: red;
+  background-color: rgb(64, 177, 247);
+  padding-left: 10px;
 }
