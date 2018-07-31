@@ -193,14 +193,17 @@ const NameInput = (props) => {
             content={props.playerName}
             placeholder={'Enter a name!'}
           />
+          {playerNameConfirmed !== '' && 
+            <button type='button' className='name-input-button leave' onClick={props.handleIsChangeNameFalse}>Leave</button>
+          }
         </form>
       :
         <span className='input-container name-confirmed'>
           <div>
-            Your name is {playerNameConfirmed}!
+            Your name is: {playerNameConfirmed}
           </div>
-          <div>
-            <button onClick={props.handleIsChangeNameToggle}>Change name</button>
+          <div className='input-form'>
+            <button className='name-input-button' onClick={props.handleIsChangeName}>Change name</button>
           </div>
         </span>
       }
@@ -243,7 +246,8 @@ class GameContainer extends Component{
     };
     this.handlePlayerNameChange = this.handlePlayerNameChange.bind(this);
     this.handlePlayerNameSubmit = this.handlePlayerNameSubmit.bind(this);
-    this.handleIsChangeNameToggle = this.handleIsChangeNameToggle.bind(this);
+    this.handleIsChangeName = this.handleIsChangeName.bind(this);
+    this.handleIsChangeNameFalse = this.handleIsChangeNameFalse.bind(this);
     this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
     this.handleRoomNameSubmit = this.handleRoomNameSubmit.bind(this);
     this.handleSquareClick = this.handleSquareClick.bind(this);
@@ -287,17 +291,25 @@ class GameContainer extends Component{
   handlePlayerNameChange(e) {
     this.setState({ playerName: e.target.value });
   }
-  handleIsChangeNameToggle() {
+  handleIsChangeName() {
     this.setState({isChangingName: true})
+  }
+  handleIsChangeNameFalse() {
+    this.setState({isChangingName: false})
   }
   handleRoomNameChange(e) {
     this.setState({ roomName: e.target.value });
   }
   handlePlayerNameSubmit(e) {
+    const {playerName, playerData} = this.state;
     e.preventDefault();
-    this.state.socket.emit('set-name', this.state.playerName, () => {
-      this.setState({isChangingName: false})
-    });
+    if(playerName !== playerData.name && playerName !== ''){
+      this.state.socket.emit('set-name', this.state.playerName, () => {
+        this.setState({isChangingName: false})
+      });
+    } else {
+      console.log('name is empty or the same')
+    }
   }
   handleRoomNameSubmit(e) {
     e.preventDefault();
@@ -341,7 +353,8 @@ class GameContainer extends Component{
             isChangingName = {isChangingName} 
             handlePlayerNameChange = {this.handlePlayerNameChange}
             handlePlayerNameSubmit = {this.handlePlayerNameSubmit}
-            handleIsChangeNameToggle = {this.handleIsChangeNameToggle}
+            handleIsChangeName = {this.handleIsChangeName}
+            handleIsChangeNameFalse = {this.handleIsChangeNameFalse}
             playerName={this.state.playerName}
           />
           {

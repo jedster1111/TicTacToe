@@ -4,6 +4,7 @@
 }
 .input-container {
   display: flex;
+  flex-direction: column;
   width: 65%;
   padding: 20px 0px;
   margin: 10px 5px;
@@ -14,12 +15,12 @@
   border-radius: 10px;
 }
 .input-container.name{
-  background-color: red;
+  background-color: lightskyblue;
 }
 .input-form {
   width: 95%;
 }
-.input-form input{
+.input-form input, .input-form button{
   border:none;
   outline: none;
   box-shadow: 0 0 1px 1px black; 
@@ -38,7 +39,7 @@
   outline-offset: 0;
   box-shadow: 0 0 0 1.5px black;
 }
-.input-form .single-input-submit-button {
+.input-form .single-input-submit-button, .name-input-button {
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
   display: block;
@@ -49,14 +50,17 @@
   text-decoration: none;
   background-color: #fff;
 }
-.input-form .single-input-submit-button:hover {
-  background-color: lightgoldenrodyellow;
+.input-form .single-input-submit-button:hover, .name-input-button:hover {
+  background-color: lightgreen;
   box-shadow: 0 0 0 1.5px;
+}
+.name-input-button.leave:hover {
+  background-color: lightcoral;
 }
 .single-input-label {
   margin-right: 5px;
 }
 .input-container.name-confirmed {
-  background-color: lightblue;
+  background-color: lightcyan;
   padding: 7px 5px;
 }

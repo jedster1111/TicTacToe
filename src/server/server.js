@@ -265,7 +265,7 @@ io.on('connection', client => {
     clientConnect(client, player);
     client.on('set-name', (name, callback) => {
         player.setName(name.trim());
-        callback && callback();
+        callback && (name !== '') && callback();
     });
     client.on('join-room', (roomName) => {
         player.joinRoom(roomName.trim());
