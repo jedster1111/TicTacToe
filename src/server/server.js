@@ -181,7 +181,6 @@ class Player {
     }
     joinRoom(roomName, setState) {
         if (roomName !== '' && this.room.name !== roomName) {
-            setState();
             if(this.isInRoom){
                 this.client.leave(this.room.name);
                 this.room.playerLeft(this);
@@ -200,6 +199,7 @@ class Player {
                 this.room.playerJoined(this);
             }
             this.emitData();
+            setState();
         }
     }
     leaveRoom() {
@@ -218,9 +218,9 @@ class Player {
     setName(name, setState) {
         if(name && name !== this.name){
             this.name = name;
-            setState();
             this.emitData();
             this.emitDataToPlayers();
+            setState();
         }
     }
     setTeam(team) {
