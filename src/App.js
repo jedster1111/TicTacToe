@@ -213,7 +213,7 @@ const RoomList = (props) => {
   }
   else{
     roomList = 
-      <h1>No rooms yet</h1>
+      <h4>No rooms yet</h4>
   }
   return roomList;
 }

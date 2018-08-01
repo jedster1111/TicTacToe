@@ -70,8 +70,7 @@
 .room-list{
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
-  padding: 6px 4px;
-  
+  padding: 6px 6px;
   background-color: lightyellow;
   border-radius: 7px;
 }
