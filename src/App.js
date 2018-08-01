@@ -199,18 +199,37 @@ const NameInput = (props) => {
   )
 }
 const RoomList = (props) => {
-  let roomList;
+  let roomList = [];
   if(Array.isArray(props.roomsFiltered) && props.roomsFiltered.length !== 0){
-    roomList = props.roomsFiltered.map(room => {
-        const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
-        return(
-          <div key={room} className={buttonClass}>
-            {room} <button onClick={(e)=>props.handleJoinRoomClick(e, room)}>Join</button>
-          </div>
-        )
-      })
+    roomList.push(
+      <div key='roomsFiltered' className='rooms-filtered'>
+        {props.roomsFiltered.map((room) => {
+          const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
+          return(
+            <div key={room} className={buttonClass}>
+              {room}
+              <button onClick={(e)=>props.handleJoinRoomClick(e, room)}>Join</button>
+            </div>
+          )
+        })}
+      </div>
+    )
   }
-  else{
+  if(Array.isArray(props.roomsRemaining) && props.roomsRemaining.length !== 0) {
+    roomList.push(
+      <div key='roomsRemaining' className='rooms-remaining'>
+        {props.roomsRemaining.map((room) => {
+          const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
+          return(
+            <div key={room} className={buttonClass}>
+              {room} <button onClick={(e)=>props.handleJoinRoomClick(e, room)}>Join</button>
+            </div>
+          );
+        })}
+      </div>
+    )
+  }
+  if(!roomList){
     roomList = 
       <h4>No rooms yet</h4>
   }
@@ -220,6 +239,7 @@ const RoomInput = (props) => {
   const {roomNameConfirmed, rooms, roomName} = props;
   const roomNameCleaned = roomName.toLowerCase().trim();
   const roomsFiltered = rooms.filter(room => room.toLowerCase().includes(roomNameCleaned));
+  const roomsRemaining = rooms.filter(room => !room.toLowerCase().includes(roomNameCleaned));
   const submitText = roomsFiltered.indexOf(roomNameCleaned) === -1 ? 'Create' : 'Join';
   const inputClass = roomNameConfirmed ? `room ${submitText.toLowerCase()}` : `no-room ${submitText.toLowerCase()}`;
   const containerClass = 'input-container ' + (roomNameConfirmed ? 'room' : 'no-room');
@@ -240,6 +260,7 @@ const RoomInput = (props) => {
         <RoomList
           rooms={rooms}
           roomsFiltered={roomsFiltered}
+          roomsRemaining={roomsRemaining}
           roomNameConfirmed={roomNameConfirmed}
           handleJoinRoomClick={props.handleJoinRoomClick}
         />
@@ -346,7 +367,7 @@ class GameContainer extends Component{
     const roomNameTrimmed = roomName.trim().replace(/\s{2,}/g, ' ').replace(/^\s+/g, '');
     if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== '') {
       this.state.socket.emit('join-room', roomNameTrimmed, () => {
-        this.setState({roomName: ''});
+        //this.setState({roomName: ''});
       });
     }
   }
@@ -356,7 +377,7 @@ class GameContainer extends Component{
     const roomNameTrimmed = name.trim().replace(/\s{2,}/g, ' ').replace(/^\s+/g, '');
     if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== '') {
       this.state.socket.emit('join-room', roomNameTrimmed, () => {
-        this.setState({roomName: ''});
+        //this.setState({roomName: ''});
       });
     }
   }
