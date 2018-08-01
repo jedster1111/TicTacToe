@@ -9,6 +9,7 @@ const ENVIRONMENT = process.env.NODE_ENV || 'development';
 const SingleInput = (props) => {
   let inputClass = 'single-input-text-box';
   let submitClass = 'single-input-submit-button';
+  let submitText = props.submitText || 'Submit';
   if(props.classes){
     inputClass += ' ' + props.classes;
     submitClass += ' ' + props.classes;
@@ -25,7 +26,7 @@ const SingleInput = (props) => {
         autoComplete='off'
         maxLength={30}
       />
-      <input type="submit" value="Submit" className = {submitClass}/>
+      <input type="submit" value={submitText} className = {submitClass}/>
     </React.Fragment>
   )
 }
@@ -131,7 +132,7 @@ const Square = (props) => (
 
 class Board extends Component{
   renderSquare = (i) => {
-    return (
+    return(
       <Square 
         value = {this.props.squares[i]}
         key = {i}
@@ -217,10 +218,13 @@ const RoomList = (props) => {
 }
 const RoomInput = (props) => {
   const {roomNameConfirmed, rooms, roomName} = props;
-  const roomsFiltered = rooms.filter(room => room.toLowerCase().includes(roomName.toLowerCase()));
-  const inputClass = roomNameConfirmed ? 'room' : 'no-room';
+  const roomNameCleaned = roomName.toLowerCase().trim();
+  const roomsFiltered = rooms.filter(room => room.toLowerCase().includes(roomNameCleaned));
+  const submitText = roomsFiltered.indexOf(roomNameCleaned) === -1 ? 'Create' : 'Join';
+  const inputClass = roomNameConfirmed ? `room ${submitText.toLowerCase()}` : `no-room ${submitText.toLowerCase()}`;
   const containerClass = 'input-container ' + (roomNameConfirmed ? 'room' : 'no-room');
   const formClass = 'input-form ' + (roomNameConfirmed ? 'room' : 'no-room');
+ 
   return(
     <div className={containerClass}>
       <form onSubmit={props.handleRoomNameSubmit} className={formClass}>
@@ -228,6 +232,7 @@ const RoomInput = (props) => {
           classes = {inputClass}
           title = 'Room Name'
           name = 'roomName'
+          submitText = {submitText}
           controlFunc = {props.handleRoomNameChange}
           content = {props.roomName}
           placeholder = {'Enter a room!'}

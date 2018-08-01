@@ -53,6 +53,11 @@
   text-decoration: none;
   background-color: #fff;
 }
+.input-form .single-input-submit-button.join{
+  background-color:rgb(194, 238, 194);
+  width:50%;
+}
+
 .input-form .single-input-submit-button:hover, .name-input-button:hover {
   background-color: lightgreen;
   box-shadow: 0 0 0 1.5px;
