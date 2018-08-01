@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import './App.css';
 import io from "socket.io-client";
+import {findBestMatch} from "string-similarity";
 import {Transition, animated} from 'react-spring';
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 //console.log(ENVIRONMENT);
@@ -235,11 +236,29 @@ const RoomList = (props) => {
   }
   return roomList;
 }
+
 const RoomInput = (props) => {
+  const rankStringArray = (target, strings) => {
+    if(Array.isArray(strings) && strings.length !== 0){
+      return(
+        findBestMatch(target, strings).ratings.sort(
+          (a,b) => {return(b.rating - a.rating)}
+        )
+      )
+    } else {
+      return(
+        []
+      )
+    }
+  }
   const {roomNameConfirmed, rooms, roomName} = props;
   const roomNameCleaned = roomName.toLowerCase().trim();
   const roomsFiltered = rooms.filter(room => room.toLowerCase().includes(roomNameCleaned));
   const roomsRemaining = rooms.filter(room => !room.toLowerCase().includes(roomNameCleaned));
+  const stringSimilarityMatches = rankStringArray(roomNameCleaned, roomsRemaining);
+  const roomsRemainingSorted = stringSimilarityMatches.map(
+    word => word.target
+  );
   const submitText = roomsFiltered.indexOf(roomNameCleaned) === -1 ? 'Create' : 'Join';
   const inputClass = roomNameConfirmed ? `room ${submitText.toLowerCase()}` : `no-room ${submitText.toLowerCase()}`;
   const containerClass = 'input-container ' + (roomNameConfirmed ? 'room' : 'no-room');
@@ -260,7 +279,7 @@ const RoomInput = (props) => {
         <RoomList
           rooms={rooms}
           roomsFiltered={roomsFiltered}
-          roomsRemaining={roomsRemaining}
+          roomsRemaining={roomsRemainingSorted}
           roomNameConfirmed={roomNameConfirmed}
           handleJoinRoomClick={props.handleJoinRoomClick}
         />
