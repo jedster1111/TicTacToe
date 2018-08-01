@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import './App.css';
 import io from "socket.io-client";
 import {findBestMatch} from "string-similarity";
-import {Transition, animated} from 'react-spring';
+import {} from 'react-spring';
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 //console.log(ENVIRONMENT);
 (ENVIRONMENT === 'development') && console.log("You are running in DEV mode");
@@ -166,8 +166,8 @@ class Board extends Component{
 }
 
 const NameInput = (props) => {
-  const {playerNameConfirmed, isChangingName} = props;
-  const inputClass = playerNameConfirmed ? 'name' : 'no-name';
+  const {playerNameConfirmed, isChangingName, playerName} = props;
+  const inputClass = playerNameConfirmed ? (playerNameConfirmed === playerName ? 'name same-name' : 'name') : 'no-name';
   const containerClass = 'input-container ' + (playerNameConfirmed ? 'name' : 'no-name');
   const formClass = 'input-form ' + (playerNameConfirmed ? 'name' : 'no-name');
   return(
@@ -205,11 +205,12 @@ const RoomList = (props) => {
     roomList.push(
       <div key='roomsFiltered' className='rooms-filtered'>
         {props.roomsFiltered.map((room) => {
-          const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
+          const containerClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
+          const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room-button' : 'room-button';
           return(
-            <div key={room} className={buttonClass}>
+            <div key={room} className={containerClass}>
               {room}
-              <button onClick={(e)=>props.handleJoinRoomClick(e, room)}>Join</button>
+              <button onClick={(e)=>props.handleJoinRoomClick(e, room)} className={buttonClass}>Join</button>
             </div>
           )
         })}
@@ -252,14 +253,14 @@ const RoomInput = (props) => {
     }
   }
   const {roomNameConfirmed, rooms, roomName} = props;
-  const roomNameCleaned = roomName.toLowerCase().trim();
-  const roomsFiltered = rooms.filter(room => room.toLowerCase().includes(roomNameCleaned));
-  const roomsRemaining = rooms.filter(room => !room.toLowerCase().includes(roomNameCleaned));
+  const roomNameCleaned = roomName.trim();
+  const roomsFiltered = rooms.filter(room => room.includes(roomNameCleaned));
+  const roomsRemaining = rooms.filter(room => !room.includes(roomNameCleaned));
   const stringSimilarityMatches = rankStringArray(roomNameCleaned, roomsRemaining);
   const roomsRemainingSorted = stringSimilarityMatches.map(
     word => word.target
   );
-  const submitText = roomsFiltered.indexOf(roomNameCleaned) === -1 ? 'Create' : 'Join';
+  const submitText = roomsFiltered.indexOf(roomNameCleaned) === -1 ? 'Create' : (roomNameCleaned !== roomNameConfirmed ? 'Join' : 'Joined');
   const inputClass = roomNameConfirmed ? `room ${submitText.toLowerCase()}` : `no-room ${submitText.toLowerCase()}`;
   const containerClass = 'input-container ' + (roomNameConfirmed ? 'room' : 'no-room');
   const formClass = 'input-form ' + (roomNameConfirmed ? 'room' : 'no-room');

@@ -12,7 +12,6 @@
   padding: 20px 0px;
   margin: 10px 5px;
   background-color: greenyellow;
-  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   border-radius: 10px;
@@ -61,6 +60,11 @@
 .input-form .single-input-submit-button:hover, .name-input-button:hover {
   background-color: lightgreen;
   box-shadow: 0 0 0 1.5px;
+}
+.input-form .single-input-submit-button.joined:hover,
+.input-form .single-input-submit-button.same-name:hover,
+.room-list button.confirmed-room-button:hover {
+  background-color: indianred;
 }
 .name-input-button.leave:hover {
   background-color: lightcoral;
