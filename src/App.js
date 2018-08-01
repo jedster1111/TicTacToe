@@ -221,10 +221,11 @@ const RoomList = (props) => {
     roomList.push(
       <div key='roomsRemaining' className='rooms-remaining'>
         {props.roomsRemaining.map((room) => {
-          const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
+          const containerClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
+          const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room-button' : 'room-button';
           return(
-            <div key={room} className={buttonClass}>
-              {room} <button onClick={(e)=>props.handleJoinRoomClick(e, room)}>Join</button>
+            <div key={room} className={containerClass}>
+              {room} <button onClick={(e)=>props.handleJoinRoomClick(e, room)}  className={buttonClass}>Join</button>
             </div>
           );
         })}
