@@ -199,7 +199,7 @@ const NameInput = (props) => {
 }
 const RoomList = (props) => {
   let roomList;
-  if(Array.isArray(props.rooms) && props.rooms.length !== 0){
+  if(Array.isArray(props.roomsFiltered) && props.roomsFiltered.length !== 0){
     roomList = props.roomsFiltered.map(room => {
         const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
         return(
@@ -350,7 +350,9 @@ class GameContainer extends Component{
     const {playerData} = this.state;
     const roomNameTrimmed = name.trim().replace(/\s{2,}/g, ' ').replace(/^\s+/g, '');
     if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== '') {
-      this.state.socket.emit('join-room', roomNameTrimmed);
+      this.state.socket.emit('join-room', roomNameTrimmed, () => {
+        this.setState({roomName: ''});
+      });
     }
   }
   handleSquareClick(i) {
