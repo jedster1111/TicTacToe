@@ -144,7 +144,6 @@ class Room {
         this.winner = null;
         this.pushData();
     }
-
 }
 class Player {
     constructor(socket) {
@@ -180,9 +179,9 @@ class Player {
             this.room.pushData();
         }
     }
-    joinRoom(roomName) {
+    joinRoom(roomName, setState) {
         if (roomName !== '' && this.room.name !== roomName) {
-            //if (this.room !== null) {
+            setState();
             if(this.isInRoom){
                 this.client.leave(this.room.name);
                 this.room.playerLeft(this);
@@ -216,9 +215,10 @@ class Player {
             this.room.reset();
         }
     }
-    setName(name) {
+    setName(name, setState) {
         if(name && name !== this.name){
             this.name = name;
+            setState();
             this.emitData();
             this.emitDataToPlayers();
         }
@@ -264,11 +264,10 @@ io.on('connection', client => {
     let player = new Player(client);
     clientConnect(client, player);
     client.on('set-name', (name, setState) => {
-        player.setName(name.trim().replace(/\s{2,}/g,' '));
-        setState && (name !== '') && setState();
+        player.setName(name.trim().replace(/\s{2,}/g,' '), setState);
     });
-    client.on('join-room', (roomName) => {
-        player.joinRoom(roomName.trim().replace(/\s{2,}/g,' '));
+    client.on('join-room', (roomName, setState) => {
+        player.joinRoom(roomName.trim().replace(/\s{2,}/g,' '), setState);
     });
     client.on('set-team', (team) => {
         player.setTeam(team)

@@ -1,13 +1,14 @@
 .game-container{
   display:flex;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
 }
 .input-container {
   display: flex;
   flex-direction: column;
-  width: 45%;
-  min-width: 300px;
+  width: 400px;
+  height: auto;
+  min-width: 250px;
   padding: 20px 0px;
   margin: 10px 5px;
   background-color: greenyellow;

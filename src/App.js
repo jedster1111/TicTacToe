@@ -200,8 +200,7 @@ const NameInput = (props) => {
 const RoomList = (props) => {
   let roomList;
   if(Array.isArray(props.rooms) && props.rooms.length !== 0){
-    roomList =
-      props.rooms.map(room => {
+    roomList = props.roomsFiltered.map(room => {
         const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
         return(
           <div key={room} className={buttonClass}>
@@ -209,7 +208,6 @@ const RoomList = (props) => {
           </div>
         )
       })
-      
   }
   else{
     roomList = 
@@ -218,7 +216,8 @@ const RoomList = (props) => {
   return roomList;
 }
 const RoomInput = (props) => {
-  const {roomNameConfirmed, rooms} = props;
+  const {roomNameConfirmed, rooms, roomName} = props;
+  const roomsFiltered = rooms.filter(room => room.toLowerCase().includes(roomName.toLowerCase()));
   const inputClass = roomNameConfirmed ? 'room' : 'no-room';
   const containerClass = 'input-container ' + (roomNameConfirmed ? 'room' : 'no-room');
   const formClass = 'input-form ' + (roomNameConfirmed ? 'room' : 'no-room');
@@ -233,7 +232,12 @@ const RoomInput = (props) => {
           content = {props.roomName}
           placeholder = {'Enter a room!'}
         />
-        <RoomList rooms={rooms} roomNameConfirmed={roomNameConfirmed} handleJoinRoomClick={props.handleJoinRoomClick} />
+        <RoomList
+          rooms={rooms}
+          roomsFiltered={roomsFiltered}
+          roomNameConfirmed={roomNameConfirmed}
+          handleJoinRoomClick={props.handleJoinRoomClick}
+        />
         {roomNameConfirmed && <div>You are in {roomNameConfirmed}</div>}
       </form>
     </div>
@@ -246,9 +250,9 @@ class GameContainer extends Component{
     this.state = {
       isConnected: false,
       isChangingName: true,
-      response: false,
       playerName: '',
       roomName: '',
+      rooms: [],
       playerData: {name: '', roomName: null, team: '', id: ''},
       roomData: {squares: Array(9).fill(null), players: [], currentPlayer: null, winner: null},
       socket: null,
@@ -294,7 +298,15 @@ class GameContainer extends Component{
     });
     socket.on('disconnect', () => {
       console.log('disconnected!!!');
-      this.setState({ isConnected: false, playerName: '', roomName: '' });
+      this.setState({
+        isConnected: false,
+        isChangingName: true,
+        playerName: '',
+        roomName: '',
+        rooms: [],
+        playerData: {name: '', roomName: null, team: '', id: ''},
+        roomData: {squares: Array(9).fill(null), players: [], currentPlayer: null, winner: null},
+       });
       this.handleIsChangeName();
     });
     this.setState({socket});
@@ -328,7 +340,9 @@ class GameContainer extends Component{
     const { roomName, playerData } = this.state;
     const roomNameTrimmed = roomName.trim().replace(/\s{2,}/g, ' ').replace(/^\s+/g, '');
     if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== '') {
-      this.state.socket.emit('join-room', roomNameTrimmed);
+      this.state.socket.emit('join-room', roomNameTrimmed, () => {
+        this.setState({roomName: ''});
+      });
     }
   }
   handleJoinRoomClick(e, name) {
@@ -368,7 +382,7 @@ class GameContainer extends Component{
     const isConnected = this.renderIsConnected();
     const playerNameConfirmed = this.state.playerData.name;
     const roomNameConfirmed = this.state.playerData.roomName;
-    const {isChangingName} = this.state;
+    const {isChangingName, roomName, rooms} = this.state;
     return (
       <Fragment>
         <div className='game-container'>
@@ -388,8 +402,8 @@ class GameContainer extends Component{
               handleRoomNameChange = {this.handleRoomNameChange}
               handleRoomNameSubmit = {this.handleRoomNameSubmit}
               handleJoinRoomClick = {this.handleJoinRoomClick}
-              roomName = {this.state.roomName}
-              rooms = {this.state.rooms}
+              roomName = {roomName}
+              rooms = {rooms}
           />}
         </div>
 
