@@ -61,6 +61,9 @@
   background-color: lightgreen;
   box-shadow: 0 0 0 1.5px;
 }
+.input-form .single-input-submit-button.joined{
+  width:50%;
+}
 .input-form .single-input-submit-button.joined:hover,
 .input-form .single-input-submit-button.same-name:hover,
 .room-list button.confirmed-room-button:hover {
