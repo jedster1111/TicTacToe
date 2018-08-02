@@ -1,5 +1,6 @@
 body{
-  background-color: cornsilk;
+  background-color: #E7F3F7;
+  color: #172121;
 }
 .game-container{
   display:flex;
@@ -13,12 +14,13 @@ body{
   height: auto;
   flex: 1 1 260px;
   min-width: 260px;
-  max-width: 600px;
+  max-width: 450px;
   padding: 20px 5px;
   margin: 10px 5px;
-  background-color: greenyellow;
+  background-color: #FFA0C9;
   align-items: center;
   flex-wrap: wrap;
+  border: rgba(34, 34, 34, 0.561) 2px solid;
   border-radius: 10px;
 }
 .input-container-name{
@@ -27,13 +29,11 @@ body{
 .input-container-room{
   flex: 1 1 260px;
 }
-.input-container.name{
-  background-color: lightskyblue;
-}
 .input-form {
   width: 95%;
 }
-.name-text {
+.name-text,
+.room-text {
   word-wrap: break-word;
   text-align: center;
   margin: 5px 0;
@@ -68,20 +68,22 @@ body{
   margin: 6px auto;
   font-size: 14px;
   text-decoration: none;
-  background-color: #fff;
+  background-color: rgb(172, 235, 172);
 }
 .input-form .single-input-submit-button.join{
-  background-color:rgb(194, 238, 194);
-  width:50%;
+  background-color: #6FD695;
+  width:47.5%;
 }
 
 .input-form .single-input-submit-button:hover, .name-input-button:hover {
-  background-color: lightgreen;
+  background-color: #6FD695;
   box-shadow: 0 0 0 1.5px;
+  width:50%;
 }
 .input-form .single-input-submit-button.joined,
 .input-form .single-input-submit-button.same-name:hover,
 .room-list button.confirmed-room-button {
+  width:40%;
   background-color: lightcoral;
 }
 .room-list button.confirmed-room-button{
@@ -101,7 +103,8 @@ body{
 .room-list-container{
   display:flex;
   flex-wrap: wrap;
-  background-color: rgb(255, 239, 239);
+  border: 1px solid rgb(10, 5, 5);
+  background-color: rgb(255, 221, 221);
   padding: 0 5px;
   border-radius: 8px;
 }
@@ -142,6 +145,6 @@ body{
   width: 60px;
 }
 .confirmed-room{
-  background-color: rgb(64, 177, 247);
+  background-color: #6ACBBC;
   padding-left: 10px;
 }

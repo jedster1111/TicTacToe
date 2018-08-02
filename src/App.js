@@ -230,18 +230,20 @@ const RoomList = (props) => {
           const buttonText = room === props.roomNameConfirmed ? 'Joined' : 'Join';
           return(
             <div key={room} className={containerClass}>
-              <div className='room-list-text'>{room}</div><button onClick={(e)=>props.handleJoinRoomClick(e, room)}  className={buttonClass}>{buttonText}</button>
+              <div className='room-list-text'>{room}</div>
+              <button onClick={(e)=>props.handleJoinRoomClick(e, room)}  className={buttonClass}>{buttonText}</button>
             </div>
-          );
+          )
         })}
       </div>
     )
   }
-  if(!roomList){
-    roomList = 
-      <h4>No rooms yet</h4>
+  if(Array.isArray(roomList) && roomList.length !== 0){
+    return <div className='room-list-container'>{roomList}</div>
   }
-  return (<div className='room-list-container'>{roomList}</div>);
+  else{
+    return <h4 className='room-text'>No rooms yet</h4>
+  }
 }
 
 const RoomInput = (props) => {
@@ -365,7 +367,7 @@ class GameContainer extends Component{
     this.setState({ playerName: e.target.value.replace(/\s{2,}/g,' ').replace(/^\s+/g,'') });
   }
   handleIsChangeName() {
-    this.setState({isChangingName: true})
+    this.setState({isChangingName: true, playerName: ''})
   }
   handleIsChangeNameFalse() {
     this.setState(({playerData}) => ({isChangingName: false, playerName: playerData.name}));
@@ -447,16 +449,14 @@ class GameContainer extends Component{
             handleIsChangeNameFalse = {this.handleIsChangeNameFalse}
             playerName={this.state.playerName}
           />
-          {
-            playerNameConfirmed &&
-            <RoomInput
-              roomNameConfirmed = {roomNameConfirmed}
-              handleRoomNameChange = {this.handleRoomNameChange}
-              handleRoomNameSubmit = {this.handleRoomNameSubmit}
-              handleJoinRoomClick = {this.handleJoinRoomClick}
-              roomName = {roomName}
-              rooms = {rooms}
-          />}
+          <RoomInput
+            roomNameConfirmed = {roomNameConfirmed}
+            handleRoomNameChange = {this.handleRoomNameChange}
+            handleRoomNameSubmit = {this.handleRoomNameSubmit}
+            handleJoinRoomClick = {this.handleJoinRoomClick}
+            roomName = {roomName}
+            rooms = {rooms}
+          />
         </div>
 
         
