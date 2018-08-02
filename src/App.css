@@ -89,6 +89,9 @@ body{
 .room-list button.confirmed-room-button{
   width: 65px;
 }
+.name-input-button.leave {
+  background-color: rgb(240, 166, 166);
+}
 .name-input-button.leave:hover {
   background-color: lightcoral;
 }

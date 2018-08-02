@@ -108,7 +108,6 @@ const PlayersDisplay = (props) => {
     </div>
   );
 }
-
 class GameInfo extends Component{
   render(){
     return (
@@ -124,13 +123,11 @@ class GameInfo extends Component{
     );
   }
 }
-
 const Square = (props) => (
     <button className = "square" onClick={props.onClick}>
       {props.value}
     </button>
 )
-
 class Board extends Component{
   renderSquare = (i) => {
     return(
@@ -164,7 +161,6 @@ class Board extends Component{
     );
   }
 }
-
 const NameInput = (props) => {
   const {playerNameConfirmed, isChangingName, playerName} = props;
   const inputClass = playerNameConfirmed ? (playerNameConfirmed === playerName ? 'name same-name' : 'name') : 'no-name';
@@ -245,7 +241,6 @@ const RoomList = (props) => {
     return <h4 className='room-text'>No rooms yet</h4>
   }
 }
-
 const RoomInput = (props) => {
   const rankStringArray = (target, strings) => {
     if(Array.isArray(strings) && strings.length !== 0){
@@ -449,6 +444,7 @@ class GameContainer extends Component{
             handleIsChangeNameFalse = {this.handleIsChangeNameFalse}
             playerName={this.state.playerName}
           />
+          
           <RoomInput
             roomNameConfirmed = {roomNameConfirmed}
             handleRoomNameChange = {this.handleRoomNameChange}
