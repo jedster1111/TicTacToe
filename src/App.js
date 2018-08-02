@@ -173,23 +173,26 @@ const NameInput = (props) => {
   return(
     <div className = {containerClass}>
       {isChangingName ?
-        <form onSubmit={props.handlePlayerNameSubmit} className={formClass}>
-          <SingleInput 
-            classes = {inputClass}
-            title = 'Player Name'
-            name='name'
-            controlFunc = {props.handlePlayerNameChange}
-            content={props.playerName}
-            placeholder={'Enter a name!'}
-          />
-          {playerNameConfirmed !== '' && 
-            <button type='button' className='name-input-button leave' onClick={props.handleIsChangeNameFalse}>Discard Changes</button>
-          }
-        </form>
+        <Fragment>
+          {playerNameConfirmed && <div className='name-text'>What name would you like <strong>{playerNameConfirmed}</strong>?</div>}
+            <form onSubmit={props.handlePlayerNameSubmit} className={formClass}>              
+              <SingleInput 
+                classes = {inputClass}
+                title = 'Player Name'
+                name='name'
+                controlFunc = {props.handlePlayerNameChange}
+                content={props.playerName}
+                placeholder={'Enter a name!'}
+              />
+              {playerNameConfirmed !== '' && 
+                <button type='button' className='name-input-button leave' onClick={props.handleIsChangeNameFalse}>Discard Changes</button>
+              }
+            </form>
+        </Fragment>
       :
         <Fragment>
-          <div>
-            Your name is: {playerNameConfirmed}
+          <div className='name-text'>
+            Welcome <strong>{playerNameConfirmed}</strong>
           </div>
           <div className='input-form'>
             <button className='name-input-button' onClick={props.handleIsChangeName}>Change name</button>
@@ -287,7 +290,6 @@ const RoomInput = (props) => {
           roomNameConfirmed={roomNameConfirmed}
           handleJoinRoomClick={props.handleJoinRoomClick}
         />
-        {roomNameConfirmed && <div>You are in {roomNameConfirmed}</div>}
       </form>
     </div>
   )

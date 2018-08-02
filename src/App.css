@@ -14,7 +14,7 @@ body{
   flex: 1 1 260px;
   min-width: 260px;
   max-width: 600px;
-  padding: 20px 0px;
+  padding: 20px 5px;
   margin: 10px 5px;
   background-color: greenyellow;
   align-items: center;
@@ -32,6 +32,13 @@ body{
 }
 .input-form {
   width: 95%;
+}
+.name-text {
+  word-wrap: break-word;
+  text-align: center;
+  margin: 5px 0;
+  box-sizing: border-box;
+  width: 100%;
 }
 .input-form input, .input-form button{
   border:none;
