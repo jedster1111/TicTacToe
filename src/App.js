@@ -1,128 +1,13 @@
 import React, { Component, Fragment } from 'react';
+import { SingleInput } from './SingleInput';
+import { GameInfo, NameAndRoomInput } from './OldGameInfo';
 import './App.css';
 import io from "socket.io-client";
 import {findBestMatch} from "string-similarity";
-import {} from 'react-spring';
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 //console.log(ENVIRONMENT);
 (ENVIRONMENT === 'development') && console.log("You are running in DEV mode");
 
-const SingleInput = (props) => {
-  let inputClass = 'single-input-text-box';
-  let submitClass = 'single-input-submit-button';
-  let submitText = props.submitText || 'Submit';
-  if(props.classes){
-    inputClass += ' ' + props.classes;
-    submitClass += ' ' + props.classes;
-  }
-  return(
-    <React.Fragment>
-      <input
-        name={props.name}
-        type="text"
-        value={props.content}
-        onChange={props.controlFunc}
-        placeholder={props.placeholder}
-        className={inputClass}
-        autoComplete='off'
-        maxLength={30}
-      />
-      <input type="submit" value={submitText} className = {submitClass}/>
-    </React.Fragment>
-  )
-}
-const NameAndRoomInput = (props) => (
-  <div>
-    <form onSubmit={props.handlePlayerNameSubmit}>
-      <h5>Player Name Input</h5>
-      <SingleInput 
-        title = {'Player Name'}
-        name = {'playerName'}
-        controlFunc = {props.handlePlayerNameChange}
-        content={props.playerName}
-        placeholder={'Enter your player name'}
-      />
-    </form>
-    <form onSubmit={props.handleRoomNameSubmit}>
-      <h5>Room Name Input</h5>
-      <SingleInput 
-        title = {'Room Name'}
-        name = {'roomName'}
-        controlFunc = {props.handleRoomNameChange}
-        content= {props.roomName}
-        placeholder={'Enter your room name'}
-      />
-    </form>
-  </div>
-)
-const TeamToggle = (props) => (
-  <div>
-    <button onClick={() => props.onClick('X')}>X</button>
-    <button onClick={() => props.onClick('O')}>O</button>
-    <button onClick={() => props.onClick('')}>Spectate</button>
-  </div>
-)
-const TeamList = (props) => (
-    props.team.map(player => <li key={player.id}>{player.name}</li>)
-);
-const PlayersDisplay = (props) => {
-  let player = props.player;
-  let XTeam = []; 
-  let OTeam = [];
-  let noTeam = [];
-  if(props.players.length > 0){
-    XTeam = props.players.filter(player => player.team === 'X');
-    OTeam = props.players.filter(player => player.team === 'O');
-    noTeam = props.players.filter(player => player.team === '');
-  }
-  else{
-    switch(player.team){
-      case 'X':
-        XTeam.push(player)
-        break;
-      case 'O':
-        OTeam.push(player)
-        break;
-      case '':
-        noTeam.push(player)
-        break;
-      default:
-        console.log('Invalid team');
-        break;
-    }
-  }
-  return(
-    <div>
-      X players
-      <ul>
-        <TeamList team={XTeam} />
-      </ul>
-      O players
-      <ul>
-        <TeamList team={OTeam} />
-      </ul>
-      Spectators
-      <ul>
-        <TeamList team={noTeam} />
-      </ul>
-    </div>
-  );
-}
-class GameInfo extends Component{
-  render(){
-    return (
-      <div>
-        <TeamToggle onClick={this.props.onTeamToggleClick}/>
-        <button onClick={()=>this.props.onResetClick()}>Reset Room</button>
-        <button onClick={()=>this.props.onLeaveRoomClick()}>Leave Room</button>
-        <div>You are in room: {this.props.player.roomName}</div>
-        <div>It is {this.props.room.currentPlayer}'s turn</div>
-        <div>The winner is: {this.props.room.winner}</div>
-        <PlayersDisplay player={this.props.player} players={this.props.room.players} />
-      </div>
-    );
-  }
-}
 const Square = (props) => (
     <button className = "square" onClick={props.onClick}>
       {props.value}
