@@ -1,6 +1,7 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
-.vscode/launch.json
+/vscode/launch.json
+/media
 
 # dependencies
 /node_modules

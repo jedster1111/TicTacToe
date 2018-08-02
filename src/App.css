@@ -1,20 +1,31 @@
+body{
+  background-color: cornsilk;
+}
 .game-container{
   display:flex;
   justify-content: center;
+  align-items: flex-start;
   flex-wrap: wrap;
 }
 .input-container {
   display: flex;
   flex-direction: column;
-  width: 400px;
   height: auto;
-  min-width: 250px;
+  flex: 1 1 260px;
+  min-width: 260px;
+  max-width: 600px;
   padding: 20px 0px;
   margin: 10px 5px;
   background-color: greenyellow;
   align-items: center;
   flex-wrap: wrap;
   border-radius: 10px;
+}
+.input-container-name{
+  flex: 2 1 260px;
+}
+.input-container-room{
+  flex: 1 1 260px;
 }
 .input-container.name{
   background-color: lightskyblue;
@@ -61,13 +72,13 @@
   background-color: lightgreen;
   box-shadow: 0 0 0 1.5px;
 }
-.input-form .single-input-submit-button.joined{
-  width:50%;
-}
-.input-form .single-input-submit-button.joined:hover,
+.input-form .single-input-submit-button.joined,
 .input-form .single-input-submit-button.same-name:hover,
-.room-list button.confirmed-room-button:hover {
-  background-color: indianred;
+.room-list button.confirmed-room-button {
+  background-color: lightcoral;
+}
+.room-list button.confirmed-room-button{
+  width: 65px;
 }
 .name-input-button.leave:hover {
   background-color: lightcoral;
@@ -80,31 +91,48 @@
   padding: 7px 5px;
   min-width: 250px;
 }
+.room-list-container{
+  display:flex;
+  flex-wrap: wrap;
+  background-color: rgb(255, 239, 239);
+  padding: 0 5px;
+  border-radius: 8px;
+}
+.room-list-container div{
+  box-sizing: border-box;
+  width:100%;
+  margin: 3px 0;
+  flex: 0 1 100%;
+}
 .room-list{
-  display: flex;
+  display:flex;
   justify-content: space-between;
+  align-items: center;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
-  padding: 6px 6px;
+  padding: 2px 6px;
   background-color: lightyellow;
-  border-radius: 7px;
-  margin: 1px;
+  border-radius: 3px;
+  margin: 2px 4px;
   border: 1px black solid;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+.room-list-text{
+  overflow:hidden;
 }
 .room-list button{
   -webkit-transition: all 0.1s;
   width: 50px;
   height: 20px;
+  margin-left: 8px;
   transition: all 0.1s;
   border-radius: 4px;
-  background-color: lightgrey;
-  margin-right: 10px;
+  background-color: lightgrey;  
 }
-.room-list button:hover{
-  background-color: rgb(35, 133, 194)
-}
-.rooms-filtered, .rooms-remaining{
-  margin: 10px 3px;
+.room-list .room-button:hover{
+  background-color: rgb(186, 221, 243);
+  width: 60px;
 }
 .confirmed-room{
   background-color: rgb(64, 177, 247);

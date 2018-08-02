@@ -168,7 +168,7 @@ class Board extends Component{
 const NameInput = (props) => {
   const {playerNameConfirmed, isChangingName, playerName} = props;
   const inputClass = playerNameConfirmed ? (playerNameConfirmed === playerName ? 'name same-name' : 'name') : 'no-name';
-  const containerClass = 'input-container ' + (playerNameConfirmed ? 'name' : 'no-name');
+  const containerClass = 'input-container input-container-name ' + (playerNameConfirmed ? 'name' : 'no-name');
   const formClass = 'input-form ' + (playerNameConfirmed ? 'name' : 'no-name');
   return(
     <div className = {containerClass}>
@@ -207,10 +207,11 @@ const RoomList = (props) => {
         {props.roomsFiltered.map((room) => {
           const containerClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
           const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room-button' : 'room-button';
+          const buttonText = room === props.roomNameConfirmed ? 'Joined' : 'Join';
           return(
             <div key={room} className={containerClass}>
-              {room}
-              <button onClick={(e)=>props.handleJoinRoomClick(e, room)} className={buttonClass}>Join</button>
+              <div className='room-list-text'>{room}</div>
+              <button onClick={(e)=>props.handleJoinRoomClick(e, room)} className={buttonClass}>{buttonText}</button>
             </div>
           )
         })}
@@ -223,9 +224,10 @@ const RoomList = (props) => {
         {props.roomsRemaining.map((room) => {
           const containerClass = room === props.roomNameConfirmed ? 'confirmed-room room-list' : 'room-list';
           const buttonClass = room === props.roomNameConfirmed ? 'confirmed-room-button' : 'room-button';
+          const buttonText = room === props.roomNameConfirmed ? 'Joined' : 'Join';
           return(
             <div key={room} className={containerClass}>
-              {room} <button onClick={(e)=>props.handleJoinRoomClick(e, room)}  className={buttonClass}>Join</button>
+              <div className='room-list-text'>{room}</div><button onClick={(e)=>props.handleJoinRoomClick(e, room)}  className={buttonClass}>{buttonText}</button>
             </div>
           );
         })}
@@ -236,7 +238,7 @@ const RoomList = (props) => {
     roomList = 
       <h4>No rooms yet</h4>
   }
-  return roomList;
+  return (<div className='room-list-container'>{roomList}</div>);
 }
 
 const RoomInput = (props) => {
@@ -263,7 +265,7 @@ const RoomInput = (props) => {
   );
   const submitText = roomsFiltered.indexOf(roomNameCleaned) === -1 ? 'Create' : (roomNameCleaned !== roomNameConfirmed ? 'Join' : 'Joined');
   const inputClass = roomNameConfirmed ? `room ${submitText.toLowerCase()}` : `no-room ${submitText.toLowerCase()}`;
-  const containerClass = 'input-container ' + (roomNameConfirmed ? 'room' : 'no-room');
+  const containerClass = 'input-container input-container-room ' + (roomNameConfirmed ? 'room' : 'no-room');
   const formClass = 'input-form ' + (roomNameConfirmed ? 'room' : 'no-room');
  
   return(
@@ -290,7 +292,6 @@ const RoomInput = (props) => {
     </div>
   )
 }
-
 class GameContainer extends Component{
   constructor(props){
     super(props);
