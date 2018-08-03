@@ -1,7 +1,11 @@
 {
   "name": "tic-tac-toe",
+  "description": "a multiplayer tictactoe website",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "npm": "6.3.0"
+  },
   "dependencies": {
     "ajv": "^6.5.2",
     "express": "^4.16.3",
