@@ -51,6 +51,7 @@
   width:42.5%;
 }
 .input-form>.single-input-submit-button.invalid:hover{
+  background-color:lightcoral;
   width:40%;
 }
 .single-input-submit-button.join{
