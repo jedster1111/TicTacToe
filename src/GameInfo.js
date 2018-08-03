@@ -142,7 +142,7 @@ export const NameInput = (props) => {
             Welcome <strong>{playerNameConfirmed}</strong>
           </div>
           <div className='input-form'>
-            <button className='name-input-button' onClick={props.handleIsChangeName}>Change name</button>
+            <button className='name-input-button' onClick={props.handleIsChangeName}>Change Name</button>
           </div>
         </Fragment>
       }
