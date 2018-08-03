@@ -1,4 +1,5 @@
 import React from 'react';
+import './SingleInput.css';
 export const SingleInput = (props) => {
   let inputClass = 'single-input-text-box';
   let submitClass = 'single-input-submit-button';

@@ -1,0 +1,32 @@
+.single-input-text-box {
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+	display: block;
+	border: none;
+	outline: none;
+  width:85%;
+  padding: 5px 0;
+  margin: 0 auto;
+	text-align: center;
+	border-radius: 7px;
+	border: 1px solid rgba(78, 78, 78, 0.89)
+}
+.single-input-text-box:focus {
+	border-color: black;
+	box-shadow: 0 0 2px 0 black;
+}
+.single-input-submit-button {
+	-webkit-transition: all 0.2s;
+	transition: all 0.2s;
+	display: block;
+	border: none;
+	border-radius: 7px;
+	outline: none;
+  width:45%;
+  padding: 5px 0;
+  margin: 6px auto;
+  font-size: 14px;
+  text-decoration: none;
+	background-color: rgb(188, 238, 188);
+	box-shadow: 0 0 1px 1px #000;
+}

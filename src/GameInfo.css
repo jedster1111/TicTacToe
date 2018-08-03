@@ -1,15 +1,34 @@
+.input-form button{
+	border: none;
+  outline: none;
+  -webkit-transition: all 0.2s;
+	transition: all 0.2s;
+  border-radius: 7px;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 0 1px 1px #000;
+}
+.input-form>input[type=submit],
+.input-form>button{
+  display: block;
+  width:45%;
+  padding: 5px 0;
+  margin: 6px auto;
+	background-color: rgb(188, 238, 188);
+}
 .room-list-container {
   display:flex;
   flex-wrap:wrap;
   border:1px solid rgb(10,5,5);
   background-color: rgb(255, 221, 221);
-  padding: 0 5px;
+  padding: 3px 8px;
+  margin: 0 10px;
   border-radius: 8px;
 }
 .room-list-container>div {
   box-sizing: border-box;
   width:100%;
-  margin: 3px 0;
+  margin: 2px 0;
 }
 .room-list-container>div .room-list{
   display:flex;
@@ -18,7 +37,7 @@
   -webkit-transition: all 0.2s;
 	transition: all 0.2s;
 	margin: 3px 0;
-  padding: 5px 7px;
+  padding: 4px 7px;
   background-color: lightyellow;
   border-radius: 3px;
   border: 1px black solid;
@@ -32,7 +51,7 @@
 .room-list button{
 	overflow: hidden;
   -webkit-transition: all 0.1s;
-  width: 50px;
+  width: 53px;
   height: 20px;
   margin-left: 8px;
   transition: all 0.1s;
@@ -41,11 +60,11 @@
 }
 .room-list button:hover {
 	background-color: rgb(186, 221, 243);
-	width: 55px;
+	width: 58px;
 }
 .room-list button.confirmed {
 	background-color: lightcoral;
-	width: 60px;
+	width: 63px;
 }
 .room-list-text{
   overflow:hidden;
