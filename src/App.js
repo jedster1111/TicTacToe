@@ -151,7 +151,7 @@ class GameContainer extends Component{
     const {isChangingName, roomName, rooms} = this.state;
     return (
       <Fragment>
-        <div className='game-container'>
+        <div className='name-room-container'>
           <NameInput
             playerNameConfirmed = {playerNameConfirmed}
             isChangingName = {isChangingName} 
@@ -160,8 +160,7 @@ class GameContainer extends Component{
             handleIsChangeName = {this.handleIsChangeName}
             handleIsChangeNameFalse = {this.handleIsChangeNameFalse}
             playerName={this.state.playerName}
-          />
-          
+          />          
           <RoomInput
             roomNameConfirmed = {roomNameConfirmed}
             handleRoomNameChange = {this.handleRoomNameChange}
@@ -169,6 +168,12 @@ class GameContainer extends Component{
             handleJoinRoomClick = {this.handleJoinRoomClick}
             roomName = {roomName}
             rooms = {rooms}
+          />
+        </div>
+        <div>
+          <Board
+              squares={squares}
+              onClick = {this.handleSquareClick}
           />
         </div>
 

@@ -2,7 +2,7 @@ body{
   background-color: #E7F3F7;
   color: #172121;
 }
-.game-container{
+.name-room-container{
   display:flex;
   justify-content: center;
   align-items: flex-start;
