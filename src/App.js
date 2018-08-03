@@ -1,53 +1,12 @@
 import React, { Component, Fragment } from 'react';
-import { SingleInput } from './SingleInput';
 import { GameInfo, NameAndRoomInput } from './OldGameInfo';
+import { RoomInput, NameInput, RoomList } from './GameInfo';
 import { Board } from './Board';
 import './App.css';
 import io from "socket.io-client";
-import {findBestMatch} from "string-similarity";
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 //console.log(ENVIRONMENT);
 (ENVIRONMENT === 'development') && console.log("You are running in DEV mode");
-
-
-const NameInput = (props) => {
-  const {playerNameConfirmed, isChangingName, playerName} = props;
-  const inputClass = playerNameConfirmed ? (playerNameConfirmed === playerName ? 'name same-name' : 'name') : 'no-name';
-  const containerClass = 'input-container input-container-name ' + (playerNameConfirmed ? 'name' : 'no-name');
-	const formClass = 'input-form ' + (playerNameConfirmed ? 'name' : 'no-name');
-  return(
-    <div className = {containerClass}>
-      {isChangingName ?
-        <Fragment>
-          {playerNameConfirmed && <div className='name-text'>What name would you like <strong>{playerNameConfirmed}</strong>?</div>}
-            <form onSubmit={props.handlePlayerNameSubmit} className={formClass}>              
-              <SingleInput 
-                classes = {inputClass}
-                title = 'Player Name'
-                name='name'
-                controlFunc = {props.handlePlayerNameChange}
-                content={props.playerName}
-                placeholder={'Enter a name!'}
-              />
-              {playerNameConfirmed !== '' && 
-                <button type='button' className='name-input-button leave' onClick={props.handleIsChangeNameFalse}>Discard Changes</button>
-              }
-            </form>
-        </Fragment>
-      :
-        <Fragment>
-          <div className='name-text'>
-            Welcome <strong>{playerNameConfirmed}</strong>
-          </div>
-          <div className='input-form'>
-            <button className='name-input-button' onClick={props.handleIsChangeName}>Change name</button>
-          </div>
-        </Fragment>
-      }
-    </div>
-  )
-}
-
 
 class GameContainer extends Component{
   constructor(props){

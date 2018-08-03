@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {Fragment} from 'react';
+import {findBestMatch} from 'string-similarity';
 import {SingleInput} from './SingleInput';
 
-const RoomList = (props) => {
+export const RoomList = (props) => {
   let roomList = [];
   if(Array.isArray(props.roomsFiltered) && props.roomsFiltered.length !== 0){
     roomList.push(
@@ -44,7 +45,7 @@ const RoomList = (props) => {
     return <h4 className='room-text'>No rooms yet</h4>
   }
 }
-const RoomInput = (props) => {
+export const RoomInput = (props) => {
   const rankStringArray = (target, strings) => {
     if(Array.isArray(strings) && strings.length !== 0){
       return(
@@ -67,7 +68,7 @@ const RoomInput = (props) => {
     }
   const {roomNameConfirmed, rooms, roomName} = props;
   const roomNameCleaned = roomName.trim();
-    const roomsFiltered = rooms.filter(room => room.includes(roomNameCleaned));
+  const roomsFiltered = rooms.filter(room => room.includes(roomNameCleaned));
   const roomsRemaining = rooms.filter(room => !room.includes(roomNameCleaned));
   const roomsRemainingSorted = sortArray(roomNameCleaned, roomsRemaining);
   const submitText = roomsFiltered.indexOf(roomNameCleaned) === -1 ? 'Create' : (roomNameCleaned !== roomNameConfirmed ? 'Join' : 'Joined');
@@ -97,4 +98,41 @@ const RoomInput = (props) => {
       </form>
     </div>
   );
+}
+export const NameInput = (props) => {
+  const {playerNameConfirmed, isChangingName, playerName} = props;
+  const inputClass = playerNameConfirmed ? (playerNameConfirmed === playerName ? 'name same-name' : 'name') : 'no-name';
+  const containerClass = 'input-container input-container-name ' + (playerNameConfirmed ? 'name' : 'no-name');
+	const formClass = 'input-form ' + (playerNameConfirmed ? 'name' : 'no-name');
+  return(
+    <div className = {containerClass}>
+      {isChangingName ?
+        <Fragment>
+          {playerNameConfirmed && <div className='name-text'>What name would you like <strong>{playerNameConfirmed}</strong>?</div>}
+            <form onSubmit={props.handlePlayerNameSubmit} className={formClass}>              
+              <SingleInput 
+                classes = {inputClass}
+                title = 'Player Name'
+                name='name'
+                controlFunc = {props.handlePlayerNameChange}
+                content={props.playerName}
+                placeholder={'Enter a name!'}
+              />
+              {playerNameConfirmed !== '' && 
+                <button type='button' className='name-input-button leave' onClick={props.handleIsChangeNameFalse}>Discard Changes</button>
+              }
+            </form>
+        </Fragment>
+      :
+        <Fragment>
+          <div className='name-text'>
+            Welcome <strong>{playerNameConfirmed}</strong>
+          </div>
+          <div className='input-form'>
+            <button className='name-input-button' onClick={props.handleIsChangeName}>Change name</button>
+          </div>
+        </Fragment>
+      }
+    </div>
+  )
 }
