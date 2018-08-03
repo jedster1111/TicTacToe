@@ -48,6 +48,10 @@
 }
 .single-input-submit-button.invalid{
   background-color:rgb(240, 166, 166);
+  width:42.5%;
+}
+.input-form>.single-input-submit-button.invalid:hover{
+  width:40%;
 }
 .single-input-submit-button.join{
   background-color: #6FD695;
@@ -57,7 +61,6 @@
   width:50%;
 }
 .name-input-button.invalid:hover,
-.single-input-submit-button.invalid:hover,
 .single-input-submit-button.joined {
   width:42.5%;
   background-color: lightcoral;
@@ -120,7 +123,7 @@
 }
 .room-list.confirmed-room {
   background-color: #6ACBBC;
-  padding-left: 10px;
+  padding-left: 12px;
 }
 .room-list button{
   -webkit-transition: all 0.1s;
