@@ -83,10 +83,11 @@ export const RoomInput = (props) => {
   const roomsRemaining = rooms.filter(room => !room.includes(roomNameCleaned));
   const roomsRemainingSorted = sortArray(roomNameCleaned, roomsRemaining);
   const submitText = roomsFiltered.indexOf(roomNameCleaned) === -1 ? 'Create' : (roomNameCleaned !== roomNameConfirmed ? 'Join' : 'Joined');
-  const inputClass = roomNameConfirmed ? `room ${submitText.toLowerCase()}` : `no-room ${submitText.toLowerCase()}`;
+  let inputClass = roomNameConfirmed ? `room` : `no-room`;
+  inputClass += (roomName && roomNameCleaned !== roomNameConfirmed) ? ' valid' : ' invalid';
+  inputClass += ` ${submitText.toLowerCase()}`;
   const containerClass = 'input-container input-container-room ' + (roomNameConfirmed ? 'room' : 'no-room');
   const formClass = 'input-form ' + (roomNameConfirmed ? 'room' : 'no-room');
- 
   return(
     <div className={containerClass}>
       <form onSubmit={props.handleRoomNameSubmit} className={formClass}>
@@ -112,7 +113,8 @@ export const RoomInput = (props) => {
 }
 export const NameInput = (props) => {
   const {playerNameConfirmed, isChangingName, playerName} = props;
-  const inputClass = playerNameConfirmed ? (playerNameConfirmed === playerName ? 'name same-name' : 'name') : 'no-name';
+  let inputClass = playerNameConfirmed ? 'name' : 'no-name';
+  inputClass += (playerName && playerName.trim() !== playerNameConfirmed ? 'valid' : ' invalid');
   const containerClass = 'input-container input-container-name ' + (playerNameConfirmed ? 'name' : 'no-name');
 	const formClass = 'input-form ' + (playerNameConfirmed ? 'name' : 'no-name');
   return(
@@ -130,7 +132,7 @@ export const NameInput = (props) => {
                 placeholder={'Enter a name!'}
               />
               {playerNameConfirmed !== '' && 
-                <button type='button' className='name-input-button leave' onClick={props.handleIsChangeNameFalse}>Discard Changes</button>
+                <button type='button' className='name-input-button discard invalid' onClick={props.handleIsChangeNameFalse}>Discard Changes</button>
               }
             </form>
         </Fragment>

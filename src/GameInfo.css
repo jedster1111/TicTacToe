@@ -1,3 +1,28 @@
+.input-container {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  flex: 1 1 260px;
+  min-width: 260px;
+  max-width: 450px;
+  padding: 20px 5px;
+  margin: 10px 5px;
+  background-color: #FFA0C9;
+  align-items: center;
+  flex-wrap: wrap;
+  border: rgba(34, 34, 34, 0.561) 2px solid;
+  border-radius: 10px;
+}
+.input-container-name{
+  flex: 1 1 260px;
+}
+.input-container-room{
+  flex: 3 1 260px;
+  max-width: 600px;
+}
+.input-form {
+  width: 95%;
+}
 .input-form button{
 	border: none;
   outline: none;
@@ -14,13 +39,56 @@
   width:45%;
   padding: 5px 0;
   margin: 6px auto;
-	background-color: rgb(188, 238, 188);
+}
+.input-form>.single-input-text-box{
+  width:85%;
+}
+.single-input-submit-button.invalid{
+  background-color:rgb(240, 166, 166);
+}
+.single-input-submit-button.join{
+  background-color: #6FD695;
+  width:47.5%;
+}
+.input-form>.single-input-submit-button:hover{
+  width:50%;
+}
+.name-input-button.invalid:hover,
+.single-input-submit-button.invalid:hover,
+.single-input-submit-button.joined {
+  width:40%;
+  background-color: lightcoral;
+}
+.name-text,
+.input-form .room-text {
+  word-wrap: break-word;
+  text-align: center;
+  margin: 5px 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+.name-input-button{
+  background-color: rgb(188, 238, 188);
+}
+.name-input-button:hover {
+  background-color: #6FD695;
+  box-shadow: 0 0 0 1.5px;
+  width:50%;
+}
+.name-input-button.discard {
+  background-color: rgb(240, 166, 166);
+}
+.name-input-button.discard:hover {
+  background-color:lightcoral;
+}
+.name-input-button.leave:hover {
+  background-color: lightcoral;
 }
 .room-list-container {
   display:flex;
   flex-wrap:wrap;
   border:1px solid rgb(10,5,5);
-  background-color: rgb(255, 221, 221);
+  background-color: rgb(243, 211, 211);
   padding: 3px 8px;
   margin: 0 10px;
   border-radius: 8px;
@@ -30,26 +98,25 @@
   width:100%;
   margin: 2px 0;
 }
-.room-list-container>div .room-list{
+.room-list{
   display:flex;
   justify-content: space-between;
   align-items: center;
   -webkit-transition: all 0.2s;
 	transition: all 0.2s;
 	margin: 3px 0;
-  padding: 4px 7px;
+  padding: 5px 7px;
   background-color: lightyellow;
   border-radius: 3px;
   border: 1px black solid;
   overflow: hidden;
   word-wrap: break-word;
 }
-.room-list-container>div .room-list.confirmed-room {
+.room-list.confirmed-room {
   background-color: #6ACBBC;
   padding-left: 10px;
 }
 .room-list button{
-	overflow: hidden;
   -webkit-transition: all 0.1s;
   width: 53px;
   height: 20px;

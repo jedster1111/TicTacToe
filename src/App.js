@@ -91,12 +91,12 @@ class GameContainer extends Component{
     e.preventDefault();
     const {playerName, playerData} = this.state;
     const playerNameTrimmed = playerName.trim().replace(/\s{2,}/g,' ').replace(/^\s+/g,'');
-    if(playerNameTrimmed !== playerData.name && playerNameTrimmed !== ''){
+    if(playerNameTrimmed !== playerData.name && playerNameTrimmed){
       this.state.socket.emit('set-name', playerNameTrimmed, () => {
         this.setState({isChangingName: false, playerName: playerNameTrimmed})
       });
-    } else {
-      console.log('name is empty or the same')
+    } else if(playerData.name && playerNameTrimmed === playerData.name) {
+      this.setState({isChangingName: false});
     }
   }
   handleRoomNameSubmit(e) {
