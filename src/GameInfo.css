@@ -43,7 +43,7 @@
 .input-form>.single-input-text-box{
   width:85%;
 }
-.single-input-submit-button{
+.input-container .single-input-submit-button{
   width:45%;
 }
 .single-input-submit-button.invalid{
