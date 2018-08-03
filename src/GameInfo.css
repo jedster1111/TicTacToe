@@ -33,7 +33,7 @@
   text-decoration: none;
   box-shadow: 0 0 1px 1px #000;
 }
-.input-form>input[type=submit],
+.input-container-room .single-input-submit-button,
 .input-form>button{
   display: block;
   width:45%;
@@ -42,6 +42,9 @@
 }
 .input-form>.single-input-text-box{
   width:85%;
+}
+.single-input-submit-button{
+  width:45%;
 }
 .single-input-submit-button.invalid{
   background-color:rgb(240, 166, 166);
@@ -56,8 +59,11 @@
 .name-input-button.invalid:hover,
 .single-input-submit-button.invalid:hover,
 .single-input-submit-button.joined {
-  width:40%;
+  width:42.5%;
   background-color: lightcoral;
+}
+.single-input-submit-button.joined:hover{
+  width: 40%;
 }
 .name-text,
 .input-form .room-text {
