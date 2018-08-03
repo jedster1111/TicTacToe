@@ -1,0 +1,52 @@
+.room-list-container {
+  display:flex;
+  flex-wrap:wrap;
+  border:1px solid rgb(10,5,5);
+  background-color: rgb(255, 221, 221);
+  padding: 0 5px;
+  border-radius: 8px;
+}
+.room-list-container>div {
+  box-sizing: border-box;
+  width:100%;
+  margin: 3px 0;
+}
+.room-list-container>div .room-list{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  -webkit-transition: all 0.2s;
+	transition: all 0.2s;
+	margin: 3px 0;
+  padding: 5px 7px;
+  background-color: lightyellow;
+  border-radius: 3px;
+  border: 1px black solid;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+.room-list-container>div .room-list.confirmed-room {
+  background-color: #6ACBBC;
+  padding-left: 10px;
+}
+.room-list button{
+	overflow: hidden;
+  -webkit-transition: all 0.1s;
+  width: 50px;
+  height: 20px;
+  margin-left: 8px;
+  transition: all 0.1s;
+  border-radius: 4px;
+  background-color: lightgrey;  
+}
+.room-list button:hover {
+	background-color: rgb(186, 221, 243);
+	width: 55px;
+}
+.room-list button.confirmed {
+	background-color: lightcoral;
+	width: 60px;
+}
+.room-list-text{
+  overflow:hidden;
+}
