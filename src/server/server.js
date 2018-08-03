@@ -38,6 +38,24 @@ class Room {
         this.turnNumber = 0;
         this.pushData();
     }
+    get playerData() {
+        let playerData = this.players.map((player) => {
+                return(
+                    {name: player.name, team: player.team, id: player.client.id}
+                );
+            }
+        );
+        return playerData;
+    }
+    get data() {   
+        let data = {
+            squares: this.squares,
+            players: this.playerData,
+            currentPlayer: this.currentPlayer,
+            winner: this.winner,
+        };
+        return data;
+    }
     receivedSquare(newSquare) {
         //Handle receiving new squares from a player.
         if (this.squares[newSquare] === null) {
@@ -57,25 +75,6 @@ class Room {
             //Game continues
             this.currentPlayer = (this.currentPlayer === 'X') ? 'O' : 'X';
         }
-    }
-    get playerData() {
-        let playerData = this.players.map((player) => {
-                return(
-                    {name: player.name, team: player.team, id: player.client.id}
-                );
-            }
-        );
-        return playerData;
-    }
-    get data() {
-        //getter allows me to access thisRoom.data to get data object    
-        let data = {
-            squares: this.squares,
-            players: this.playerData,
-            currentPlayer: this.currentPlayer,
-            winner: this.winner,
-        };
-        return data;
     }
     pushData() {
         //pushes this room's data to EVERY connected player in room
