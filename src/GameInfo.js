@@ -149,23 +149,27 @@ export const NameInput = (props) => {
   )
 }
 const TeamToggle = (props) => {
+  const {team} = props;
   return(
     <div className='team-toggle'>
       <div className='team-buttons-container'>
-        <button onClick={()=>props.handleTeamToggleClick('X')}>X</button>
-        <button onClick={()=>props.handleTeamToggleClick('O')}>O</button>
+        <button className={team==='X' && 'current'} onClick={()=>props.handleTeamToggleClick('X')}>X</button>
+        <button className={team==='O' && 'current'} onClick={()=>props.handleTeamToggleClick('O')}>O</button>
       </div>
       <div className='spectate-button-container'>
-        <button onClick={()=>props.handleTeamToggleClick('')}>Spectate</button>
+        <button className={team==='' && 'current'} onClick={()=>props.handleTeamToggleClick('')}>Spectate</button>
       </div>
     </div>
   )
 }
 export const GameInfo = (props) => {
+  const {playerData} = props;
   return(
     <div className='game-info-container'>
-      Test
-      <TeamToggle handleTeamToggleClick={props.handleTeamToggleClick} />
+      <TeamToggle
+        handleTeamToggleClick={props.handleTeamToggleClick} 
+        team={playerData.team}
+      />
     </div>
   )
 }

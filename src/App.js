@@ -171,13 +171,15 @@ class GameContainer extends Component{
           />
         </div>
         <div className='game-container'>
-          <GameInfo
-            handleTeamToggleClick={this.handleTeamToggleClick}
-          />
           <Board
               squares={squares}
               onClick = {this.handleSquareClick}
           />
+          <GameInfo
+            handleTeamToggleClick={this.handleTeamToggleClick}
+            playerData={this.state.playerData}
+          />
+
         </div>
 
         

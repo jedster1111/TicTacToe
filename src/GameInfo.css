@@ -1,11 +1,12 @@
 .game-info-container{
+	display: flex;
+	align-items: center;
+  flex-wrap: wrap;
 	max-width: 650px;
 	min-width: 150px;
   padding: 20px 10px;
-  margin: 10px 5px;
+  margin: 10px 20px;
   background-color: #FFA0C9;
-  align-items: center;
-  flex-wrap: wrap;
   border: rgba(34, 34, 34, 0.561) 2px solid;
   border-radius: 10px;
 }
@@ -45,6 +46,17 @@
   font-size: 14px;
   text-decoration: none;
 	box-shadow: 0 0 1px 1px #000;
+	
+}
+.team-toggle button:hover{
+	box-shadow: 0 0 0 1.5px;
+}
+.team-toggle button.current {
+	background-color: #6FD695;
+	flex:4;
+	margin-left:4px;
+	margin-right:4px;
+	box-shadow: 0 0 0 1.5px;
 }
 .team-toggle .spectate-button-container{
 	display:flex;
@@ -52,4 +64,8 @@
 }
 .team-toggle .spectate-button-container button{
 	max-width: 200px;
+}
+.team-toggle .spectate-button-container button.current {
+	max-width: 215px;
+	background-color: rgb(182, 182, 182);
 }

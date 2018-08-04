@@ -8,3 +8,10 @@ body{
   align-items: flex-start;
   flex-wrap: wrap;
 }
+.game-container{
+  display:flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin: 10px 15px;
+}
