@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { GameInfo, NameAndRoomInput } from './OldGameInfo';
-import { RoomInput, NameInput, RoomList } from './GameInfo';
+import { OldGameInfo, NameAndRoomInput } from './OldGameInfo';
+import { RoomInput, NameInput, RoomList, GameInfo } from './GameInfo';
 import { Board } from './Board';
 import './App.css';
 import io from "socket.io-client";
@@ -170,7 +170,10 @@ class GameContainer extends Component{
             rooms = {rooms}
           />
         </div>
-        <div>
+        <div className='game-container'>
+          <GameInfo
+            handleTeamToggleClick={this.handleTeamToggleClick}
+          />
           <Board
               squares={squares}
               onClick = {this.handleSquareClick}
@@ -191,7 +194,7 @@ class GameContainer extends Component{
           />
           <div>
             <Board squares = {squares} onClick = {this.handleSquareClick}/>
-            <GameInfo
+            <OldGameInfo
               player={this.state.playerData}
               room={this.state.roomData}
               onTeamToggleClick={this.handleTeamToggleClick}

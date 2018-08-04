@@ -1,0 +1,147 @@
+.input-container {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  flex: 1 1 260px;
+  min-width: 260px;
+  max-width: 450px;
+  padding: 20px 5px;
+  margin: 10px 5px;
+  background-color: #FFA0C9;
+  align-items: center;
+  flex-wrap: wrap;
+  border: rgba(34, 34, 34, 0.561) 2px solid;
+  border-radius: 10px;
+}
+.input-container-name{  
+  flex: 1 1 260px;
+}
+.input-container-room{
+  flex: 3 1 260px;
+  max-width: 600px;
+}
+.input-form {
+  width: 95%;
+}
+.input-form button{
+	border: none;
+  outline: none;
+  -webkit-transition: all 0.2s;
+	transition: all 0.2s;
+  border-radius: 7px;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 0 1px 1px #000;
+}
+.input-container-room .single-input-submit-button,
+.input-form>button{
+  display: block;
+  width:45%;
+  padding: 5px 0;
+  margin: 6px auto;
+}
+.input-form>.single-input-text-box{
+  width:85%;
+}
+.input-container .single-input-submit-button{
+  width:45%;
+}
+.single-input-submit-button.invalid{
+  background-color:rgb(240, 166, 166);
+  width:42.5%;
+}
+.input-form>.single-input-submit-button.invalid:hover{
+  background-color:lightcoral;
+  width:40%;
+}
+.single-input-submit-button.join{
+  background-color: #6FD695;
+  width:47.5%;
+}
+.input-form>.single-input-submit-button:hover{
+  width:50%;
+}
+.name-input-button.invalid:hover,
+.single-input-submit-button.joined {
+  width:42.5%;
+  background-color: lightcoral;
+}
+.single-input-submit-button.joined:hover{
+  width: 40%;
+}
+.name-text,
+.input-form .room-text {
+  word-wrap: break-word;
+  text-align: center;
+  margin: 5px 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+.name-input-button{
+  background-color: rgb(188, 238, 188);
+}
+.name-input-button:hover {
+  background-color: #6FD695;
+  box-shadow: 0 0 0 1.5px;
+  width:50%;
+}
+.name-input-button.discard {
+  background-color: rgb(240, 166, 166);
+}
+.name-input-button.discard:hover {
+  background-color:lightcoral;
+}
+.name-input-button.leave:hover {
+  background-color: lightcoral;
+}
+.room-list-container {
+  display:flex;
+  flex-wrap:wrap;
+  border:1px solid rgb(10,5,5);
+  background-color: rgb(243, 211, 211);
+  padding: 3px 8px;
+  margin: 0 10px;
+  border-radius: 8px;
+}
+.room-list-container>div {
+  box-sizing: border-box;
+  width:100%;
+  margin: 2px 0;
+}
+.room-list{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  -webkit-transition: all 0.2s;
+	transition: all 0.2s;
+	margin: 3px 0;
+  padding: 5px 7px;
+  background-color: lightyellow;
+  border-radius: 3px;
+  border: 1px black solid;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+.room-list.confirmed-room {
+  background-color: #6ACBBC;
+  padding-left: 12px;
+}
+.room-list button{
+  width: 53px;
+  height: 20px;
+  margin-left: 8px;
+  transition: all 0.1s;
+  border-radius: 4px;
+  background-color: lightgrey;  
+}
+.room-list button:hover {
+	background-color: rgb(186, 221, 243);
+	width: 58px;
+}
+.room-list button.confirmed {
+	background-color: lightcoral;
+	width: 63px;
+}
+.room-list-text{
+  overflow:hidden;
+}

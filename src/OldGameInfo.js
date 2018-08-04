@@ -78,7 +78,7 @@ const PlayersDisplay = (props) => {
     </div>
   );
 }
-export const GameInfo = (props) => {
+export const OldGameInfo = (props) => {
   return (
     <div>
       <TeamToggle onClick={props.onTeamToggleClick}/>

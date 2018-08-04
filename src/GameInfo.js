@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import {findBestMatch} from 'string-similarity';
 import {SingleInput} from './SingleInput';
+import './Name-Room-Input.css';
 import './GameInfo.css';
 
 const RoomWithJoinButton = (props) => {
@@ -21,7 +22,6 @@ const RoomWithJoinButton = (props) => {
 		</div>
 	)
 }
-
 export const RoomList = (props) => {
   let roomList = [];
   if(Array.isArray(props.roomsFiltered) && props.roomsFiltered.length !== 0){
@@ -55,7 +55,6 @@ export const RoomList = (props) => {
     return <h4 className='room-text'>No rooms yet</h4>
   }
 }
-
 export const RoomInput = (props) => {
   const rankStringArray = (target, strings) => {
     if(Array.isArray(strings) && strings.length !== 0){
@@ -146,6 +145,27 @@ export const NameInput = (props) => {
           </div>
         </Fragment>
       }
+    </div>
+  )
+}
+const TeamToggle = (props) => {
+  return(
+    <div className='team-toggle'>
+      <div className='team-buttons-container'>
+        <button onClick={()=>props.handleTeamToggleClick('X')}>X</button>
+        <button onClick={()=>props.handleTeamToggleClick('O')}>O</button>
+      </div>
+      <div className='spectate-button-container'>
+        <button onClick={()=>props.handleTeamToggleClick('')}>Spectate</button>
+      </div>
+    </div>
+  )
+}
+export const GameInfo = (props) => {
+  return(
+    <div className='game-info-container'>
+      Test
+      <TeamToggle handleTeamToggleClick={props.handleTeamToggleClick} />
     </div>
   )
 }
