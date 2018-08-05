@@ -16,10 +16,10 @@
 	flex: 1;
 	flex-wrap: wrap;
 	justify-content: center;
-	max-width: 400px;
+	max-width: 200px;
   border: 1px solid rgb(10,5,5);
   background-color: rgb(243, 211, 211);
-  padding: 15px 8px;
+  padding: 4px 8px;
   margin: 0 10px;
   border-radius: 8px;
 }
@@ -60,7 +60,7 @@
 .team-toggle button{
 	flex: 1 1 50px;
 	padding: 6px 8px;
-	margin: 6px 10px;
+	margin: 3px 10px;
 	border: none;
   outline: none;
 	transition: all 0.2s;
