@@ -51,11 +51,10 @@
 	box-shadow: none;
 	border: solid black;
 	border-width: 1px 1px 1px 0;
-	
 }
 .team-toggle .team-buttons-container button:hover{
 	background-color: rgb(188, 238, 188);
-	flex:1.1;
+	flex:1.2;
 }
 .team-toggle button{
 	flex: 1 1 50px;
@@ -83,12 +82,15 @@
 }
 .team-toggle .spectate-button-container button{
 	max-width: 200px;
+	flex: 0.8;
 }
 .team-toggle .spectate-button-container button:hover{
 	background-color: rgb(204, 204, 204);
 	max-width: 204px;
+	flex: 0.86;
 }
 .team-toggle .spectate-button-container button.current {
 	max-width: 215px;
 	background-color: rgb(182, 182, 182);
+	flex:1;
 }
