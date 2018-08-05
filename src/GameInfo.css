@@ -34,6 +34,23 @@
 	min-width: 90px;
 	max-width: 255px;
 }
+.team-toggle .team-buttons-container button:first-child{
+	border-radius: 7px 0 0 7px;
+	margin-right:0;
+	box-shadow: none;
+	border: solid black;
+	border-right-color: rgb(192, 192, 192);
+	border-right-style: groove;
+	border-width: 1px; 
+}
+.team-toggle .team-buttons-container button:last-child{
+	border-radius: 0 7px 7px 0;
+	margin-left:0;
+	box-shadow: none;
+	border: solid black;
+	border-width: 1px 1px 1px 0;
+	
+}
 .team-toggle button{
 	flex: 1 1 50px;
 	padding: 6px 8px;
