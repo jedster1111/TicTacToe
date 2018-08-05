@@ -19,9 +19,11 @@
 .input-container-room{
   flex: 3 1 260px;
   max-width: 600px;
+  max-height: 500px;
 }
 .input-form {
   width: 95%;
+  max-height:100%;
 }
 .input-form button{
 	border: none;
@@ -102,6 +104,24 @@
   padding: 3px 8px;
   margin: 0 10px;
   border-radius: 8px;
+  max-height: 387px;
+  overflow: auto;
+}
+.room-list-container::-webkit-scrollbar{
+  width: 10px;
+}
+.room-list-container::-webkit-scrollbar-track{
+  background: rgb(211, 211, 211);
+  margin: 5px 0;
+}
+.room-list-container::-webkit-scrollbar-thumb{
+  background: rgb(116, 115, 115);
+  margin: 10px 0;
+  border-radius: 3px;
+}
+.room-list-container::-webkit-scrollbar-thumb:hover{
+  background: rgb(82, 82, 82);
+  width:12px;
 }
 .room-list-container>div {
   box-sizing: border-box;
@@ -133,14 +153,18 @@
   transition: all 0.1s;
   border-radius: 4px;
   background-color: lightgrey;  
+  flex:0 0 53px;
 }
 .room-list button:hover {
-	background-color: rgb(186, 221, 243);
-	width: 58px;
+	background-color: rgb(188, 238, 188);
+	flex:0 0 56px;
 }
 .room-list button.confirmed {
 	background-color: lightcoral;
-	width: 63px;
+	flex:0 0 63px;
+}
+.room-list button.confirmed:hover {
+  flex:0 0 60px;
 }
 .room-list-text{
   overflow:hidden;
