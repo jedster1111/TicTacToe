@@ -55,6 +55,7 @@
 .team-toggle .team-buttons-container button:hover{
 	background-color: rgb(188, 238, 188);
 	flex:1.2;
+	box-shadow: 0 0 3px 0 black;
 }
 .team-toggle button{
 	flex: 1 1 50px;
