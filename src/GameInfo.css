@@ -1,9 +1,10 @@
 .game-info-container{
 	display: flex;
-	align-items: center;
+	justify-content: center;
   flex-wrap: wrap;
 	max-width: 650px;
 	min-width: 150px;
+	width:50%;
   padding: 20px 10px;
   margin: 10px 20px;
   background-color: #FFA0C9;
@@ -12,8 +13,10 @@
 }
 .team-toggle{
 	display:flex;
+	flex: 1;
 	flex-wrap: wrap;
 	justify-content: center;
+	max-width: 400px;
   border: 1px solid rgb(10,5,5);
   background-color: rgb(243, 211, 211);
   padding: 15px 8px;
@@ -26,13 +29,12 @@
 }
 .team-toggle .team-buttons-container{
 	display:flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	justify-content: center;
 	min-width: 100%;
 }
 .team-toggle .team-buttons-container button{
-	min-width: 90px;
-	max-width: 255px;
+	flex: 1 0;
 }
 .team-toggle .team-buttons-container button:first-child{
 	border-radius: 7px 0 0 7px;
@@ -51,13 +53,16 @@
 	border-width: 1px 1px 1px 0;
 	
 }
+.team-toggle .team-buttons-container button:hover{
+	background-color: rgb(188, 238, 188);
+	flex:1.1;
+}
 .team-toggle button{
 	flex: 1 1 50px;
 	padding: 6px 8px;
 	margin: 6px 10px;
 	border: none;
   outline: none;
-  -webkit-transition: all 0.2s;
 	transition: all 0.2s;
   border-radius: 7px;
   font-size: 14px;
@@ -68,12 +73,9 @@
 .team-toggle button:hover{
 	box-shadow: 0 0 0 1.5px;
 }
-.team-toggle button.current {
+.team-toggle .team-buttons-container button.current {
 	background-color: #6FD695;
 	flex:4;
-	margin-left:4px;
-	margin-right:4px;
-	box-shadow: 0 0 0 1.5px;
 }
 .team-toggle .spectate-button-container{
 	display:flex;
@@ -81,6 +83,10 @@
 }
 .team-toggle .spectate-button-container button{
 	max-width: 200px;
+}
+.team-toggle .spectate-button-container button:hover{
+	background-color: rgb(204, 204, 204);
+	max-width: 204px;
 }
 .team-toggle .spectate-button-container button.current {
 	max-width: 215px;

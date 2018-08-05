@@ -153,11 +153,11 @@ const TeamToggle = (props) => {
   return(
     <div className='team-toggle'>
       <div className='team-buttons-container'>
-        <button className={team==='X' && 'current'} onClick={()=>props.handleTeamToggleClick('X')}>X</button>
-        <button className={team==='O' && 'current'} onClick={()=>props.handleTeamToggleClick('O')}>O</button>
+        <button className={team==='X' ? 'current' : undefined} onClick={()=>props.handleTeamToggleClick('X')}>X</button>
+        <button className={team==='O' ? 'current' : undefined} onClick={()=>props.handleTeamToggleClick('O')}>O</button>
       </div>
       <div className='spectate-button-container'>
-        <button className={team==='' && 'current'} onClick={()=>props.handleTeamToggleClick('')}>Spectate</button>
+        <button className={team==='' ? 'current' : undefined} onClick={()=>props.handleTeamToggleClick('')}>Spectate</button>
       </div>
     </div>
   )
