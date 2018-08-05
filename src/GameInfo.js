@@ -68,14 +68,14 @@ export const RoomInput = (props) => {
         []
       )
     }
-    }
-    const sortArray = (target, strings) => {
-        const stringSimilarityMatches = rankStringArray(target, strings);
-        const stringsSorted = stringSimilarityMatches.map(
-            string => string.target
-        );
-        return stringsSorted;
-    }
+  }
+  const sortArray = (target, strings) => {
+      const stringSimilarityMatches = rankStringArray(target, strings);
+      const stringsSorted = stringSimilarityMatches.map(
+          string => string.target
+      );
+      return stringsSorted;
+  }
   const {roomNameConfirmed, rooms, roomName} = props;
   const roomNameCleaned = roomName.trim();
   const roomsFiltered = rooms.filter(room => room.includes(roomNameCleaned));
@@ -113,7 +113,7 @@ export const RoomInput = (props) => {
 export const NameInput = (props) => {
   const {playerNameConfirmed, isChangingName, playerName} = props;
   let inputClass = playerNameConfirmed ? 'name' : 'no-name';
-  inputClass += (playerName && playerName.trim() !== playerNameConfirmed ? 'valid' : ' invalid');
+  inputClass += (playerName && playerName.trim() !== playerNameConfirmed ? ' valid' : ' invalid');
   const containerClass = 'input-container input-container-name ' + (playerNameConfirmed ? 'name' : 'no-name');
 	const formClass = 'input-form ' + (playerNameConfirmed ? 'name' : 'no-name');
   return(
