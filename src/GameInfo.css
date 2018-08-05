@@ -64,6 +64,7 @@
 	border: none;
   outline: none;
 	transition: all 0.2s;
+	transition-timing-function: ease-out;
   border-radius: 7px;
   font-size: 14px;
   text-decoration: none;
