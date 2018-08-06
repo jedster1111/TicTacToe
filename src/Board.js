@@ -34,8 +34,21 @@ export const Board = (props) => {
     return rows;
   }
   return (
-    <div>
+    <div className='board'>
       {createTable()}
     </div>
   );
+}
+export const BoardContainer = (props) => {
+  const {roomName, squares, handleSquareClick} = props;
+  return(
+    <div className='board-container'>
+      {roomName ? 
+        <div className='board-room-text'>{roomName}</div>
+        :
+        <div className='board-room-text'>Offline Game</div> 
+      }
+      <Board squares={squares} onClick={handleSquareClick} />
+    </div>
+  )
 }

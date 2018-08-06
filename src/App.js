@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { OldGameInfo, NameAndRoomInput } from './OldGameInfo';
 import { RoomInput, NameInput, RoomList, GameInfo } from './GameInfo';
-import { Board } from './Board';
+import { Board, BoardContainer } from './Board';
 import './App.css';
 import io from "socket.io-client";
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
@@ -149,10 +149,23 @@ class GameContainer extends Component{
     const isConnected = this.renderIsConnected();
     const playerNameConfirmed = this.state.playerData.name;
     const roomNameConfirmed = this.state.playerData.roomName;
-    const {isChangingName, roomName, rooms} = this.state;
+		const {isChangingName, roomName, rooms} = this.state;
     return (
       <Fragment>
-        <div className='name-room-container'>
+        <div className='game-container'>
+          <BoardContainer
+            roomName={roomNameConfirmed}
+            squares={squares}
+            handleSquareClick = {this.handleSquareClick}
+          />
+          <GameInfo
+            handleTeamToggleClick={this.handleTeamToggleClick}
+            handleResetClick={this.handleResetClick}
+            handleLeaveRoomClick={this.handleLeaveRoomClick}
+            playerData={this.state.playerData}
+          />
+        </div>
+				<div className='name-room-container'>
           <NameInput
             playerNameConfirmed = {playerNameConfirmed}
             isChangingName = {isChangingName} 
@@ -171,20 +184,6 @@ class GameContainer extends Component{
             rooms = {rooms}
           />
         </div>
-        <div className='game-container'>
-          <Board
-              squares={squares}
-              onClick = {this.handleSquareClick}
-          />
-          <GameInfo
-            handleTeamToggleClick={this.handleTeamToggleClick}
-            handleResetClick={this.handleResetClick}
-            handleLeaveRoomClick={this.handleLeaveRoomClick}
-            playerData={this.state.playerData}
-          />
-
-        </div>
-
         
         <div>
           {isConnected}
@@ -198,7 +197,10 @@ class GameContainer extends Component{
             roomName = {this.state.roomName}
           />
           <div>
-            <Board squares = {squares} onClick = {this.handleSquareClick}/>
+            <Board
+              squares = {squares}
+              onClick = {this.handleSquareClick}
+            />
             <OldGameInfo
               player={this.state.playerData}
               room={this.state.roomData}
