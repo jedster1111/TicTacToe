@@ -18,7 +18,7 @@ class GameContainer extends Component{
       roomName: '',
       rooms: [],
       playerData: {name: '', roomName: '', team: '', id: ''},
-      roomData: {squares: Array(9).fill(null), players: [], currentPlayer: null, winner: null},
+      roomData: {squares: Array(9).fill(null), players: [], currentPlayer: 'X', winner: null},
       socket: null,
     };
     this.handlePlayerNameChange = this.handlePlayerNameChange.bind(this);
@@ -69,7 +69,7 @@ class GameContainer extends Component{
         roomName: '',
         rooms: [],
         playerData: {name: '', roomName: '', team: '', id: ''},
-        roomData: {squares: Array(9).fill(null), players: [], currentPlayer: null, winner: null},
+        roomData: {squares: Array(9).fill(null), players: [], currentPlayer: 'X', winner: null},
        });
       this.handleIsChangeName();
     });
@@ -120,18 +120,27 @@ class GameContainer extends Component{
     }
   }
   handleSquareClick(i) {
-    if(this.state.playerData.roomName){
+    if(this.state.playerData.roomName){ //in the case you are in a room send to server
       this.state.socket.emit('new-square', i);
-    } else {
-      this.setState((prevState) => {
-        const {playerData:prevPlayerData, roomData:prevRoomData} = prevState;
-        const prevSquares = prevRoomData.squares;
-        const team = prevPlayerData.team;
-        let newSquares = [...prevSquares];
-        newSquares[i] = team;
-        const roomData = {...prevPlayerData, squares:newSquares};
-        return {roomData:roomData};
-      })
+    }
+    else { //else it's a local room and manage the game logic locally
+      if (
+        this.state.playerData.team === this.state.roomData.currentPlayer &&
+        !this.state.roomData.winner &&
+        this.state.roomData.squares[i] === null
+      ) {
+          this.setState((prevState) => {
+          const {playerData:prevPlayerData, roomData:prevRoomData} = prevState;
+          const {squares:prevSquares, currentPlayer: prevCurrentPlayer} = prevRoomData;
+          const team = prevPlayerData.team;
+          let newSquares = [...prevSquares];
+          newSquares[i] = team;
+          const nextPlayer = prevCurrentPlayer==='X'?'O':'X';
+          const roomData = {...prevRoomData, squares:newSquares, currentPlayer:nextPlayer};
+          const playerData = {...prevPlayerData, team:nextPlayer};
+          return ({roomData:roomData, playerData:playerData});
+        })
+      }
     }
   }
   handleTeamToggleClick(team) {
@@ -198,7 +207,6 @@ class GameContainer extends Component{
             rooms = {rooms}
           />
         </div>
-        
         <div>
           {isConnected}
           <RoomList rooms={this.state.rooms} />
