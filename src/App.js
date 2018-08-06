@@ -123,6 +123,7 @@ class GameContainer extends Component{
     this.state.socket.emit('new-square', i);
   }
   handleTeamToggleClick(team) {
+    this.setState((prevState) => ({playerData: {...prevState.playerData,team:team}}));
     this.state.socket.emit('set-team', team);
   }
   handleResetClick() {

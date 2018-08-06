@@ -19,7 +19,6 @@
 .input-container-room{
   flex: 4 1 260px;
   max-width: 600px;
-  max-height: 500px;
 }
 .input-form {
   width: 95%;
@@ -104,7 +103,7 @@
   padding: 3px 8px;
   margin: 0 10px;
   border-radius: 8px;
-  max-height: 387px;
+  max-height: 220px;
   overflow: auto;
 }
 .room-list-container::-webkit-scrollbar{
