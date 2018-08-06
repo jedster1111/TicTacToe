@@ -17,7 +17,7 @@ class GameContainer extends Component{
       playerName: '',
       roomName: '',
       rooms: [],
-      playerData: {name: '', roomName: null, team: '', id: ''},
+      playerData: {name: '', roomName: '', team: '', id: ''},
       roomData: {squares: Array(9).fill(null), players: [], currentPlayer: null, winner: null},
       socket: null,
     };
@@ -68,7 +68,7 @@ class GameContainer extends Component{
         playerName: '',
         roomName: '',
         rooms: [],
-        playerData: {name: '', roomName: null, team: '', id: ''},
+        playerData: {name: '', roomName: '', team: '', id: ''},
         roomData: {squares: Array(9).fill(null), players: [], currentPlayer: null, winner: null},
        });
       this.handleIsChangeName();
@@ -120,10 +120,24 @@ class GameContainer extends Component{
     }
   }
   handleSquareClick(i) {
-    this.state.socket.emit('new-square', i);
+    if(this.state.playerData.roomName){
+      this.state.socket.emit('new-square', i);
+    } else {
+      this.setState((prevState) => {
+        const {playerData:prevPlayerData, roomData:prevRoomData} = prevState;
+        const prevSquares = prevRoomData.squares;
+        const team = prevPlayerData.team;
+        let newSquares = [...prevSquares];
+        newSquares[i] = team;
+        const roomData = {...prevPlayerData, squares:newSquares};
+        return {roomData:roomData};
+      })
+    }
   }
   handleTeamToggleClick(team) {
-    this.setState((prevState) => ({playerData: {...prevState.playerData,team:team}}));
+		if(this.state.playerData.team !== team){
+			this.setState((prevState) => ({playerData: {...prevState.playerData,team:team}}));
+		}
     this.state.socket.emit('set-team', team);
   }
   handleResetClick() {

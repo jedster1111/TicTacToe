@@ -154,7 +154,7 @@ class Player {
     get data () {
         let roomName;
         if(this.room.name === undefined){
-            roomName = null;
+            roomName = '';
         }
         else{
             roomName = this.room.name;

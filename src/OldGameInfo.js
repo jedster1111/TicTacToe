@@ -40,7 +40,7 @@ const PlayersDisplay = (props) => {
   let XTeam = []; 
   let OTeam = [];
   let noTeam = [];
-  if(props.players.length > 0){
+  if(props.players && props.players.length > 0){
     XTeam = props.players.filter(player => player.team === 'X');
     OTeam = props.players.filter(player => player.team === 'O');
     noTeam = props.players.filter(player => player.team === '');
