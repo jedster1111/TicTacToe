@@ -177,6 +177,8 @@ class GameContainer extends Component{
           />
           <GameInfo
             handleTeamToggleClick={this.handleTeamToggleClick}
+            handleResetClick={this.handleResetClick}
+            handleLeaveRoomClick={this.handleLeaveRoomClick}
             playerData={this.state.playerData}
           />
 

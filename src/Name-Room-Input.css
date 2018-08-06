@@ -17,7 +17,7 @@
   flex: 1 1 260px;
 }
 .input-container-room{
-  flex: 3 1 260px;
+  flex: 4 1 260px;
   max-width: 600px;
   max-height: 500px;
 }
@@ -154,6 +154,7 @@
   border-radius: 4px;
   background-color: lightgrey;  
   flex:0 0 53px;
+  overflow: hidden;
 }
 .room-list button:hover {
 	background-color: rgb(188, 238, 188);
@@ -167,5 +168,6 @@
   flex:0 0 60px;
 }
 .room-list-text{
+  width:80%;
   overflow:hidden;
 }

@@ -162,6 +162,14 @@ const TeamToggle = (props) => {
     </div>
   )
 }
+const RoomControls = (props) => {
+  return(
+    <div className='room-controls-container'>
+      <button  className='reset-room' onClick={props.handleResetClick}>Reset Game</button>
+      <button className='leave-room' onClick={props.handleLeaveRoomClick}>Leave Room</button>
+    </div>
+  )
+}
 export const GameInfo = (props) => {
   const {playerData} = props;
   return(
@@ -169,6 +177,10 @@ export const GameInfo = (props) => {
       <TeamToggle
         handleTeamToggleClick={props.handleTeamToggleClick} 
         team={playerData.team}
+      />
+      <RoomControls
+        handleResetClick={props.handleResetClick}
+        handleLeaveRoomClick={props.handleLeaveRoomClick}
       />
     </div>
   )
