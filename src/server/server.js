@@ -149,7 +149,7 @@ class Player {
         this.client = socket;
         this.name = '';
         this.room = {};
-        this.team = '';
+        this.team = 'X';
     };
     get data () {
         let roomName;

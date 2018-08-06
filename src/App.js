@@ -2,11 +2,13 @@ import React, { Component, Fragment } from 'react';
 import { OldGameInfo, NameAndRoomInput } from './OldGameInfo';
 import { RoomInput, NameInput, RoomList, GameInfo } from './GameInfo';
 import { Board, BoardContainer } from './Board';
+import { calculateWinner, calculateWinningLines } from './calculateWinner';
 import './App.css';
 import io from "socket.io-client";
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 //console.log(ENVIRONMENT);
 (ENVIRONMENT === 'development') && console.log("You are running in DEV mode");
+
 
 class GameContainer extends Component{
   constructor(props){
@@ -17,7 +19,7 @@ class GameContainer extends Component{
       playerName: '',
       roomName: '',
       rooms: [],
-      playerData: {name: '', roomName: '', team: '', id: ''},
+      playerData: {name: '', roomName: '', team: 'X', id: ''},
       roomData: {squares: Array(9).fill(null), players: [], currentPlayer: 'X', winner: null},
       socket: null,
     };
@@ -123,24 +125,28 @@ class GameContainer extends Component{
     if(this.state.playerData.roomName){ //in the case you are in a room send to server
       this.state.socket.emit('new-square', i);
     }
-    else { //else it's a local room and manage the game logic locally
-      if (
-        this.state.playerData.team === this.state.roomData.currentPlayer &&
-        !this.state.roomData.winner &&
-        this.state.roomData.squares[i] === null
-      ) {
-          this.setState((prevState) => {
-          const {playerData:prevPlayerData, roomData:prevRoomData} = prevState;
-          const {squares:prevSquares, currentPlayer: prevCurrentPlayer} = prevRoomData;
-          const team = prevPlayerData.team;
-          let newSquares = [...prevSquares];
-          newSquares[i] = team;
-          const nextPlayer = prevCurrentPlayer==='X'?'O':'X';
-          const roomData = {...prevRoomData, squares:newSquares, currentPlayer:nextPlayer};
-          const playerData = {...prevPlayerData, team:nextPlayer};
-          return ({roomData:roomData, playerData:playerData});
-        })
-      }
+    else if ( //else it's a local room and manage the game logic locally but check if can click
+      this.state.playerData.team === this.state.roomData.currentPlayer &&
+      !this.state.roomData.winner &&
+      this.state.roomData.squares[i] === null
+    ) {
+      this.setState((prevState) => {
+        const {playerData:prevPlayerData, roomData:prevRoomData} = prevState;
+        const {squares:prevSquares, currentPlayer: prevCurrentPlayer} = prevRoomData;
+        const team = prevPlayerData.team;
+        let newSquares = [...prevSquares];
+        newSquares[i] = team;
+        const winner = calculateWinner(newSquares, prevCurrentPlayer);
+        const nextPlayer = prevCurrentPlayer==='X'?'O':'X';
+        const roomData = {
+          ...prevRoomData,
+          squares:newSquares,
+          currentPlayer:nextPlayer,
+          winner:winner
+        };
+        const playerData = {...prevPlayerData, team:nextPlayer};
+        return ({roomData:roomData, playerData:playerData});
+      })
     }
   }
   handleTeamToggleClick(team) {
