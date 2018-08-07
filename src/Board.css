@@ -37,19 +37,19 @@
   border: 1px solid #999;
   float: left;
 	font-size: 46px;
-	
   font-weight: bold;
   line-height: 34px;
-
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
 	width: 55px;
 	height: 55px;
-
-
+	outline:none;
+	box-sizing: border-box;
 }
-.square:focus {
-  outline: none;
+.square.winning-square {
+	color: rgb(92, 182, 122);
+	border: 1px solid black;
+	z-index: 50;
 }

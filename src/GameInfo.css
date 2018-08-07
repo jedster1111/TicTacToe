@@ -127,8 +127,7 @@
 	box-shadow: 0 0 1px 1px #000;
 }
 .room-controls-container button:hover{
-	margin: 3px 7px;
-	flex-grow:1;
+	flex-grow:0.8;
 	box-shadow: 0 0 0 1.5px;
 	background-color: rgb(240, 166, 166);
 }

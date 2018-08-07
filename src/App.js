@@ -9,7 +9,6 @@ const ENVIRONMENT = process.env.NODE_ENV || 'development';
 //console.log(ENVIRONMENT);
 (ENVIRONMENT === 'development') && console.log("You are running in DEV mode");
 
-
 class GameContainer extends Component{
   constructor(props){
     super(props);
@@ -42,7 +41,7 @@ class GameContainer extends Component{
     let socket;
     if(ENVIRONMENT === 'development'){
       let LOCALIP = process.env.REACT_APP_LOCAL_IP || 'localhost';
-      console.log(LOCALIP);
+      console.log(`You are running on ${LOCALIP}, see readme to set environemnt variable for local ip if you want to test on multiple devices!`);
       socket = io(`http://${LOCALIP}:8000`);
     } else {
       socket = io();
@@ -137,7 +136,7 @@ class GameContainer extends Component{
         let newSquares = [...prevSquares];
         newSquares[i] = team;
         const winner = calculateWinner(newSquares, prevCurrentPlayer);
-        const nextPlayer = prevCurrentPlayer==='X'?'O':'X';
+        const nextPlayer = winner ? prevCurrentPlayer : prevCurrentPlayer==='X'?'O':'X';
         const roomData = {
           ...prevRoomData,
           squares:newSquares,
@@ -212,7 +211,9 @@ class GameContainer extends Component{
       return isConnectedText;
   }
   render(){
-    const squares = this.state.roomData.squares;
+		const squares = this.state.roomData.squares;
+		const winner = calculateWinner(squares, this.state.roomData.currentPlayer);
+		const isTurn = !winner && this.state.playerData.team === this.state.roomData.currentPlayer
     const isConnected = this.renderIsConnected();
     const playerNameConfirmed = this.state.playerData.name;
     const roomNameConfirmed = this.state.playerData.roomName;
@@ -230,6 +231,8 @@ class GameContainer extends Component{
             handleResetClick={this.handleResetClick}
             handleLeaveRoomClick={this.handleLeaveRoomClick}
             playerData={this.state.playerData}
+						winner = {winner}
+						isTurn = {isTurn}
           />
         </div>
 				<div className='name-room-container'>

@@ -1,20 +1,28 @@
 import React from 'react';
+import {calculateWinningLines} from './calculateWinner';
 import './Board.css';
 
 const Square = (props) => {
 	return(
-    <button className = "square" onClick={props.onClick}>
+    <button className = {`square ${props.extraClass}`} onClick={props.onClick}>
       {props.value}
     </button>
 	);
 }
 export const Board = (props) => {
+  const {squares} = props;
+  const winningLines = calculateWinningLines(squares);
+  const winningSquares = flattenAndClean(winningLines); //flattens and removes duplicates
+  winningSquares && console.log(winningLines, winningSquares);
   const renderSquare = (i) => {
+    const square = squares[i]
+    const extraClass = winningSquares.indexOf(i) !== -1 ? 'winning-square' : '';
     return(
       <Square 
-        value = {props.squares[i]}
+        value = {square}
         key = {i}
         onClick = {() => props.onClick(i)}
+        extraClass = {(extraClass)}
       />
     );
   }
@@ -51,4 +59,8 @@ export const BoardContainer = (props) => {
       <Board squares={squares} onClick={handleSquareClick} />
     </div>
   )
+}
+
+function flattenAndClean(winningLines) {
+  return [...new Set([].concat(...winningLines))];
 }
