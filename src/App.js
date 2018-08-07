@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { OldGameInfo, NameAndRoomInput } from './OldGameInfo';
 import { RoomInput, NameInput, RoomList, GameInfo } from './GameInfo';
 import { Board, BoardContainer } from './Board';
-import { calculateWinner, calculateWinningLines, calculateTurnNumber } from './calculateWinner';
+import { calculateWinner} from './calculateWinner';
 import './App.css';
 import io from "socket.io-client";
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
