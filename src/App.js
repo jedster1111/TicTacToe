@@ -60,7 +60,7 @@ class GameContainer extends Component{
       this.setState({ playerData });
     });
     socket.on('rooms', (rooms) =>{
-      this.setState({ rooms });
+      this.setState(() => ({ rooms }));
     });
     socket.on('disconnect', () => {
       console.log('disconnected!!!');
@@ -151,12 +151,34 @@ class GameContainer extends Component{
   }
   handleTeamToggleClick(team) {
 		if(this.state.playerData.team !== team){
-			this.setState((prevState) => ({playerData: {...prevState.playerData,team:team}}));
+      this.setState((prevState) => ({playerData: {...prevState.playerData,team:team}}));
+      this.state.socket.emit('set-team', team);
 		}
-    this.state.socket.emit('set-team', team);
   }
   handleResetClick() {
-    this.state.socket.emit('reset-game');
+    if(this.state.playerData.roomName){
+      this.state.socket.emit('reset-game');
+    }
+    else if (
+      this.state.roomData.squares.some(
+        (square) => square !== null
+      )
+    ) {
+      this.setState((prevState)=>{
+        const {roomData:prevRoomData, playerData: prevPlayerData} = prevState;
+        const roomData = {
+          ...prevRoomData,
+          squares:Array(9).fill(null),
+          currentPlayer: 'X',
+          winner: ''
+        };
+        const playerData = {
+          ...prevPlayerData,
+          team: 'X'
+        }
+        return ({roomData, playerData});
+      })
+    }
   }
   handleLeaveRoomClick() {
     this.state.socket.emit('leave-room');
