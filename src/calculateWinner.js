@@ -21,7 +21,7 @@ export const calculateWinningLines=(squares)=>{
 export const calculateWinner=(squares, currentPlayer)=>{
 	const winningLines = calculateWinningLines(squares);
 	const turnNumber = calculateTurnNumber(squares);
-	console.log(turnNumber);
+	//console.log(turnNumber);
   let result;
   if (winningLines.length === 0) {
       // no winner it was either a draw or game continues

@@ -13,7 +13,7 @@ export const Board = (props) => {
   const {squares} = props;
   const winningLines = calculateWinningLines(squares);
   const winningSquares = flattenAndClean(winningLines); //flattens and removes duplicates
-  winningSquares && console.log(winningLines, winningSquares);
+  //winningSquares && console.log(winningLines, winningSquares);
   const renderSquare = (i) => {
     const square = squares[i]
     const extraClass = winningSquares.indexOf(i) !== -1 ? 'winning-square' : '';
