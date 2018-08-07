@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { OldGameInfo, NameAndRoomInput } from './OldGameInfo';
 import { RoomInput, NameInput, RoomList, GameInfo } from './GameInfo';
 import { Board, BoardContainer } from './Board';
-import { calculateWinner, calculateWinningLines } from './calculateWinner';
+import { calculateWinner, calculateWinningLines, calculateTurnNumber } from './calculateWinner';
 import './App.css';
 import io from "socket.io-client";
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
@@ -181,7 +181,23 @@ class GameContainer extends Component{
     }
   }
   handleLeaveRoomClick() {
-    this.state.socket.emit('leave-room');
+    if(this.state.playerData.roomName){
+      this.state.socket.emit('leave-room');
+      this.setState((prevState)=>{
+        const {roomData:prevRoomData, playerData: prevPlayerData} = prevState;
+        const roomData = {
+          ...prevRoomData,
+          squares:Array(9).fill(null),
+          currentPlayer: 'X',
+          winner: ''
+        };
+        const playerData = {
+          ...prevPlayerData,
+          team: 'X'
+        }
+        return ({roomData, playerData});
+      })
+    }
   }
   renderIsConnected() {
       const isConnected = this.state.isConnected;

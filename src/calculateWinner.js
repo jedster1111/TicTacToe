@@ -20,25 +20,30 @@ export const calculateWinningLines=(squares)=>{
 }
 export const calculateWinner=(squares, currentPlayer)=>{
 	const winningLines = calculateWinningLines(squares);
-	const turnNumber = squares.reduce((count, square)=>{
-		if(square !== null){
-			return (count+1);
-		}	
-		else{
-			return count;
-		}
-	}, 0)
+	const turnNumber = calculateTurnNumber(squares);
 	console.log(turnNumber);
   let result;
   if (winningLines.length === 0) {
       // no winner it was either a draw or game continues
       if (turnNumber === 9) {
-          return result = 'draw';
+          result = 'draw';
       } else {
-          return result = null;
+          result = null;
       }
   } else {
-      return currentPlayer;
+      result = currentPlayer;
   }
+  return result;
   //Return X, O, draw, or null
+}
+
+export function calculateTurnNumber(squares) {
+    return squares.reduce((count, square) => {
+        if (square !== null) {
+            return (count + 1);
+        }
+        else {
+            return count;
+        }
+    }, 0);
 }

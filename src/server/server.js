@@ -206,6 +206,7 @@ class Player {
             this.client.leave(this.room.name);
             this.room.playerLeft(this);
             this.room = {};
+            this.team = 'X';
             this.emitData();
         }
     }
