@@ -70,7 +70,7 @@ class GameContainer extends Component{
         playerName: '',
         roomName: '',
         rooms: [],
-        playerData: {name: '', roomName: '', team: '', id: ''},
+        playerData: {name: '', roomName: '', team: 'X', id: ''},
         roomData: {squares: Array(9).fill(null), players: [], currentPlayer: 'X', winner: null},
        });
       this.handleIsChangeName();
