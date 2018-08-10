@@ -10,10 +10,12 @@ console.log(ENVIRONMENT, PORT);
 (ENVIRONMENT === 'development') && console.log("You are running in dev mode");
 
 //const socketPort = 8000;
-if(ENVIRONMENT === 'development'){
+if (ENVIRONMENT === 'development') {
     app.use(express.static(path.join(__dirname, '../../build')));
     app.get('/', (req, res) =>
-        res.send({ response: "I am alive"}).status(200)
+        res.send({
+            response: "I am alive"
+        }).status(200)
     );
 } else {
     app.use(express.static(path.join(__dirname, '../../build')));
@@ -40,14 +42,15 @@ class Room {
     }
     get playerData() {
         let playerData = this.players.map((player) => {
-                return(
-                    {name: player.name, team: player.team, id: player.client.id}
-                );
-            }
-        );
+            return ({
+                name: player.name,
+                team: player.team,
+                id: player.client.id
+            });
+        });
         return playerData;
     }
-    get data() {   
+    get data() {
         let data = {
             squares: this.squares,
             players: this.playerData,
@@ -151,12 +154,11 @@ class Player {
         this.room = {};
         this.team = 'X';
     };
-    get data () {
+    get data() {
         let roomName;
-        if(this.room.name === undefined){
+        if (this.room.name === undefined) {
             roomName = '';
-        }
-        else{
+        } else {
             roomName = this.room.name;
         }
         const data = {
@@ -167,20 +169,20 @@ class Player {
         };
         return data;
     }
-    get isInRoom (){
+    get isInRoom() {
         return (!(Object.keys(this.room).length === 0 && this.room.constructor === Object));
     }
-    emitData () {
+    emitData() {
         this.client.emit('player-data', this.data);
     }
-    emitDataToPlayers () {
-        if(this.isInRoom){
+    emitDataToPlayers() {
+        if (this.isInRoom) {
             this.room.pushData();
         }
     }
     joinRoom(roomName, setState) {
         if (roomName !== '' && this.room.name !== roomName) {
-            if(this.isInRoom){
+            if (this.isInRoom) {
                 this.client.leave(this.room.name);
                 this.room.playerLeft(this);
                 this.room = {};
@@ -211,12 +213,12 @@ class Player {
         }
     }
     resetRoom() {
-        if(this.isInRoom && this.room.turnNumber !==0){
+        if (this.isInRoom && this.room.turnNumber !== 0) {
             this.room.reset();
         }
     }
     setName(name, setState) {
-        if(name && name !== this.name){
+        if (name && name !== this.name) {
             this.name = name;
             this.emitData();
             this.emitDataToPlayers();
@@ -224,7 +226,7 @@ class Player {
         }
     }
     setTeam(team) {
-        if(this.team !== team){
+        if (this.team !== team) {
             this.team = team;
             this.emitData();
             this.emitDataToPlayers();
@@ -242,7 +244,7 @@ class Player {
 
 function emitRooms() {
     io.emit('rooms', rooms.map(room => room.name));
-}   
+}
 
 function clientConnect(client, player) {
     console.log("New client connected");
@@ -264,10 +266,10 @@ io.on('connection', client => {
     let player = new Player(client);
     clientConnect(client, player);
     client.on('set-name', (name, setState) => {
-        player.setName(name.trim().replace(/\s{2,}/g,' '), setState);
+        player.setName(name.trim().replace(/\s{2,}/g, ' '), setState);
     });
     client.on('join-room', (roomName, setState) => {
-        player.joinRoom(roomName.trim().replace(/\s{2,}/g,' '), setState);
+        player.joinRoom(roomName.trim().replace(/\s{2,}/g, ' '), setState);
     });
     client.on('set-team', (team) => {
         player.setTeam(team)
@@ -291,4 +293,3 @@ io.on('connection', client => {
 //    console.log(allPlayers.map(player => player.name));
 //    console.log(rooms);
 //}, 5000);
-
