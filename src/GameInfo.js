@@ -6,7 +6,7 @@ import "./GameInfo.css";
 
 const RoomWithJoinButton = props => {
   return (
-    <div key={props.containerKey} className={props.containerClass}>
+    <div className={props.containerClass}>
       {props.rooms.map(room => {
         const isJoinedRoom = room === props.roomNameConfirmed;
         const containerClass = isJoinedRoom

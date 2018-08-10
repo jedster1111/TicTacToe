@@ -37,7 +37,7 @@ export const calculateWinner = (squares, currentPlayer) => {
   //Return X, O, draw, or null
 };
 
-export function calculateTurnNumber(squares) {
+function calculateTurnNumber(squares) {
   return squares.reduce((count, square) => {
     if (square !== null) {
       return count + 1;
