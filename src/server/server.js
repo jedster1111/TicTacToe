@@ -302,3 +302,8 @@ io.on("connection", client => {
 //    console.log(allPlayers.map(player => player.name));
 //    console.log(rooms);
 //}, 5000);
+process.on("SIGINT", function() {
+  console.log("\nShutting down");
+  console.log("Stopping Server...");
+  process.exit();
+});
