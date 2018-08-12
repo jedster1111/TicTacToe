@@ -303,7 +303,7 @@ io.on("connection", client => {
 //    console.log(rooms);
 //}, 5000);
 process.on("SIGINT", function() {
-  console.log("\nShutting down");
+  console.log("\nShutting down, some one hit ctrl c");
   console.log("Stopping Server...");
   process.exit();
 });
