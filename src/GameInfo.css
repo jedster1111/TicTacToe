@@ -1,9 +1,9 @@
 .game-info-container{
+	flex:1;
 	justify-content: center;
   flex-wrap: wrap;
 	max-width: 485px;
-	min-width: 150px;
-	width:50%;
+	min-width: 260px;
   padding: 20px 10px;
   margin: 10px 20px;
   background-color: #FFA0C9;
@@ -133,4 +133,40 @@
 }
 .room-controls-container button:active{
 	background-color: lightcoral;
+}
+.player-list-container{
+	background-color: rgb(243, 211, 211);
+	border: 1px solid black;
+	border-radius: 8px;
+	padding: 3px 8px;
+}
+.player-list-container .X-O-teams {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+.player-list-container .X-O-teams .player-list {
+	flex: 1 0 45%;
+}
+.player-list-container .player-list {
+	overflow-wrap: break-word;
+	overflow: hidden;
+	text-align: center;
+	padding: 0 5px;
+}
+.player-list-container .player-list div {
+	margin: 2px 0;
+	padding-left: 8px;
+	border-bottom: 1px dashed rgb(0, 0, 0);
+}
+.player-list-text {
+	font-weight: bold;
+	font-size: 22px;
+	text-align: center;
+	border-bottom: 1px solid black;
+	display: block;
+	margin-bottom: 4px;
+}
+.player-list .empty {
+	font-style: italic
 }

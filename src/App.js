@@ -208,7 +208,8 @@ class GameContainer extends Component {
           ...prevRoomData,
           squares: Array(9).fill(null),
           currentPlayer: "X",
-          winner: ""
+          winner: "",
+          players: []
         };
         const playerData = {
           ...prevPlayerData,
@@ -230,7 +231,8 @@ class GameContainer extends Component {
           ...prevRoomData,
           squares: Array(9).fill(null),
           currentPlayer: "X",
-          winner: ""
+          winner: "",
+          players: []
         };
         const playerData = {
           ...prevPlayerData,
@@ -259,7 +261,8 @@ class GameContainer extends Component {
     const isConnected = this.renderIsConnected();
     const playerNameConfirmed = this.state.playerData.name;
     const roomNameConfirmed = this.state.playerData.roomName;
-    const { isChangingName, roomName, rooms } = this.state;
+    const { roomData, isChangingName, roomName, rooms } = this.state;
+    const { players } = roomData;
     return (
       <Fragment>
         <div className="game-container">
@@ -275,6 +278,7 @@ class GameContainer extends Component {
             playerData={this.state.playerData}
             winner={winner}
             isTurn={isTurn}
+            players={players}
           />
         </div>
         <div className="name-room-container">

@@ -164,7 +164,7 @@ export const NameInput = props => {
       ) : (
         <Fragment>
           <div className="name-text">
-            Welcome <strong>{playerNameConfirmed}</strong>
+            Welcome <strong>{playerNameConfirmed || "Unnamed Player"}</strong>
           </div>
           <div className="input-form">
             <button
@@ -220,8 +220,49 @@ const RoomControls = props => {
     </div>
   );
 };
+const PlayerList = props => {
+  const filterPlayers = (players, teamName) => {
+    const filtered = !isPlayersEmpty
+      ? players.filter(player => player.team === teamName)
+      : playerData.team === teamName
+        ? [{ name: playerData.name, team: teamName }]
+        : [];
+    return filtered;
+  };
+  const renderTeam = (players, teamName) => {
+    return (
+      <div className="player-list">
+        <span className="player-list-text">{teamName}</span>
+        {players.length !== 0 ? (
+          players.map(player => (
+            <div className="player" key={player.id}>
+              {player.name || "Unnamed Player"}
+            </div>
+          ))
+        ) : (
+          <div className="empty">empty</div>
+        )}
+      </div>
+    );
+  };
+  const { players, playerData } = props;
+  const isPlayersEmpty = players.length === 0;
+  const xPlayers = filterPlayers(players, "X");
+  const oPlayers = filterPlayers(players, "O");
+  const spectators = filterPlayers(players, "");
+
+  return (
+    <div className="player-list-container">
+      <div className="X-O-teams">
+        {renderTeam(xPlayers, "X")}
+        {renderTeam(oPlayers, "O")}
+      </div>
+      {renderTeam(spectators, "Spectating")}
+    </div>
+  );
+};
 export const GameInfo = props => {
-  const { playerData } = props;
+  const { playerData, players } = props;
   return (
     <div className="game-info-container">
       <TeamToggle
@@ -232,6 +273,7 @@ export const GameInfo = props => {
         handleResetClick={props.handleResetClick}
         handleLeaveRoomClick={props.handleLeaveRoomClick}
       />
+      <PlayerList players={players} playerData={playerData} />
     </div>
   );
 };
