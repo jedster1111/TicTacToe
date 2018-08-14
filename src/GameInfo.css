@@ -157,7 +157,7 @@
 .player-list-container .player-list div {
 	margin: 2px 0;
 	padding-left: 8px;
-	border-bottom: 1px dashed rgb(0, 0, 0);
+	border-bottom: 1px dashed rgb(109, 109, 109);
 }
 .player-list-container .player-list .player {
 	font-weight: bold;
