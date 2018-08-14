@@ -220,44 +220,49 @@ const RoomControls = props => {
     </div>
   );
 };
-const PlayerList = props => {
-  const filterPlayers = (players, teamName) => {
-    const filtered = !isPlayersEmpty
-      ? players.filter(player => player.team === teamName)
-      : playerData.team === teamName
-        ? [{ name: playerData.name, team: teamName }]
-        : [];
-    return filtered;
-  };
-  const renderTeam = (players, teamName) => {
-    return (
-      <div className="player-list">
-        <span className="player-list-text">{teamName}</span>
-        {players.length !== 0 ? (
-          players.map(player => (
-            <div className="player" key={player.id}>
+const filterPlayers = (players, teamName, playerData) => {
+  const isPlayersEmpty = players.length === 0;
+  const filtered = !isPlayersEmpty
+    ? players.filter(player => player.team === teamName)
+    : playerData.team === teamName
+      ? [{ name: playerData.name, team: teamName }]
+      : [];
+  return filtered;
+};
+const renderTeam = (players, teamName, playerData) => {
+  return (
+    <div className="player-list">
+      <span className="player-list-text">{teamName}</span>
+      {players.length !== 0 ? (
+        players.map(player => {
+          const classes =
+            player.id === playerData.id || !player.id
+              ? "player"
+              : "other-players";
+          return (
+            <div className={classes} key={player.id || playerData.id}>
               {player.name || "Unnamed Player"}
             </div>
-          ))
-        ) : (
-          <div className="empty">empty</div>
-        )}
-      </div>
-    );
-  };
+          );
+        })
+      ) : (
+        <div className="empty">empty</div>
+      )}
+    </div>
+  );
+};
+const PlayerList = props => {
   const { players, playerData } = props;
-  const isPlayersEmpty = players.length === 0;
-  const xPlayers = filterPlayers(players, "X");
-  const oPlayers = filterPlayers(players, "O");
-  const spectators = filterPlayers(players, "");
-
+  const xPlayers = filterPlayers(players, "X", playerData);
+  const oPlayers = filterPlayers(players, "O", playerData);
+  const spectators = filterPlayers(players, "", playerData);
   return (
     <div className="player-list-container">
       <div className="X-O-teams">
-        {renderTeam(xPlayers, "X")}
-        {renderTeam(oPlayers, "O")}
+        {renderTeam(xPlayers, "X", playerData)}
+        {renderTeam(oPlayers, "O", playerData)}
       </div>
-      {renderTeam(spectators, "Spectating")}
+      {renderTeam(spectators, "Spectating", playerData)}
     </div>
   );
 };

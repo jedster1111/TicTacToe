@@ -159,6 +159,9 @@
 	padding-left: 8px;
 	border-bottom: 1px dashed rgb(0, 0, 0);
 }
+.player-list-container .player-list .player {
+	font-weight: bold;
+}
 .player-list-text {
 	font-weight: bold;
 	font-size: 22px;
