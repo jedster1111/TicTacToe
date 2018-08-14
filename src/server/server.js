@@ -302,8 +302,7 @@ io.on("connection", client => {
 //    console.log(allPlayers.map(player => player.name));
 //    console.log(rooms);
 //}, 5000);
-// a comment it aborts
-// can you get this in your code
+
 process.on("SIGINT", function() {
   console.log("\nShutting down, some one hit ctrl c");
   console.log("Stopping Server...");
