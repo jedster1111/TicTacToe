@@ -1,0 +1,34 @@
+.connection-status-container {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 250px;
+    height:50px;
+    background-color: rgb(243, 211, 211);
+    border: solid 1px black;
+    border-radius: 8px;
+    margin: 5px 0;
+    margin-left: 5px;
+    padding: 2px 8px;
+}
+.connection-status-text {
+    white-space: nowrap;
+}
+.connection-status {
+    width:30px;
+    height:30px;
+    margin: 8px;
+    margin-right: 0;
+    border-radius: 50%;
+    border: solid 1px rgb(95, 95, 95);
+}
+.connection-status.connected{
+    background-color: rgb(22, 177, 2);
+}
+.connection-status.connecting{
+    background-color: rgb(253, 196, 40);
+}
+.connection-status.disconnected{
+    background-color: rgb(255, 39, 39);
+}

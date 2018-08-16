@@ -267,7 +267,7 @@ const PlayerList = props => {
   );
 };
 export const GameInfo = props => {
-  const { playerData, players } = props;
+  const { playerData, players, handleResetClick, handleLeaveRoomClick } = props;
   return (
     <div className="game-info-container">
       <TeamToggle
@@ -275,8 +275,8 @@ export const GameInfo = props => {
         team={playerData.team}
       />
       <RoomControls
-        handleResetClick={props.handleResetClick}
-        handleLeaveRoomClick={props.handleLeaveRoomClick}
+        handleResetClick={handleResetClick}
+        handleLeaveRoomClick={handleLeaveRoomClick}
       />
       <PlayerList players={players} playerData={playerData} />
     </div>

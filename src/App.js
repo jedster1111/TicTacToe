@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
-import { OldGameInfo, NameAndRoomInput } from "./OldGameInfo";
-import { RoomInput, NameInput, RoomList, GameInfo } from "./GameInfo";
-import { Board, BoardContainer } from "./Board";
+import { RoomInput, NameInput, GameInfo } from "./GameInfo";
+import { ConnectionStatus } from "./ConnectionStatus";
+import { BoardContainer } from "./Board";
 import { calculateWinner } from "./calculateWinner";
 import "./App.css";
 import io from "socket.io-client";
@@ -14,6 +14,7 @@ class GameContainer extends Component {
     super(props);
     this.state = {
       isConnected: false,
+      connectionStatus: "connecting",
       isChangingName: true,
       playerName: "",
       roomName: "",
@@ -55,7 +56,11 @@ class GameContainer extends Component {
     }
     socket.on("hello", rooms => {
       console.log("we made contact!");
-      this.setState({ rooms, isConnected: true });
+      this.setState({
+        rooms,
+        isConnected: true,
+        connectionStatus: "connected"
+      });
     });
     socket.on("game-data", roomData => {
       console.log(roomData);
@@ -69,7 +74,7 @@ class GameContainer extends Component {
       this.setState(() => ({ rooms }));
     });
     socket.on("disconnect", () => {
-      console.log("disconnected!!!");
+      console.log("trying to reconnect");
       this.setState({
         isConnected: false,
         isChangingName: true,
@@ -82,9 +87,18 @@ class GameContainer extends Component {
           players: [],
           currentPlayer: "X",
           winner: null
-        }
+        },
+        connectionStatus: "connecting"
       });
       this.handleIsChangeName();
+    });
+    socket.on("reconnecting", attemptNumber => {
+      if (attemptNumber > 4) {
+        console.log("disconnected probably, try refreshing?");
+        this.setState({
+          connectionStatus: "disconnected"
+        });
+      }
     });
     this.setState({ socket });
   };
@@ -258,13 +272,19 @@ class GameContainer extends Component {
     const isTurn =
       !winner &&
       this.state.playerData.team === this.state.roomData.currentPlayer;
-    const isConnected = this.renderIsConnected();
     const playerNameConfirmed = this.state.playerData.name;
     const roomNameConfirmed = this.state.playerData.roomName;
-    const { roomData, isChangingName, roomName, rooms } = this.state;
+    const {
+      roomData,
+      isChangingName,
+      roomName,
+      rooms,
+      connectionStatus
+    } = this.state;
     const { players } = roomData;
     return (
       <Fragment>
+        <ConnectionStatus connectionStatus={connectionStatus} />
         <div className="game-container">
           <BoardContainer
             roomName={roomNameConfirmed}
@@ -279,6 +299,7 @@ class GameContainer extends Component {
             winner={winner}
             isTurn={isTurn}
             players={players}
+            connectionStatus={connectionStatus}
           />
         </div>
         <div className="name-room-container">
@@ -299,28 +320,6 @@ class GameContainer extends Component {
             roomName={roomName}
             rooms={rooms}
           />
-        </div>
-        <div>
-          {isConnected}
-          <RoomList rooms={this.state.rooms} />
-          <NameAndRoomInput
-            handlePlayerNameChange={this.handlePlayerNameChange}
-            handlePlayerNameSubmit={this.handlePlayerNameSubmit}
-            playerName={this.state.playerName}
-            handleRoomNameChange={this.handleRoomNameChange}
-            handleRoomNameSubmit={this.handleRoomNameSubmit}
-            roomName={this.state.roomName}
-          />
-          <div>
-            <Board squares={squares} onClick={this.handleSquareClick} />
-            <OldGameInfo
-              player={this.state.playerData}
-              room={this.state.roomData}
-              onTeamToggleClick={this.handleTeamToggleClick}
-              onResetClick={this.handleResetClick}
-              onLeaveRoomClick={this.handleLeaveRoomClick}
-            />
-          </div>
         </div>
       </Fragment>
     );
