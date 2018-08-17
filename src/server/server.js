@@ -74,7 +74,6 @@ class Room {
     let result = this.calculateWinner(this.squares);
     if (result === "X" || result === "O" || result === "draw") {
       //There's a WINNER or a DRAW
-      this.currentPlayer = null;
       this.winner = result;
     } else {
       //Game continues
@@ -244,7 +243,7 @@ class Player {
   }
   pushedSquare(newSquare) {
     if (this.room !== null) {
-      if (this.team === this.room.currentPlayer) {
+      if (this.team === this.room.currentPlayer && !this.room.winner) {
         this.room.receivedSquare(newSquare);
       }
     }

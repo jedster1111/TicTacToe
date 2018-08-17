@@ -66,8 +66,7 @@ const BoardTurnText = ({ winner, currentPlayer }) => {
   return <div className={`board-turn-text-container${extraClass}`}>{text}</div>;
 };
 export const BoardContainer = props => {
-  const { roomName, squares, handleSquareClick, currentPlayer } = props;
-  const winner = calculateWinner(squares, currentPlayer);
+  const { roomName, squares, handleSquareClick, currentPlayer, winner } = props;
   return (
     <div className="board-container">
       <BoardRoomText roomName={roomName} />

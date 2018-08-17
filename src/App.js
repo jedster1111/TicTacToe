@@ -332,6 +332,7 @@ class GameContainer extends Component {
             roomName={roomNameConfirmed}
             squares={squares}
             handleSquareClick={this.handleSquareClick}
+            winner={winner}
             currentPlayer={this.state.roomData.currentPlayer}
           />
           <GameInfo
