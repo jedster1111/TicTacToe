@@ -75,22 +75,29 @@ class GameContainer extends Component {
     });
     socket.on("disconnect", () => {
       console.log("trying to reconnect");
-      this.setState({
-        isConnected: false,
-        isChangingName: true,
-        playerName: "",
-        roomName: "",
-        rooms: [],
-        playerData: { name: "", roomName: "", team: "X", id: "" },
-        roomData: {
-          squares: Array(9).fill(null),
-          players: [],
-          currentPlayer: "X",
-          winner: null
-        },
-        connectionStatus: "connecting"
+      this.setState(prevState => {
+        const isNotInRoom = prevState.roomName === "";
+        const playerData = isNotInRoom
+          ? prevState.playerData
+          : { ...prevState.playerData, roomName: "", team: "X" };
+        const roomData = isNotInRoom
+          ? prevState.roomData
+          : {
+              squares: Array(9).fill(null),
+              players: [],
+              currentPlayer: "X",
+              winner: null
+            };
+        return {
+          isConnected: false,
+          playerName: "",
+          roomName: "",
+          rooms: [],
+          playerData: playerData,
+          roomData: roomData,
+          connectionStatus: "connecting"
+        };
       });
-      this.handleIsChangeName();
     });
     socket.on("reconnecting", attemptNumber => {
       if (attemptNumber > 4) {
@@ -284,7 +291,9 @@ class GameContainer extends Component {
     const { players } = roomData;
     return (
       <Fragment>
-        <ConnectionStatus connectionStatus={connectionStatus} />
+        {connectionStatus !== "connected" && (
+          <ConnectionStatus connectionStatus={connectionStatus} />
+        )}
         <div className="game-container">
           <BoardContainer
             roomName={roomNameConfirmed}
