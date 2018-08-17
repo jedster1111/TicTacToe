@@ -54,6 +54,19 @@ class GameContainer extends Component {
     } else {
       socket = io();
     }
+    socket.on("connect", () => {
+      console.log("connect fired off", this.state.playerData);
+      this.state.playerData.name &&
+        this.state.socket.emit("set-name", this.state.playerData.name, () => {
+          this.setState(prevState => {
+            return {
+              isChangingName: false,
+              playerName: prevState.playerData.name
+            };
+          });
+        });
+      this.state.socket.emit("set-team", this.state.playerData.team);
+    });
     socket.on("hello", rooms => {
       console.log("we made contact!");
       this.setState({
@@ -76,7 +89,7 @@ class GameContainer extends Component {
     socket.on("disconnect", () => {
       console.log("trying to reconnect");
       this.setState(prevState => {
-        const isNotInRoom = prevState.roomName === "";
+        const isNotInRoom = prevState.playerData.roomName === "";
         const playerData = isNotInRoom
           ? prevState.playerData
           : { ...prevState.playerData, roomName: "", team: "X" };
@@ -128,20 +141,37 @@ class GameContainer extends Component {
       roomName: e.target.value.replace(/\s{2,}/g, " ").replace(/^\s+/g, "")
     });
   }
-  handlePlayerNameSubmit(e) {
-    e.preventDefault();
-    const { playerName, playerData } = this.state;
+  playerNameSubmit() {
+    const { playerName, playerData, connectionStatus } = this.state;
     const playerNameTrimmed = playerName
       .trim()
       .replace(/\s{2,}/g, " ")
       .replace(/^\s+/g, "");
-    if (playerNameTrimmed !== playerData.name && playerNameTrimmed) {
-      this.state.socket.emit("set-name", playerNameTrimmed, () => {
-        this.setState({ isChangingName: false, playerName: playerNameTrimmed });
+    if (connectionStatus === "connected") {
+      if (playerNameTrimmed !== playerData.name && playerNameTrimmed) {
+        this.state.socket.emit("set-name", playerNameTrimmed, () => {
+          this.setState({
+            isChangingName: false,
+            playerName: playerNameTrimmed
+          });
+        });
+      } else if (playerData.name && playerNameTrimmed === playerData.name) {
+        this.setState({ isChangingName: false });
+      }
+    } else {
+      this.setState(prevState => {
+        const { playerData } = prevState;
+        return {
+          isChangingName: false,
+          playerName: playerNameTrimmed,
+          playerData: { ...playerData, name: playerNameTrimmed }
+        };
       });
-    } else if (playerData.name && playerNameTrimmed === playerData.name) {
-      this.setState({ isChangingName: false });
     }
+  }
+  handlePlayerNameSubmit(e) {
+    e.preventDefault();
+    this.playerNameSubmit();
   }
   handleRoomNameSubmit(e) {
     e.preventDefault();
@@ -179,33 +209,36 @@ class GameContainer extends Component {
       !this.state.roomData.winner &&
       this.state.roomData.squares[i] === null
     ) {
-      this.setState(prevState => {
-        const {
-          playerData: prevPlayerData,
-          roomData: prevRoomData
-        } = prevState;
-        const {
-          squares: prevSquares,
-          currentPlayer: prevCurrentPlayer
-        } = prevRoomData;
-        const team = prevPlayerData.team;
-        let newSquares = [...prevSquares];
-        newSquares[i] = team;
-        const winner = calculateWinner(newSquares, prevCurrentPlayer);
-        const nextPlayer = winner
-          ? prevCurrentPlayer
-          : prevCurrentPlayer === "X"
-            ? "O"
-            : "X";
-        const roomData = {
-          ...prevRoomData,
-          squares: newSquares,
-          currentPlayer: nextPlayer,
-          winner: winner
-        };
-        const playerData = { ...prevPlayerData, team: nextPlayer };
-        return { roomData: roomData, playerData: playerData };
-      });
+      this.setState(
+        prevState => {
+          const {
+            playerData: prevPlayerData,
+            roomData: prevRoomData
+          } = prevState;
+          const {
+            squares: prevSquares,
+            currentPlayer: prevCurrentPlayer
+          } = prevRoomData;
+          const team = prevPlayerData.team;
+          let newSquares = [...prevSquares];
+          newSquares[i] = team;
+          const winner = calculateWinner(newSquares, prevCurrentPlayer);
+          const nextPlayer = winner
+            ? prevCurrentPlayer
+            : prevCurrentPlayer === "X"
+              ? "O"
+              : "X";
+          const roomData = {
+            ...prevRoomData,
+            squares: newSquares,
+            currentPlayer: nextPlayer,
+            winner: winner
+          };
+          const playerData = { ...prevPlayerData, team: nextPlayer };
+          return { roomData: roomData, playerData: playerData };
+        },
+        () => this.state.socket.emit("set-team", this.state.playerData.team)
+      );
     }
   }
   handleTeamToggleClick(team) {
@@ -291,9 +324,7 @@ class GameContainer extends Component {
     const { players } = roomData;
     return (
       <Fragment>
-        {connectionStatus !== "connected" && (
-          <ConnectionStatus connectionStatus={connectionStatus} />
-        )}
+        <ConnectionStatus connectionStatus={connectionStatus} />
         <div className="game-container">
           <BoardContainer
             roomName={roomNameConfirmed}

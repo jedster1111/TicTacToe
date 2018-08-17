@@ -12,6 +12,7 @@
     margin-left: 5px;
     padding: 2px 8px;
     box-shadow: 0 0 8px 1px black;
+    z-index: 100;
 }
 .connection-status-text {
     white-space: nowrap;
