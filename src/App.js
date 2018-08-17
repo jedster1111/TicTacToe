@@ -12,14 +12,15 @@ ENVIRONMENT === "development" && console.log("You are running in DEV mode");
 class GameContainer extends Component {
   constructor(props) {
     super(props);
+    const playerName = sessionStorage.getItem("playerName") || "";
     this.state = {
       isConnected: false,
       connectionStatus: "connecting",
-      isChangingName: true,
-      playerName: "",
+      isChangingName: playerName === "",
+      playerName: playerName,
       roomName: "",
       rooms: [],
-      playerData: { name: "", roomName: "", team: "X", id: "" },
+      playerData: { name: playerName, roomName: "", team: "X", id: "" },
       roomData: {
         squares: Array(9).fill(null),
         players: [],
@@ -48,7 +49,7 @@ class GameContainer extends Component {
     if (ENVIRONMENT === "development") {
       let LOCALIP = process.env.REACT_APP_LOCAL_IP || "localhost";
       console.log(
-        `You are running on ${LOCALIP}, see readme to set environemnt variable for local ip if you want to test on multiple devices!`
+        `You are running on ${LOCALIP}, see readme to set environment variable for local ip if you want to test on multiple devices!`
       );
       socket = io(`http://${LOCALIP}:8000`);
     } else {
@@ -168,6 +169,7 @@ class GameContainer extends Component {
         };
       });
     }
+    sessionStorage.setItem("playerName", playerNameTrimmed);
   }
   handlePlayerNameSubmit(e) {
     e.preventDefault();
