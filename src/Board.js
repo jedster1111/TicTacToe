@@ -1,7 +1,10 @@
 import React from "react";
-import { calculateWinningLines } from "./calculateWinner";
+import { calculateWinningLines, calculateWinner } from "./calculateWinner";
 import "./Board.css";
 
+function flattenAndClean(winningLines) {
+  return [...new Set([].concat(...winningLines))];
+}
 const Square = props => {
   return (
     <button className={`square ${props.extraClass}`} onClick={props.onClick}>
@@ -43,20 +46,33 @@ export const Board = props => {
   };
   return <div className="board">{createTable()}</div>;
 };
+const BoardRoomText = ({ roomName }) => {
+  const text = roomName ? (
+    <div className="board-room-text">{roomName}</div>
+  ) : (
+    <div className="board-room-text">Offline Game</div>
+  );
+  return text;
+};
+const BoardTurnText = ({ winner, currentPlayer }) => {
+  console.log(winner, currentPlayer);
+  const text =
+    winner === null
+      ? `${currentPlayer}'s turn`
+      : winner === "draw"
+        ? `Draw!`
+        : `${currentPlayer} wins!`;
+  const extraClass = winner === null ? "" : " finished";
+  return <div className={`board-turn-text-container${extraClass}`}>{text}</div>;
+};
 export const BoardContainer = props => {
-  const { roomName, squares, handleSquareClick } = props;
+  const { roomName, squares, handleSquareClick, currentPlayer } = props;
+  const winner = calculateWinner(squares, currentPlayer);
   return (
     <div className="board-container">
-      {roomName ? (
-        <div className="board-room-text">{roomName}</div>
-      ) : (
-        <div className="board-room-text">Offline Game</div>
-      )}
+      <BoardRoomText roomName={roomName} />
       <Board squares={squares} onClick={handleSquareClick} />
+      <BoardTurnText winner={winner} currentPlayer={currentPlayer} />
     </div>
   );
 };
-
-function flattenAndClean(winningLines) {
-  return [...new Set([].concat(...winningLines))];
-}

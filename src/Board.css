@@ -53,3 +53,14 @@
 	border: 1px solid black;
 	z-index: 50;
 }
+.board-turn-text-container {
+	background-color: rgb(243, 211, 211);
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 4px 6px;
+	text-align: center;
+	font-size: 18px;
+}
+.board-turn-text-container.finished {
+	font-weight: bold;
+}
