@@ -14,7 +14,6 @@ class GameContainer extends Component {
     super(props);
     const playerName = sessionStorage.getItem("playerName") || "";
     this.state = {
-      isConnected: false,
       connectionStatus: "connecting",
       isChangingName: playerName === "",
       playerName: playerName,
@@ -297,16 +296,6 @@ class GameContainer extends Component {
         return { roomData, playerData };
       });
     }
-  }
-  renderIsConnected() {
-    const isConnected = this.state.isConnected;
-    let isConnectedText;
-    if (isConnected) {
-      isConnectedText = <div>You are connected</div>;
-    } else {
-      isConnectedText = <div>DISCONNECTED</div>;
-    }
-    return isConnectedText;
   }
   render() {
     const squares = this.state.roomData.squares;
