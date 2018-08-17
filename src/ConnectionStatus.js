@@ -12,9 +12,15 @@ export const ConnectionStatusText = ({ connectionStatus }) => {
   return <div>{message}</div>;
 };
 
-export const ConnectionStatus = ({ connectionStatus }) => (
-  <div className="connection-status-container">
-    <span className="connection-status-text">Connection status:</span>
-    <div className={`connection-status ${connectionStatus}`} />
-  </div>
-);
+export const ConnectionStatus = ({
+  connectionStatus,
+  showConnectionStatus
+}) => {
+  const extraClass = showConnectionStatus ? "" : " hidden";
+  return (
+    <div className={`connection-status-container${extraClass}`}>
+      <span className="connection-status-text">Connection status:</span>
+      <div className={`connection-status ${connectionStatus}`} />
+    </div>
+  );
+};

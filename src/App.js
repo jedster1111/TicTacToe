@@ -15,6 +15,7 @@ class GameContainer extends Component {
     const playerName = sessionStorage.getItem("playerName") || "";
     this.state = {
       connectionStatus: "connecting",
+      showConnectionStatus: true,
       isChangingName: playerName === "",
       playerName: playerName,
       roomName: "",
@@ -73,11 +74,19 @@ class GameContainer extends Component {
     });
     socket.on("hello", rooms => {
       console.log("Succesfully communicating with server!");
-      this.setState({
-        rooms,
-        isConnected: true,
-        connectionStatus: "connected"
-      });
+      this.setState(
+        {
+          rooms,
+          connectionStatus: "connected",
+          showConnectionStatus: true
+        },
+        () => {
+          //show connection status for some time then hide again
+          setTimeout(() => {
+            this.setState({ showConnectionStatus: false });
+          }, 5000);
+        }
+      );
     });
     socket.on("game-data", roomData => {
       //console.log(roomData);
@@ -106,13 +115,13 @@ class GameContainer extends Component {
               winner: null
             };
         return {
-          isConnected: false,
           playerName: "",
           roomName: "",
           rooms: [],
           playerData: playerData,
           roomData: roomData,
-          connectionStatus: "connecting"
+          connectionStatus: "connecting",
+          showConnectionStatus: true
         };
       });
     });
@@ -121,9 +130,16 @@ class GameContainer extends Component {
         console.log(`Disconnected, attempt to reconnect #${attemptNumber}`);
       } else if (attemptNumber === 5) {
         console.log("Have you lost connection? Try refreshing?");
-        this.setState({
-          connectionStatus: "disconnected"
-        });
+        this.setState(
+          {
+            connectionStatus: "disconnected"
+          },
+          () => {
+            setTimeout(() => {
+              this.setState({ showConnectionStatus: false });
+            }, 5000);
+          }
+        );
       }
     });
     this.setState({ socket });
@@ -316,12 +332,12 @@ class GameContainer extends Component {
       isChangingName,
       roomName,
       rooms,
-      connectionStatus
+      connectionStatus,
+      showConnectionStatus
     } = this.state;
     const { players } = roomData;
     return (
       <Fragment>
-        <ConnectionStatus connectionStatus={connectionStatus} />
         <div className="game-container">
           <BoardContainer
             roomName={roomNameConfirmed}
@@ -360,6 +376,10 @@ class GameContainer extends Component {
             rooms={rooms}
           />
         </div>
+        <ConnectionStatus
+          connectionStatus={connectionStatus}
+          showConnectionStatus={showConnectionStatus}
+        />
       </Fragment>
     );
   }
