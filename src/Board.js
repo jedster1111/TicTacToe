@@ -55,7 +55,6 @@ const BoardRoomText = ({ roomName }) => {
   return text;
 };
 const BoardTurnText = ({ winner, currentPlayer }) => {
-  console.log(winner, currentPlayer);
   const text =
     winner === null
       ? `${currentPlayer}'s turn`

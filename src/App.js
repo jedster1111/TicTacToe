@@ -47,15 +47,19 @@ class GameContainer extends Component {
     let socket;
     if (ENVIRONMENT === "development") {
       let LOCALIP = process.env.REACT_APP_LOCAL_IP || "localhost";
-      console.log(
-        `You are running on ${LOCALIP}, see readme to set environment variable for local ip if you want to test on multiple devices!`
-      );
+      if (LOCALIP === "localhost") {
+        console.log(
+          `You are running on ${LOCALIP}, see readme to set environment variable for local ip if you want to test on multiple devices!`
+        );
+      } else {
+        console.log(`You are running on ${LOCALIP}`);
+      }
       socket = io(`http://${LOCALIP}:8000`);
     } else {
       socket = io();
     }
     socket.on("connect", () => {
-      console.log("connect fired off", this.state.playerData);
+      //console.log("connect fired off", this.state.playerData);
       this.state.playerData.name &&
         this.state.socket.emit("set-name", this.state.playerData.name, () => {
           this.setState(prevState => {
@@ -68,7 +72,7 @@ class GameContainer extends Component {
       this.state.socket.emit("set-team", this.state.playerData.team);
     });
     socket.on("hello", rooms => {
-      console.log("we made contact!");
+      console.log("Succesfully communicating with server!");
       this.setState({
         rooms,
         isConnected: true,
@@ -76,18 +80,18 @@ class GameContainer extends Component {
       });
     });
     socket.on("game-data", roomData => {
-      console.log(roomData);
+      //console.log(roomData);
       this.setState({ roomData });
     });
     socket.on("player-data", playerData => {
-      console.log(playerData);
+      //console.log(playerData);
       this.setState({ playerData });
     });
     socket.on("rooms", rooms => {
       this.setState(() => ({ rooms }));
     });
     socket.on("disconnect", () => {
-      console.log("trying to reconnect");
+      console.log("Trying to reconnect");
       this.setState(prevState => {
         const isNotInRoom = prevState.playerData.roomName === "";
         const playerData = isNotInRoom
@@ -113,8 +117,10 @@ class GameContainer extends Component {
       });
     });
     socket.on("reconnecting", attemptNumber => {
-      if (attemptNumber > 4) {
-        console.log("disconnected probably, try refreshing?");
+      if (attemptNumber < 5) {
+        console.log(`Disconnected, attempt to reconnect #${attemptNumber}`);
+      } else if (attemptNumber === 5) {
+        console.log("Have you lost connection? Try refreshing?");
         this.setState({
           connectionStatus: "disconnected"
         });
