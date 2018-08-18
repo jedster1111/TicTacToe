@@ -3,6 +3,7 @@ import { RoomInput, NameInput, GameInfo } from "./GameInfo";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { BoardContainer } from "./Board";
 import { calculateWinner } from "./calculateWinner";
+import { ChatRoom } from "./ChatRoom";
 import "./App.css";
 import io from "socket.io-client";
 const ENVIRONMENT = process.env.NODE_ENV || "development";
@@ -27,6 +28,8 @@ class GameContainer extends Component {
         currentPlayer: "X",
         winner: null
       },
+      messageInput: "",
+      messages: [],
       socket: null
     };
     this.handlePlayerNameChange = this.handlePlayerNameChange.bind(this);
@@ -40,6 +43,8 @@ class GameContainer extends Component {
     this.handleTeamToggleClick = this.handleTeamToggleClick.bind(this);
     this.handleResetClick = this.handleResetClick.bind(this);
     this.handleLeaveRoomClick = this.handleLeaveRoomClick.bind(this);
+    this.handleMessageChange = this.handleMessageChange.bind(this);
+    this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
   }
   componentDidMount() {
     this.initSocket();
@@ -141,6 +146,17 @@ class GameContainer extends Component {
           }
         );
       }
+    });
+    socket.on("new-message", (message, senderName) => {
+      this.setState(prevState => {
+        const prevMessages = prevState.messages;
+        const messages = [
+          ...prevMessages,
+          { message: message, sender: senderName }
+        ];
+        console.log(messages);
+        return { messages: messages };
+      });
     });
     this.setState({ socket });
   };
@@ -319,6 +335,18 @@ class GameContainer extends Component {
       });
     }
   }
+  handleMessageChange(e) {
+    this.setState({ messageInput: e.target.value });
+  }
+  handleMessageSubmit(e) {
+    e.preventDefault();
+    const { messageInput, socket, playerData } = this.state;
+    if (messageInput && playerData.roomName) {
+      //console.log(messageInput);
+      socket.emit("new-message", messageInput);
+      this.setState({ messageInput: "" });
+    }
+  }
   render() {
     const squares = this.state.roomData.squares;
     const winner = calculateWinner(squares, this.state.roomData.currentPlayer);
@@ -333,11 +361,19 @@ class GameContainer extends Component {
       roomName,
       rooms,
       connectionStatus,
-      showConnectionStatus
+      showConnectionStatus,
+      messageInput,
+      messages
     } = this.state;
     const { players } = roomData;
     return (
       <Fragment>
+        <ChatRoom
+          messageInput={messageInput}
+          messages={messages}
+          handleMessageChange={this.handleMessageChange}
+          handleMessageSubmit={this.handleMessageSubmit}
+        />
         <div className="game-container">
           <BoardContainer
             roomName={roomNameConfirmed}

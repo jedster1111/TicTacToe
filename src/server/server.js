@@ -152,6 +152,13 @@ class Room {
     this.winner = null;
     this.pushData();
   }
+  sendMessage(message, senderName) {
+    io.to(this.name).emit(
+      "new-message",
+      message,
+      senderName || "Unnamed Player"
+    );
+  }
 }
 class Player {
   constructor(socket) {
@@ -242,10 +249,15 @@ class Player {
     //should set this.team to either 'X' or 'O' or null
   }
   pushedSquare(newSquare) {
-    if (this.room !== null) {
+    if (this.isInRoom) {
       if (this.team === this.room.currentPlayer && !this.room.winner) {
         this.room.receivedSquare(newSquare);
       }
+    }
+  }
+  sendMessage(message) {
+    if (this.isInRoom) {
+      this.room.sendMessage(message, this.name);
     }
   }
 }
@@ -291,7 +303,10 @@ io.on("connection", client => {
   client.on("leave-room", () => {
     player.leaveRoom();
   });
-
+  client.on("new-message", message => {
+    //console.log(message);
+    player.sendMessage(message);
+  });
   client.on("disconnect", () => {
     clientDisconnect(client, player);
   });
