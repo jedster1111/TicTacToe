@@ -1,10 +1,16 @@
 .board-container{
-	flex: 0;
+	flex: 2;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	background-color: #FFA0C9;
 	padding: 15px 30px;
-	border: 1px solid black;
+	border: 2px solid rgba(34, 34, 34, 0.561);
 	border-radius: 8px;
 	margin: 10px 10px;
+	min-width: 225px;
+	max-width: 350px;
 }
 .board-container>.board-room-text{
 	margin: 0;
@@ -13,7 +19,6 @@
 	text-align: center;
 	word-wrap: break-word;
 	max-width: 250px;
-	
 }
 .board-container>.board{
 	display:flex;
@@ -60,6 +65,8 @@
 	padding: 4px 6px;
 	text-align: center;
 	font-size: 18px;
+	width: 75%;
+	max-width: 190px;
 }
 .board-turn-text-container.finished {
 	font-weight: bold;

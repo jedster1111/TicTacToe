@@ -1,5 +1,5 @@
 .chat-room-container {
-    flex: 1;
+    flex: 3;
     background-color: #FFA0C9;
     border: rgba(34, 34, 34, 0.561) 2px solid;
     border-radius: 10px;
@@ -11,8 +11,58 @@
 .chat-room-messages {
     background-color: rgb(243, 211, 211);
     border: 1px solid black;
-    border-radius: 8px;
+    margin: 5px 0;
     padding: 3px 8px;
-    height: 150px;
-    overflow: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    height: 335px;
+}
+.chat-room-messages::-webkit-scrollbar{
+    width: 7px;
+}
+.chat-room-messages::-webkit-scrollbar-track{
+    background: rgb(211, 211, 211);
+    margin: 0;
+    
+  }
+.chat-room-messages::-webkit-scrollbar-thumb{
+    background: rgb(116, 115, 115);
+    margin: 10px 0;
+  }
+.chat-room-messages::-webkit-scrollbar-thumb:hover{
+  background: rgb(82, 82, 82);
+}
+.chat-room-message-container {
+    border-bottom: 1px solid grey;
+    margin: 2px 0;
+}
+.chat-room-message-container>.sender-name {
+    font-weight: bold;
+}
+.chat-room-message-container>.sender-name::after {
+    content: ": ";
+}
+.chat-room-form {
+    padding:  0 15px;
+}
+.chat-room-form .chat-room-text-input {
+    outline: none;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 3px auto;
+    padding: 3px 5px;
+
+}
+.chat-room-form .chat-room-send-button {
+    display: block;
+    float: right;
+    border: none;
+    outline: none;
+    width: 15%;
+    margin: 3px 0;
+    padding: 5px 0;
+
+
 }

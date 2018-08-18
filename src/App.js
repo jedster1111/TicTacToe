@@ -6,6 +6,7 @@ import { calculateWinner } from "./calculateWinner";
 import { ChatRoom } from "./ChatRoom";
 import "./App.css";
 import io from "socket.io-client";
+const uuid = require("uuid/v1");
 const ENVIRONMENT = process.env.NODE_ENV || "development";
 //console.log(ENVIRONMENT);
 ENVIRONMENT === "development" && console.log("You are running in DEV mode");
@@ -126,7 +127,8 @@ class GameContainer extends Component {
           playerData: playerData,
           roomData: roomData,
           connectionStatus: "connecting",
-          showConnectionStatus: true
+          showConnectionStatus: true,
+          messages: []
         };
       });
     });
@@ -226,7 +228,7 @@ class GameContainer extends Component {
       .replace(/^\s+/g, "");
     if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
       this.state.socket.emit("join-room", roomNameTrimmed, () => {
-        //this.setState({roomName: ''});
+        this.setState({ messages: [] });
       });
     }
   }
@@ -239,7 +241,7 @@ class GameContainer extends Component {
       .replace(/^\s+/g, "");
     if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
       this.state.socket.emit("join-room", roomNameTrimmed, () => {
-        //this.setState({roomName: ''});
+        this.setState({ messages: [] });
       });
     }
   }
@@ -336,7 +338,7 @@ class GameContainer extends Component {
           ...prevPlayerData,
           team: "X"
         };
-        return { roomData, playerData };
+        return { roomData, playerData, messages: [] };
       });
     }
   }
@@ -346,10 +348,23 @@ class GameContainer extends Component {
   handleMessageSubmit(e) {
     e.preventDefault();
     const { messageInput, socket, playerData } = this.state;
-    if (messageInput && playerData.roomName) {
+    if (messageInput.trim() && playerData.roomName) {
       //console.log(messageInput);
       socket.emit("new-message", messageInput);
       this.setState({ messageInput: "" });
+    } else if (messageInput.trim()) {
+      this.setState(prevState => ({
+        messageInput: "",
+        messages: [
+          ...prevState.messages,
+          {
+            message: prevState.messageInput,
+            senderName: prevState.playerData.name || "Unnamed Player",
+            messageID: uuid(),
+            senderID: prevState.socket.id
+          }
+        ]
+      }));
     }
   }
   render() {

@@ -6,6 +6,15 @@ export class ChatRoom extends Component {
     super(props);
     this.messagesListRef = React.createRef();
   }
+  isArray() {
+    return array => Array.isArray(array) && array.length;
+  }
+  scrollToBottom() {
+    this.messagesListRef.current.scrollTop = this.messagesListRef.current.scrollHeight;
+  }
+  scrollToPrevious(prevScrollTop) {
+    this.messagesListRef.current.scrollTop = prevScrollTop;
+  }
   getSnapshotBeforeUpdate(prevProps) {
     if (prevProps.messages.length !== this.props.messages.length) {
       const messagesList = this.messagesListRef.current;
@@ -37,15 +46,6 @@ export class ChatRoom extends Component {
       this.scrollToPrevious(prevScrollData.scrollTop);
     }
   }
-  isArray() {
-    return array => Array.isArray(array) && array.length;
-  }
-  scrollToBottom() {
-    this.messagesListRef.current.scrollTop = this.messagesListRef.current.scrollHeight;
-  }
-  scrollToPrevious(prevScrollTop) {
-    this.messagesListRef.current.scrollTop = prevScrollTop;
-  }
   render() {
     const {
       messageInput,
@@ -55,7 +55,7 @@ export class ChatRoom extends Component {
     } = this.props;
     const messagesList = messages.map((message, index) => {
       return (
-        <div key={message.messageID}>
+        <div key={message.messageID} className="chat-room-message-container">
           <span className="sender-name">{message.senderName}</span>
           <span className="message">{message.message}</span>
         </div>
@@ -74,7 +74,7 @@ export class ChatRoom extends Component {
             onChange={handleMessageChange}
             placeholder="Enter your message"
             autoComplete="off"
-            className="chat-room-text-area"
+            className="chat-room-text-input"
           />
           <input type="submit" value="Send" className="chat-room-send-button" />
         </form>
