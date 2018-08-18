@@ -17,7 +17,6 @@ export class ChatRoom extends Component {
     return null;
   }
   componentDidUpdate(prevProps, prevState, prevScrollData) {
-    // console.log(prevScrollData);
     const messageListRef = this.messagesListRef.current;
     const prevMessages = prevProps.messages;
     const prevLastMessage = prevMessages[prevMessages.length - 1];
@@ -32,7 +31,6 @@ export class ChatRoom extends Component {
       shouldScroll &&
       prevScrollData.scrollTop + messageListRef.clientHeight ===
         prevScrollData.scrollHeight;
-    // console.log(shouldScrollToBottom, shouldScrollToPrevious);
     if (shouldScrollToBottom) {
       this.scrollToBottom();
     } else if (shouldScroll) {
