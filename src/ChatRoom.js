@@ -6,11 +6,47 @@ export class ChatRoom extends Component {
     super(props);
     this.messagesListRef = React.createRef();
   }
-  componentDidUpdate() {
-    this.scrollToBottom();
+  getSnapshotBeforeUpdate(prevProps) {
+    if (prevProps.messages.length !== this.props.messages.length) {
+      const messagesList = this.messagesListRef.current;
+      return {
+        scrollTop: messagesList.scrollTop,
+        scrollHeight: messagesList.scrollHeight
+      };
+    }
+    return null;
+  }
+  componentDidUpdate(prevProps, prevState, prevScrollData) {
+    // console.log(prevScrollData);
+    const messageListRef = this.messagesListRef.current;
+    const prevMessages = prevProps.messages;
+    const prevLastMessage = prevMessages[prevMessages.length - 1];
+    const messages = this.props.messages;
+    const lastMessage = messages[messages.length - 1];
+    const isArray = this.isArray();
+    const shouldScroll =
+      isArray(prevMessages) &&
+      isArray(messages) &&
+      prevLastMessage.messageID !== lastMessage.messageID;
+    const shouldScrollToBottom =
+      shouldScroll &&
+      prevScrollData.scrollTop + messageListRef.clientHeight ===
+        prevScrollData.scrollHeight;
+    // console.log(shouldScrollToBottom, shouldScrollToPrevious);
+    if (shouldScrollToBottom) {
+      this.scrollToBottom();
+    } else if (shouldScroll) {
+      this.scrollToPrevious(prevScrollData.scrollTop);
+    }
+  }
+  isArray() {
+    return array => Array.isArray(array) && array.length;
   }
   scrollToBottom() {
     this.messagesListRef.current.scrollTop = this.messagesListRef.current.scrollHeight;
+  }
+  scrollToPrevious(prevScrollTop) {
+    this.messagesListRef.current.scrollTop = prevScrollTop;
   }
   render() {
     const {
