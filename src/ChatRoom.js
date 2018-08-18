@@ -9,9 +9,9 @@ export const ChatRoom = props => {
   } = props;
   const messagesList = messages.map(message => {
     return (
-      <div>
-        <span>{message.message}</span>
-        <span>{message.sender}</span>
+      <div key={message.messageID}>
+        <span className="sender-name">{message.senderName}:</span>
+        <span className="message">{message.message}</span>
       </div>
     );
   });
@@ -19,11 +19,13 @@ export const ChatRoom = props => {
     <div className="chat-room-container">
       <div className="chat-room-messages">{messagesList}</div>
       <form onSubmit={handleMessageSubmit} className="chat-room-form">
-        <textarea
+        <input
           name="messageInput"
+          type="text"
           value={messageInput}
           onChange={handleMessageChange}
           placeholder="Enter your message"
+          autoComplete="off"
           className="chat-room-text-area"
         />
         <input type="submit" value="Send" className="chat-room-send-button" />

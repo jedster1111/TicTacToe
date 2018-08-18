@@ -147,12 +147,17 @@ class GameContainer extends Component {
         );
       }
     });
-    socket.on("new-message", (message, senderName) => {
+    socket.on("new-message", (message, senderName, messageID, senderID) => {
       this.setState(prevState => {
         const prevMessages = prevState.messages;
         const messages = [
           ...prevMessages,
-          { message: message, sender: senderName }
+          {
+            message: message,
+            senderName: senderName,
+            messageID: messageID,
+            senderID: senderID
+          }
         ];
         console.log(messages);
         return { messages: messages };

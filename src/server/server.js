@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+const uuid = require("uuid/v1");
 const ENVIRONMENT = process.env.NODE_ENV || "development";
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -152,11 +153,13 @@ class Room {
     this.winner = null;
     this.pushData();
   }
-  sendMessage(message, senderName) {
+  sendMessage(message, senderName, socketID) {
     io.to(this.name).emit(
       "new-message",
       message,
-      senderName || "Unnamed Player"
+      senderName || "Unnamed Player",
+      uuid(),
+      socketID
     );
   }
 }
@@ -257,7 +260,7 @@ class Player {
   }
   sendMessage(message) {
     if (this.isInRoom) {
-      this.room.sendMessage(message, this.name);
+      this.room.sendMessage(message, this.name, this.data.id);
     }
   }
 }
