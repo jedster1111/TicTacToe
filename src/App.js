@@ -373,12 +373,6 @@ class GameContainer extends Component {
     const { players } = roomData;
     return (
       <Fragment>
-        <ChatRoom
-          messageInput={messageInput}
-          messages={messages}
-          handleMessageChange={this.handleMessageChange}
-          handleMessageSubmit={this.handleMessageSubmit}
-        />
         <div className="game-container">
           <BoardContainer
             roomName={roomNameConfirmed}
@@ -396,6 +390,12 @@ class GameContainer extends Component {
             isTurn={isTurn}
             players={players}
             connectionStatus={connectionStatus}
+          />
+          <ChatRoom
+            messageInput={messageInput}
+            messages={messages}
+            handleMessageChange={this.handleMessageChange}
+            handleMessageSubmit={this.handleMessageSubmit}
           />
         </div>
         <div className="name-room-container">
