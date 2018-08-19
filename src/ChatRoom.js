@@ -61,6 +61,8 @@ export class ChatRoom extends Component {
         </div>
       );
     });
+    const buttonClass =
+      "chat-room-send-button" + (messageInput ? "" : " invalid");
     return (
       <div className="chat-room-container">
         <div className="chat-room-messages" ref={this.messagesListRef}>
@@ -76,7 +78,7 @@ export class ChatRoom extends Component {
             autoComplete="off"
             className="chat-room-text-input"
           />
-          <input type="submit" value="Send" className="chat-room-send-button" />
+          <input type="submit" value="Send" className={buttonClass} />
         </form>
       </div>
     );

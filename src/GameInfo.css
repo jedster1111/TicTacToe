@@ -1,7 +1,5 @@
 .game-info-container{
 	flex:1;
-	justify-content: center;
-  flex-wrap: wrap;
 	max-width: 485px;
 	min-width: 260px;
   padding: 20px 10px;
