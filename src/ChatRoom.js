@@ -53,14 +53,22 @@ export class ChatRoom extends Component {
       handleMessageChange,
       handleMessageSubmit
     } = this.props;
-    const messagesList = messages.map((message, index) => {
-      return (
-        <div key={message.messageID} className="chat-room-message-container">
-          <span className="sender-name">{message.senderName}</span>
-          <span className="message">{message.message}</span>
-        </div>
+    const messagesList =
+      messages.length > 0 ? (
+        messages.map((message, index) => {
+          return (
+            <div
+              key={message.messageID}
+              className="chat-room-message-container"
+            >
+              <span className="sender-name">{message.senderName}</span>
+              <span className="message">{message.message}</span>
+            </div>
+          );
+        })
+      ) : (
+        <div>No messages yet!</div>
       );
-    });
     const buttonClass =
       "chat-room-send-button" + (messageInput ? "" : " invalid");
     return (

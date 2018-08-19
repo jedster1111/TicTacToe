@@ -36,6 +36,7 @@
 .chat-room-message-container {
     border-bottom: 1px solid grey;
     margin: 2px 0;
+    padding: 0 2px;
 }
 .chat-room-message-container>.sender-name {
     font-weight: bold;
@@ -69,7 +70,7 @@
     float: right;
     border: none;
     outline: none;
-    width: 15%;
+    width: 20%;
     margin: 3px 0;
     padding: 5px 0;
     border-radius: 7px;
@@ -77,15 +78,15 @@
     box-shadow: 0 0 1px 1px #000;
 }
 .chat-room-form .chat-room-send-button:hover {
-    width: 16%;
+    width: 21%;
     background-color: #6FD695;
     box-shadow: 0 0 0 1.5px;
 }
 .chat-room-form .chat-room-send-button.invalid {
     background-color: rgb(240, 166, 166);
-    width: 14%;
+    width: 19%;
 }
 .chat-room-form .chat-room-send-button.invalid:hover {
     background-color: lightcoral;
-    width: 13.5%;
+    width: 18%;
 }

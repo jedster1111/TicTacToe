@@ -120,6 +120,7 @@ class GameContainer extends Component {
               currentPlayer: "X",
               winner: null
             };
+        const messages = isNotInRoom ? prevState.messages : [];
         return {
           playerName: "",
           roomName: "",
@@ -128,7 +129,7 @@ class GameContainer extends Component {
           roomData: roomData,
           connectionStatus: "connecting",
           showConnectionStatus: true,
-          messages: []
+          messages: messages
         };
       });
     });
