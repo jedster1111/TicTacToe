@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { RoomInput, NameInput, GameInfo } from "./GameInfo";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { BoardContainer } from "./Board";
@@ -49,6 +50,13 @@ class GameContainer extends Component {
   }
   componentDidMount() {
     this.initSocket();
+    const { history } = this.props;
+    history.listen((location, action) => {
+      console.log(action);
+      this.state.socket.emit("join-room", location.pathname.substr(1), () => {
+        this.setState({ messages: [] });
+      });
+    });
   }
   initSocket = () => {
     let socket;
@@ -220,6 +228,9 @@ class GameContainer extends Component {
     e.preventDefault();
     this.playerNameSubmit();
   }
+  handleRouteChange(roomName) {
+    this.props.history.push(`/${roomName}`);
+  }
   handleRoomNameSubmit(e) {
     e.preventDefault();
     const { roomName, playerData } = this.state;
@@ -228,9 +239,10 @@ class GameContainer extends Component {
       .replace(/\s{2,}/g, " ")
       .replace(/^\s+/g, "");
     if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
-      this.state.socket.emit("join-room", roomNameTrimmed, () => {
-        this.setState({ messages: [] });
-      });
+      // this.state.socket.emit("join-room", roomNameTrimmed, () => {
+      //   this.setState({ messages: [] });
+      // });
+      this.handleRouteChange(roomNameTrimmed);
     }
   }
   handleJoinRoomClick(e, name) {
@@ -241,9 +253,10 @@ class GameContainer extends Component {
       .replace(/\s{2,}/g, " ")
       .replace(/^\s+/g, "");
     if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
-      this.state.socket.emit("join-room", roomNameTrimmed, () => {
-        this.setState({ messages: [] });
-      });
+      // this.state.socket.emit("join-room", roomNameTrimmed, () => {
+      //   this.setState({ messages: [] });
+      // });
+      this.handleRouteChange(roomNameTrimmed);
     }
   }
   handleSquareClick(i) {
@@ -437,14 +450,24 @@ class GameContainer extends Component {
           connectionStatus={connectionStatus}
           showConnectionStatus={showConnectionStatus}
         />
+        <Route
+          path="/:roomName"
+          render={({ match }) => <div>room is {match.params.roomName}</div>}
+        />
       </Fragment>
     );
   }
 }
-
 class App extends Component {
   render() {
-    return <GameContainer />;
+    return (
+      <Router>
+        <Fragment>
+          <Route exact path="/" component={GameContainer} />
+          <Route path="/:roomName" component={GameContainer} />
+        </Fragment>
+      </Router>
+    );
   }
 }
 

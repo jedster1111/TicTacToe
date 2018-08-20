@@ -20,12 +20,12 @@
     "uuid": "^3.3.2"
   },
   "scripts": {
-    "start": "concurrently --kill-others \"react-scripts start\" \"npm run start-server\"",
+    "start": "react-scripts start",
     "heroku-postbuild": "npm install && npm run build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "start-server": "nodemon src/server/server"
+    "server": "nodemon src/server/server"
   },
   "devDependencies": {
     "concurrently": "^3.6.1",
