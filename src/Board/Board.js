@@ -1,5 +1,5 @@
 import React from "react";
-import { calculateWinningLines } from "./calculateWinner";
+import { calculateWinningLines } from "../calculateWinner";
 import "./Board.css";
 
 function flattenAndClean(winningLines) {
