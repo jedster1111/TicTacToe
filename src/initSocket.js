@@ -1,5 +1,5 @@
 export function initSocket() {
-  const socket = this.props.socket;
+  const socket = this.state.socket;
   socket.on("connect", () => {
     //console.log("connect fired off", this.state.playerData);
     this.state.playerData.name &&

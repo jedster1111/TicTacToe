@@ -6,7 +6,7 @@ import { ConnectionStatus } from "../ConnectionStatus";
 import { BoardContainer } from "../Board/Board";
 import { calculateWinner } from "../calculateWinner";
 import { ChatRoom } from "../ChatRoom";
-import { initSocket } from "./initSocket";
+import { initSocket } from "../initSocket";
 import { withSocket } from "../withSocketHOC";
 const uuid = require("uuid/v1");
 
@@ -31,13 +31,6 @@ export class TicTacToeContainer extends Component {
       messageInput: "",
       messages: []
     };
-    this.handlePlayerNameChange = this.handlePlayerNameChange.bind(this);
-    this.handlePlayerNameSubmit = this.handlePlayerNameSubmit.bind(this);
-    this.handleIsChangeName = this.handleIsChangeName.bind(this);
-    this.handleIsChangeNameFalse = this.handleIsChangeNameFalse.bind(this);
-    this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
-    this.handleRoomNameSubmit = this.handleRoomNameSubmit.bind(this);
-    this.handleJoinRoomClick = this.handleJoinRoomClick.bind(this);
     this.handleSquareClick = this.handleSquareClick.bind(this);
     this.handleTeamToggleClick = this.handleTeamToggleClick.bind(this);
     this.handleResetClick = this.handleResetClick.bind(this);
@@ -47,82 +40,7 @@ export class TicTacToeContainer extends Component {
     this.initSocket = initSocket.bind(this);
   }
   componentDidMount() {
-    this.initSocket();
-  }
-  handlePlayerNameChange(e) {
-    this.setState({
-      playerName: e.target.value.replace(/\s{2,}/g, " ").replace(/^\s+/g, "")
-    });
-  }
-  handleIsChangeName() {
-    this.setState({ isChangingName: true, playerName: "" });
-  }
-  handleIsChangeNameFalse() {
-    this.setState(({ playerData }) => ({
-      isChangingName: false,
-      playerName: playerData.name
-    }));
-  }
-  handleRoomNameChange(e) {
-    this.setState({
-      roomName: e.target.value.replace(/\s{2,}/g, " ").replace(/^\s+/g, "")
-    });
-  }
-  handlePlayerNameSubmit(e) {
-    e.preventDefault();
-    const { playerName, playerData, connectionStatus } = this.state;
-    const playerNameTrimmed = playerName
-      .trim()
-      .replace(/\s{2,}/g, " ")
-      .replace(/^\s+/g, "");
-    if (connectionStatus === "connected") {
-      if (playerNameTrimmed !== playerData.name && playerNameTrimmed) {
-        this.props.socket.emit("set-name", playerNameTrimmed, () => {
-          this.setState({
-            isChangingName: false,
-            playerName: playerNameTrimmed
-          });
-        });
-      } else if (playerData.name && playerNameTrimmed === playerData.name) {
-        this.setState({ isChangingName: false });
-      }
-    } else {
-      this.setState(prevState => {
-        const { playerData } = prevState;
-        return {
-          isChangingName: false,
-          playerName: playerNameTrimmed,
-          playerData: { ...playerData, name: playerNameTrimmed }
-        };
-      });
-    }
-    sessionStorage.setItem("playerName", playerNameTrimmed);
-  }
-  handleRoomNameSubmit(e) {
-    e.preventDefault();
-    const { roomName, playerData } = this.state;
-    const roomNameTrimmed = roomName
-      .trim()
-      .replace(/\s{2,}/g, " ")
-      .replace(/^\s+/g, "");
-    if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
-      this.props.socket.emit("join-room", roomNameTrimmed, () => {
-        this.setState({ messages: [] });
-      });
-    }
-  }
-  handleJoinRoomClick(e, name) {
-    e.preventDefault();
-    const { playerData } = this.state;
-    const roomNameTrimmed = name
-      .trim()
-      .replace(/\s{2,}/g, " ")
-      .replace(/^\s+/g, "");
-    if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
-      this.props.socket.emit("join-room", roomNameTrimmed, () => {
-        this.setState({ messages: [] });
-      });
-    }
+    //this.initSocket();
   }
   handleSquareClick(i) {
     if (this.state.playerData.roomName) {
@@ -266,27 +184,6 @@ export class TicTacToeContainer extends Component {
       messages
     } = this.state;
     const { players } = roomData;
-    const NameAndRoomInputContainer = (
-      <div className="name-room-container">
-        <NameInput
-          playerNameConfirmed={playerNameConfirmed}
-          isChangingName={isChangingName}
-          handlePlayerNameChange={this.handlePlayerNameChange}
-          handlePlayerNameSubmit={this.handlePlayerNameSubmit}
-          handleIsChangeName={this.handleIsChangeName}
-          handleIsChangeNameFalse={this.handleIsChangeNameFalse}
-          playerName={this.state.playerName}
-        />
-        <RoomInput
-          roomNameConfirmed={roomNameConfirmed}
-          handleRoomNameChange={this.handleRoomNameChange}
-          handleRoomNameSubmit={this.handleRoomNameSubmit}
-          handleJoinRoomClick={this.handleJoinRoomClick}
-          roomName={roomName}
-          rooms={rooms}
-        />
-      </div>
-    );
     return (
       <div>
         <div className="game-container">
@@ -314,7 +211,6 @@ export class TicTacToeContainer extends Component {
             handleMessageSubmit={this.handleMessageSubmit}
           />
         </div>
-        {NameAndRoomInputContainer}
         <ConnectionStatus
           connectionStatus={connectionStatus}
           showConnectionStatus={showConnectionStatus}
