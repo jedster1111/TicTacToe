@@ -1,12 +1,9 @@
-import io from "socket.io-client";
-import { ENVIRONMENT } from "./environmentCheck";
-
 export function initSocket() {
-  let socket;
+  const socket = this.props.socket;
   socket.on("connect", () => {
     //console.log("connect fired off", this.state.playerData);
     this.state.playerData.name &&
-      this.state.socket.emit("set-name", this.state.playerData.name, () => {
+      socket.emit("set-name", this.state.playerData.name, () => {
         this.setState(prevState => {
           return {
             isChangingName: false,
@@ -14,7 +11,7 @@ export function initSocket() {
           };
         });
       });
-    this.state.socket.emit("set-team", this.state.playerData.team);
+    socket.emit("set-team", this.state.playerData.team);
   });
   socket.on("hello", rooms => {
     console.log("Succesfully communicating with server!");
@@ -104,5 +101,4 @@ export function initSocket() {
       return { messages: messages };
     });
   });
-  this.setState = { socket: socket };
 }

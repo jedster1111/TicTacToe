@@ -6,7 +6,6 @@ import { calculateWinner } from "../calculateWinner";
 import { ChatRoom } from "../ChatRoom";
 import { initSocket } from "./initSocket";
 import { withSocket } from "../SocketContainer/SocketContainer";
-import { ENVIRONMENT } from "./environmentCheck";
 const uuid = require("uuid/v1");
 
 class GameContainer extends Component {
@@ -28,8 +27,7 @@ class GameContainer extends Component {
         winner: null
       },
       messageInput: "",
-      messages: [],
-      socket: null
+      messages: []
     };
     this.handlePlayerNameChange = this.handlePlayerNameChange.bind(this);
     this.handlePlayerNameSubmit = this.handlePlayerNameSubmit.bind(this);
@@ -47,7 +45,7 @@ class GameContainer extends Component {
     this.initSocket = initSocket.bind(this);
   }
   componentDidMount() {
-    // this.initSocket(ENVIRONMENT);
+    this.initSocket();
   }
   handlePlayerNameChange(e) {
     this.setState({
@@ -77,7 +75,7 @@ class GameContainer extends Component {
       .replace(/^\s+/g, "");
     if (connectionStatus === "connected") {
       if (playerNameTrimmed !== playerData.name && playerNameTrimmed) {
-        this.state.socket.emit("set-name", playerNameTrimmed, () => {
+        this.props.socket.emit("set-name", playerNameTrimmed, () => {
           this.setState({
             isChangingName: false,
             playerName: playerNameTrimmed
@@ -106,7 +104,7 @@ class GameContainer extends Component {
       .replace(/\s{2,}/g, " ")
       .replace(/^\s+/g, "");
     if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
-      this.state.socket.emit("join-room", roomNameTrimmed, () => {
+      this.props.socket.emit("join-room", roomNameTrimmed, () => {
         this.setState({ messages: [] });
       });
     }
@@ -119,7 +117,7 @@ class GameContainer extends Component {
       .replace(/\s{2,}/g, " ")
       .replace(/^\s+/g, "");
     if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
-      this.state.socket.emit("join-room", roomNameTrimmed, () => {
+      this.props.socket.emit("join-room", roomNameTrimmed, () => {
         this.setState({ messages: [] });
       });
     }
@@ -127,7 +125,7 @@ class GameContainer extends Component {
   handleSquareClick(i) {
     if (this.state.playerData.roomName) {
       //in the case you are in a room send to server
-      this.state.socket.emit("new-square", i);
+      this.props.socket.emit("new-square", i);
     } else if (
       //else it's a local room and manage the game logic locally but check if can click
       this.state.playerData.team === this.state.roomData.currentPlayer &&
@@ -162,7 +160,7 @@ class GameContainer extends Component {
           const playerData = { ...prevPlayerData, team: nextPlayer };
           return { roomData: roomData, playerData: playerData };
         },
-        () => this.state.socket.emit("set-team", this.state.playerData.team)
+        () => this.props.socket.emit("set-team", this.state.playerData.team)
       );
     }
   }
@@ -171,12 +169,12 @@ class GameContainer extends Component {
       this.setState(prevState => ({
         playerData: { ...prevState.playerData, team: team }
       }));
-      this.state.socket.emit("set-team", team);
+      this.props.socket.emit("set-team", team);
     }
   }
   handleResetClick() {
     if (this.state.playerData.roomName) {
-      this.state.socket.emit("reset-game");
+      this.props.socket.emit("reset-game");
     } else if (this.state.roomData.squares.some(square => square !== null)) {
       this.setState(prevState => {
         const {
@@ -200,7 +198,7 @@ class GameContainer extends Component {
   }
   handleLeaveRoomClick() {
     if (this.state.playerData.roomName) {
-      this.state.socket.emit("leave-room");
+      this.props.socket.emit("leave-room");
       this.setState(prevState => {
         const {
           roomData: prevRoomData,
@@ -226,7 +224,8 @@ class GameContainer extends Component {
   }
   handleMessageSubmit(e) {
     e.preventDefault();
-    const { messageInput, socket, playerData } = this.state;
+    const { messageInput, playerData } = this.state;
+    const { socket } = this.props;
     if (messageInput.trim() && playerData.roomName) {
       //console.log(messageInput);
       socket.emit("new-message", messageInput);
@@ -240,7 +239,7 @@ class GameContainer extends Component {
             message: prevState.messageInput,
             senderName: prevState.playerData.name || "Unnamed Player",
             messageID: uuid(),
-            senderID: prevState.socket.id
+            senderID: socket.id
           }
         ]
       }));

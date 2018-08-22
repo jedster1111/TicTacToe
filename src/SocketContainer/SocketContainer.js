@@ -6,11 +6,6 @@ export function withSocket(WrappedComponent) {
   class withSocket extends Component {
     constructor(props) {
       super(props);
-      this.state = {
-        socket: null
-      };
-    }
-    componentDidMount() {
       let socket;
       if (ENVIRONMENT === "development") {
         let LOCALIP = process.env.REACT_APP_LOCAL_IP || "localhost";
@@ -25,7 +20,9 @@ export function withSocket(WrappedComponent) {
       } else {
         socket = io();
       }
-      this.setState({ socket });
+      this.state = {
+        socket: socket
+      };
     }
     render() {
       return <WrappedComponent socket={this.state.socket} {...this.props} />;
