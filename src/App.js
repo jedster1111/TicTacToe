@@ -1,10 +1,16 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import "./App.css";
-import { GameContainerWithSocket } from "./GameContainer/GameContainer";
+import { TicTacToeContainer } from "./TicTacToe/TicTacToeContainer";
+import { withSocket } from "./withSocketHOC";
 
+const TicTacToeWithSocket = withSocket(TicTacToeContainer);
 class App extends Component {
   render() {
-    return <GameContainerWithSocket />;
+    return (
+      <Fragment>
+        <TicTacToeWithSocket />
+      </Fragment>
+    );
   }
 }
 

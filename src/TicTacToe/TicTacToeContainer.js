@@ -1,14 +1,16 @@
-import React, { Component, Fragment } from "react";
-import { RoomInput, NameInput, GameInfo } from "../GameInfo";
+import React, { Component } from "react";
+import { GameInfo } from "../GameInfo";
+import { NameInput } from "../NameAndRoomInput/NameInput";
+import { RoomInput } from "../NameAndRoomInput/RoomInput";
 import { ConnectionStatus } from "../ConnectionStatus";
 import { BoardContainer } from "../Board/Board";
 import { calculateWinner } from "../calculateWinner";
 import { ChatRoom } from "../ChatRoom";
 import { initSocket } from "./initSocket";
-import { withSocket } from "../SocketContainer/SocketContainer";
+import { withSocket } from "../withSocketHOC";
 const uuid = require("uuid/v1");
 
-class GameContainer extends Component {
+export class TicTacToeContainer extends Component {
   constructor(props) {
     super(props);
     const playerName = sessionStorage.getItem("playerName") || "";
@@ -264,8 +266,29 @@ class GameContainer extends Component {
       messages
     } = this.state;
     const { players } = roomData;
+    const NameAndRoomInputContainer = (
+      <div className="name-room-container">
+        <NameInput
+          playerNameConfirmed={playerNameConfirmed}
+          isChangingName={isChangingName}
+          handlePlayerNameChange={this.handlePlayerNameChange}
+          handlePlayerNameSubmit={this.handlePlayerNameSubmit}
+          handleIsChangeName={this.handleIsChangeName}
+          handleIsChangeNameFalse={this.handleIsChangeNameFalse}
+          playerName={this.state.playerName}
+        />
+        <RoomInput
+          roomNameConfirmed={roomNameConfirmed}
+          handleRoomNameChange={this.handleRoomNameChange}
+          handleRoomNameSubmit={this.handleRoomNameSubmit}
+          handleJoinRoomClick={this.handleJoinRoomClick}
+          roomName={roomName}
+          rooms={rooms}
+        />
+      </div>
+    );
     return (
-      <Fragment>
+      <div>
         <div className="game-container">
           <BoardContainer
             roomName={roomNameConfirmed}
@@ -291,32 +314,14 @@ class GameContainer extends Component {
             handleMessageSubmit={this.handleMessageSubmit}
           />
         </div>
-        <div className="name-room-container">
-          <NameInput
-            playerNameConfirmed={playerNameConfirmed}
-            isChangingName={isChangingName}
-            handlePlayerNameChange={this.handlePlayerNameChange}
-            handlePlayerNameSubmit={this.handlePlayerNameSubmit}
-            handleIsChangeName={this.handleIsChangeName}
-            handleIsChangeNameFalse={this.handleIsChangeNameFalse}
-            playerName={this.state.playerName}
-          />
-          <RoomInput
-            roomNameConfirmed={roomNameConfirmed}
-            handleRoomNameChange={this.handleRoomNameChange}
-            handleRoomNameSubmit={this.handleRoomNameSubmit}
-            handleJoinRoomClick={this.handleJoinRoomClick}
-            roomName={roomName}
-            rooms={rooms}
-          />
-        </div>
+        {NameAndRoomInputContainer}
         <ConnectionStatus
           connectionStatus={connectionStatus}
           showConnectionStatus={showConnectionStatus}
         />
-      </Fragment>
+      </div>
     );
   }
 }
 
-export const GameContainerWithSocket = withSocket(GameContainer);
+export const TicTacToeWithSocket = withSocket(TicTacToeContainer);

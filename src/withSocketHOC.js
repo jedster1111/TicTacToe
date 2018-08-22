@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
-import { ENVIRONMENT } from "../GameContainer/environmentCheck";
+import { ENVIRONMENT } from "./TicTacToe/environmentCheck";
 
 export function withSocket(WrappedComponent) {
   class withSocket extends Component {
