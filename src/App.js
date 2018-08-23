@@ -31,9 +31,8 @@ class App extends Component {
       playerName: playerName,
       roomName: "",
       rooms: [],
-      playerData: { name: playerName, roomName: "", team: "X", id: "" },
-      messageInput: "",
-      messages: [],
+      playerData: { name: playerName, roomName: "", id: "" },
+      joinedRoom: "",
       socket: socket
     };
     this.initSocket = initSocket.bind(this);
@@ -44,6 +43,10 @@ class App extends Component {
     this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
     this.handleRoomNameSubmit = this.handleRoomNameSubmit.bind(this);
     this.handleJoinRoomClick = this.handleJoinRoomClick.bind(this);
+    this.handleLeaveRoomClick = this.handleLeaveRoomClick.bind(this);
+  }
+  componentDidMount() {
+    this.initSocket();
   }
   handlePlayerNameChange(e) {
     this.setState({
@@ -94,44 +97,74 @@ class App extends Component {
     }
     sessionStorage.setItem("playerName", playerNameTrimmed);
   }
-  handleRoomNameSubmit(e) {
+  handleRoomNameSubmit(e, name) {
     e.preventDefault();
-    const { roomName, playerData } = this.state;
-    const roomNameTrimmed = roomName
-      .trim()
-      .replace(/\s{2,}/g, " ")
-      .replace(/^\s+/g, "");
-    if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
-      this.state.socket.emit("join-room", roomNameTrimmed, () => {
-        this.setState({ messages: [] });
-      });
+    const { socket } = this.state;
+    function emitName(name) {
+      // console.log(name);
+      socket.emit("join-room", name);
     }
+    if (name) {
+      this.setState({ joinedRoom: name }, () => emitName(name));
+    } else {
+      this.setState(
+        prevState => ({ joinedRoom: prevState.roomName }),
+        () => emitName(this.state.joinedRoom)
+      );
+    }
+    // const { roomName, playerData } = this.state;
+    // const roomNameTrimmed = roomName
+    //   .trim()
+    //   .replace(/\s{2,}/g, " ")
+    //   .replace(/^\s+/g, "");
+    // if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
+    //   this.state.socket.emit("join-room", roomNameTrimmed, () => {
+    //     this.setState({ messages: [] });
+    //   });
+    // }
   }
   handleJoinRoomClick(e, name) {
     e.preventDefault();
-    const { playerData } = this.state;
-    const roomNameTrimmed = name
-      .trim()
-      .replace(/\s{2,}/g, " ")
-      .replace(/^\s+/g, "");
-    if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
-      this.state.socket.emit("join-room", roomNameTrimmed, () => {
-        this.setState({ messages: [] });
+    // const { playerData } = this.state;
+    // const roomNameTrimmed = name
+    //   .trim()
+    //   .replace(/\s{2,}/g, " ")
+    //   .replace(/^\s+/g, "");
+    // if (roomNameTrimmed !== playerData.roomName && roomNameTrimmed !== "") {
+    //   this.state.socket.emit("join-room", roomNameTrimmed, () => {
+    //     this.setState({ messages: [] });
+    //   });
+    // }
+  }
+  handleLeaveRoomClick() {
+    if (this.state.joinedRoom) {
+      this.state.socket.emit("leave-room", () => {
+        this.setState({ joinedRoom: "" });
       });
     }
-  }
-  componentDidMount() {
-    this.initSocket();
   }
   render() {
     const {
       name: playerNameConfirmed,
       roomName: roomNameConfirmed
     } = this.state.playerData;
-    const { socket, isChangingName, playerName, roomName, rooms } = this.state;
+    const {
+      socket,
+      isChangingName,
+      playerName,
+      roomName,
+      rooms,
+      joinedRoom,
+      playerData
+    } = this.state;
     return (
       <Fragment>
-        <TicTacToeContainer socket={socket} />
+        <TicTacToeContainer
+          socket={socket}
+          joinedRoom={joinedRoom}
+          handleLeaveRoomClick={this.handleLeaveRoomClick}
+          playerData={playerData}
+        />
         <NameAndRoomInputContainer
           playerNameConfirmed={playerNameConfirmed}
           isChangingName={isChangingName}
@@ -143,7 +176,7 @@ class App extends Component {
           roomNameConfirmed={roomNameConfirmed}
           handleRoomNameChange={this.handleRoomNameChange}
           handleRoomNameSubmit={this.handleRoomNameSubmit}
-          handleJoinRoomClick={this.handleJoinRoomClick}
+          handleJoinRoomClick={this.handleRoomNameSubmit}
           roomName={roomName}
           rooms={rooms}
         />

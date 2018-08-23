@@ -218,16 +218,17 @@ class Player {
         this.room.playerJoined(this);
       }
       this.emitData();
-      setState();
+      setState && setState();
     }
   }
-  leaveRoom() {
+  leaveRoom(setState) {
     if (this.isInRoom) {
       this.client.leave(this.room.name);
       this.room.playerLeft(this);
       this.room = {};
       this.team = "X";
       this.emitData();
+      setState && setState();
     }
   }
   resetRoom() {
@@ -303,8 +304,8 @@ io.on("connection", client => {
   client.on("reset-game", () => {
     player.resetRoom();
   });
-  client.on("leave-room", () => {
-    player.leaveRoom();
+  client.on("leave-room", setState => {
+    player.leaveRoom(setState);
   });
   client.on("new-message", message => {
     //console.log(message);
@@ -315,10 +316,11 @@ io.on("connection", client => {
   });
 });
 
-//ENVIRONMENT === 'development' && setInterval(() => {
-//    console.log(allPlayers.map(player => player.name));
-//    console.log(rooms);
-//}, 5000);
+ENVIRONMENT === "development" &&
+  setInterval(() => {
+    console.log(allPlayers.map(player => player.team));
+    console.log(rooms);
+  }, 5000);
 
 process.on("SIGINT", function() {
   console.log("\nShutting down, some one hit ctrl c");

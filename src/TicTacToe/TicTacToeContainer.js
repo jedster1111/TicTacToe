@@ -1,27 +1,15 @@
 import React, { Component } from "react";
 import { GameInfo } from "../GameInfo";
-import { NameInput } from "../NameAndRoomInput/NameInput";
-import { RoomInput } from "../NameAndRoomInput/RoomInput";
-import { ConnectionStatus } from "../ConnectionStatus";
 import { BoardContainer } from "../Board/Board";
 import { calculateWinner } from "../calculateWinner";
 import { ChatRoom } from "../ChatRoom";
-import { initSocket } from "../initSocket";
-import { withSocket } from "../withSocketHOC";
 const uuid = require("uuid/v1");
 
 export class TicTacToeContainer extends Component {
   constructor(props) {
     super(props);
-    const playerName = sessionStorage.getItem("playerName") || "";
     this.state = {
-      connectionStatus: "connecting",
-      showConnectionStatus: true,
-      isChangingName: playerName === "",
-      playerName: playerName,
-      roomName: "",
-      rooms: [],
-      playerData: { name: playerName, roomName: "", team: "X", id: "" },
+      team: "X",
       roomData: {
         squares: Array(9).fill(null),
         players: [],
@@ -37,63 +25,86 @@ export class TicTacToeContainer extends Component {
     this.handleLeaveRoomClick = this.handleLeaveRoomClick.bind(this);
     this.handleMessageChange = this.handleMessageChange.bind(this);
     this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
-    this.initSocket = initSocket.bind(this);
   }
   componentDidMount() {
-    //this.initSocket();
+    const { socket, joinedRoom } = this.props;
+    socket.on("game-data", roomData => {
+      this.setState({ roomData });
+    });
+    socket.on("new-message", (message, senderName, messageID, senderID) => {
+      this.setState(prevState => {
+        const prevMessages = prevState.messages;
+        const messages = [
+          ...prevMessages,
+          {
+            message: message,
+            senderName: senderName,
+            messageID: messageID,
+            senderID: senderID
+          }
+        ];
+        console.log(messages);
+        return { messages: messages };
+      });
+    });
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.joinedRoom !== this.props.joinedRoom) {
+      this.props.socket.emit("set-team", this.state.team);
+    }
   }
   handleSquareClick(i) {
-    if (this.state.playerData.roomName) {
-      //in the case you are in a room send to server
-      this.props.socket.emit("new-square", i);
-    } else if (
-      //else it's a local room and manage the game logic locally but check if can click
-      this.state.playerData.team === this.state.roomData.currentPlayer &&
+    if (
+      this.state.team === this.state.roomData.currentPlayer &&
       !this.state.roomData.winner &&
       this.state.roomData.squares[i] === null
     ) {
-      this.setState(
-        prevState => {
-          const {
-            playerData: prevPlayerData,
-            roomData: prevRoomData
-          } = prevState;
-          const {
-            squares: prevSquares,
-            currentPlayer: prevCurrentPlayer
-          } = prevRoomData;
-          const team = prevPlayerData.team;
-          let newSquares = [...prevSquares];
-          newSquares[i] = team;
-          const winner = calculateWinner(newSquares, prevCurrentPlayer);
-          const nextPlayer = winner
-            ? prevCurrentPlayer
-            : prevCurrentPlayer === "X"
-              ? "O"
-              : "X";
-          const roomData = {
-            ...prevRoomData,
-            squares: newSquares,
-            currentPlayer: nextPlayer,
-            winner: winner
-          };
-          const playerData = { ...prevPlayerData, team: nextPlayer };
-          return { roomData: roomData, playerData: playerData };
-        },
-        () => this.props.socket.emit("set-team", this.state.playerData.team)
-      );
+      if (this.props.joinedRoom) {
+        //in the case you are in a room send to server
+        // console.log("thisishappening");
+        this.props.socket.emit("new-square", i);
+      } else {
+        this.setState(
+          prevState => {
+            const {
+              playerData: prevPlayerData,
+              roomData: prevRoomData
+            } = prevState;
+            const {
+              squares: prevSquares,
+              currentPlayer: prevCurrentPlayer
+            } = prevRoomData;
+            const team = prevState.team;
+            let newSquares = [...prevSquares];
+            newSquares[i] = team;
+            const winner = calculateWinner(newSquares, prevCurrentPlayer);
+            const nextPlayer = winner
+              ? prevCurrentPlayer
+              : prevCurrentPlayer === "X"
+                ? "O"
+                : "X";
+            const roomData = {
+              ...prevRoomData,
+              squares: newSquares,
+              currentPlayer: nextPlayer,
+              winner: winner
+            };
+            const playerData = { ...prevPlayerData, team: nextPlayer };
+            return { roomData: roomData, team: nextPlayer };
+          }
+          //() => this.props.socket.emit("set-team", this.state.playerData.team)
+        );
+      }
     }
   }
   handleTeamToggleClick(team) {
-    if (this.state.playerData.team !== team) {
-      this.setState(prevState => ({
-        playerData: { ...prevState.playerData, team: team }
-      }));
+    if (this.state.team !== team) {
+      this.setState({ team: team });
       this.props.socket.emit("set-team", team);
     }
   }
   handleResetClick() {
-    if (this.state.playerData.roomName) {
+    if (this.props.joinedRoom) {
       this.props.socket.emit("reset-game");
     } else if (this.state.roomData.squares.some(square => square !== null)) {
       this.setState(prevState => {
@@ -112,18 +123,15 @@ export class TicTacToeContainer extends Component {
           ...prevPlayerData,
           team: "X"
         };
-        return { roomData, playerData };
+        return { roomData, team: "X" };
       });
     }
   }
   handleLeaveRoomClick() {
-    if (this.state.playerData.roomName) {
-      this.props.socket.emit("leave-room");
+    if (this.props.joinedRoom) {
+      console.log("happpennignigngni");
       this.setState(prevState => {
-        const {
-          roomData: prevRoomData,
-          playerData: prevPlayerData
-        } = prevState;
+        const { roomData: prevRoomData } = prevState;
         const roomData = {
           ...prevRoomData,
           squares: Array(9).fill(null),
@@ -131,12 +139,9 @@ export class TicTacToeContainer extends Component {
           winner: "",
           players: []
         };
-        const playerData = {
-          ...prevPlayerData,
-          team: "X"
-        };
-        return { roomData, playerData, messages: [] };
+        return { roomData, messages: [], team: "X" };
       });
+      this.props.handleLeaveRoomClick();
     }
   }
   handleMessageChange(e) {
@@ -145,8 +150,8 @@ export class TicTacToeContainer extends Component {
   handleMessageSubmit(e) {
     e.preventDefault();
     const { messageInput, playerData } = this.state;
-    const { socket } = this.props;
-    if (messageInput.trim() && playerData.roomName) {
+    const { socket, joinedRoom } = this.props;
+    if (messageInput.trim() && joinedRoom) {
       //console.log(messageInput);
       socket.emit("new-message", messageInput);
       this.setState({ messageInput: "" });
@@ -169,19 +174,14 @@ export class TicTacToeContainer extends Component {
     const squares = this.state.roomData.squares;
     const winner = calculateWinner(squares, this.state.roomData.currentPlayer);
     const isTurn =
-      !winner &&
-      this.state.playerData.team === this.state.roomData.currentPlayer;
-    const playerNameConfirmed = this.state.playerData.name;
-    const roomNameConfirmed = this.state.playerData.roomName;
+      !winner && this.state.team === this.state.roomData.currentPlayer;
+    const roomNameConfirmed = this.props.joinedRoom;
     const {
       roomData,
-      isChangingName,
-      roomName,
-      rooms,
       connectionStatus,
-      showConnectionStatus,
       messageInput,
-      messages
+      messages,
+      team
     } = this.state;
     const { players } = roomData;
     return (
@@ -198,7 +198,8 @@ export class TicTacToeContainer extends Component {
             handleTeamToggleClick={this.handleTeamToggleClick}
             handleResetClick={this.handleResetClick}
             handleLeaveRoomClick={this.handleLeaveRoomClick}
-            playerData={this.state.playerData}
+            playerData={this.props.playerData}
+            team={team}
             winner={winner}
             isTurn={isTurn}
             players={players}
@@ -211,13 +212,7 @@ export class TicTacToeContainer extends Component {
             handleMessageSubmit={this.handleMessageSubmit}
           />
         </div>
-        <ConnectionStatus
-          connectionStatus={connectionStatus}
-          showConnectionStatus={showConnectionStatus}
-        />
       </div>
     );
   }
 }
-
-export const TicTacToeWithSocket = withSocket(TicTacToeContainer);

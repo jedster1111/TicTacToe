@@ -11,7 +11,7 @@ export function initSocket() {
           };
         });
       });
-    socket.emit("set-team", this.state.playerData.team);
+    socket.emit("set-team", this.state.team);
   });
   socket.on("hello", rooms => {
     console.log("Succesfully communicating with server!");
@@ -28,10 +28,6 @@ export function initSocket() {
         }, 5000);
       }
     );
-  });
-  socket.on("game-data", roomData => {
-    //console.log(roomData);
-    this.setState({ roomData });
   });
   socket.on("player-data", playerData => {
     //console.log(playerData);
@@ -84,21 +80,5 @@ export function initSocket() {
         }
       );
     }
-  });
-  socket.on("new-message", (message, senderName, messageID, senderID) => {
-    this.setState(prevState => {
-      const prevMessages = prevState.messages;
-      const messages = [
-        ...prevMessages,
-        {
-          message: message,
-          senderName: senderName,
-          messageID: messageID,
-          senderID: senderID
-        }
-      ];
-      console.log(messages);
-      return { messages: messages };
-    });
   });
 }

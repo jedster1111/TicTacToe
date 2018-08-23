@@ -74,7 +74,7 @@ const renderTeam = (players, teamName, playerData) => {
   );
 };
 const PlayerList = props => {
-  const { players, playerData } = props;
+  const { players, playerData, team } = props;
   const xPlayers = filterPlayers(players, "X", playerData);
   const oPlayers = filterPlayers(players, "O", playerData);
   const spectators = filterPlayers(players, "", playerData);
@@ -89,18 +89,24 @@ const PlayerList = props => {
   );
 };
 export const GameInfo = props => {
-  const { playerData, players, handleResetClick, handleLeaveRoomClick } = props;
+  const {
+    playerData,
+    players,
+    handleResetClick,
+    handleLeaveRoomClick,
+    team
+  } = props;
   return (
     <div className="game-info-container">
       <TeamToggle
         handleTeamToggleClick={props.handleTeamToggleClick}
-        team={playerData.team}
+        team={team}
       />
       <RoomControls
         handleResetClick={handleResetClick}
         handleLeaveRoomClick={handleLeaveRoomClick}
       />
-      <PlayerList players={players} playerData={playerData} />
+      <PlayerList players={players} playerData={playerData} team={team} />
     </div>
   );
 };
