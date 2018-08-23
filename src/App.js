@@ -105,12 +105,9 @@ class App extends Component {
       socket.emit("join-room", name);
     }
     if (name) {
-      this.setState({ joinedRoom: name }, () => emitName(name));
+      this.setState({ joinedRoom: name });
     } else {
-      this.setState(
-        prevState => ({ joinedRoom: prevState.roomName }),
-        () => emitName(this.state.joinedRoom)
-      );
+      this.setState(prevState => ({ joinedRoom: prevState.roomName }));
     }
     // const { roomName, playerData } = this.state;
     // const roomNameTrimmed = roomName
