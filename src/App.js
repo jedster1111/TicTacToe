@@ -31,7 +31,7 @@ class App extends Component {
       playerName: playerName,
       roomName: "",
       rooms: [],
-      playerData: { name: playerName, roomName: "", id: "" },
+      playerData: { name: playerName, id: "" },
       joinedRoom: "",
       socket: socket
     };
@@ -105,9 +105,12 @@ class App extends Component {
       socket.emit("join-room", name);
     }
     if (name) {
-      this.setState({ joinedRoom: name });
+      this.setState({ joinedRoom: name }, () => emitName(name));
     } else {
-      this.setState(prevState => ({ joinedRoom: prevState.roomName }));
+      this.setState(
+        prevState => ({ joinedRoom: prevState.roomName }),
+        () => emitName(this.state.joinedRoom)
+      );
     }
     // const { roomName, playerData } = this.state;
     // const roomNameTrimmed = roomName

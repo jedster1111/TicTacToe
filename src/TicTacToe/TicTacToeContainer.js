@@ -51,7 +51,6 @@ export class TicTacToeContainer extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.joinedRoom !== this.props.joinedRoom) {
       const { socket } = this.props;
-      socket.emit("join-room", this.props.joinedRoom);
       socket.emit("set-team", this.state.team);
     }
   }

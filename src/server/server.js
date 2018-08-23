@@ -55,6 +55,7 @@ class Room {
   }
   get data() {
     let data = {
+      name: this.name,
       squares: this.squares,
       players: this.playerData,
       currentPlayer: this.currentPlayer,
