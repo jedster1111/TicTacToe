@@ -79,12 +79,23 @@ class TicTacToeGame {
     return { xTeam: xTeam, oTeam: oTeam, spectators: spectators };
   }
   get data() {
+    let players = [];
+    for (const playerID in this.players) {
+      const thisPlayer = this.players[playerID];
+      players.push({
+        id: thisPlayer.player.id,
+        name: thisPlayer.player.name,
+        team: thisPlayer.team
+      });
+    }
     return {
       id: this.id,
+      type: "TicTacToe",
       squares: this.squares,
       currentPlayer: this.currentPlayer,
       winner: this.winner,
       turnNumber: this.turnNumber,
+      players: players,
       teams: this.teams
     };
   }
@@ -191,7 +202,8 @@ class Room {
     const data = {
       name: this.name,
       players: this.playersInRoom,
-      games: gamesData
+      games: gamesData,
+      wins: this.wins
     };
     return data;
   }
