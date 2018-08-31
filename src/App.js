@@ -95,11 +95,11 @@ class GameContainer extends Component {
       );
     });
     socket.on("game-data", roomData => {
-      //console.log(roomData);
+      console.log("Room data:", roomData);
       this.setState({ roomData });
     });
     socket.on("player-data", playerData => {
-      //console.log(playerData);
+      console.log("Player data:", playerData);
       this.setState({ playerData });
     });
     socket.on("rooms", rooms => {
