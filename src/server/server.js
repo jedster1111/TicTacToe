@@ -41,53 +41,47 @@ class TicTacToeGame {
     this.currentPlayer = "X";
     this.winner = null;
     this.turnNumber = 0;
-    this.players = room.players.reduce((players, player) => {
-      players[player.id] = {
-        player: player,
-        team: "spectator"
-      };
+    this.playersTeams = room.players.reduce((players, player) => {
+      players[player.id] = "X";
       return players;
     }, {});
-    console.log(this.players);
+    // console.log(this.playersTeams);
   }
   get teams() {
     let xTeam = [];
     let oTeam = [];
     let spectators = [];
-    const players = this.players;
+    const playersTeams = this.playersTeams;
     // loop through player objects in each team and add to relevant team list
-    for (const playerID in players) {
-      console.log(players[playerID]);
-      if (players[playerID].team === "X") {
-        xTeam.push({
-          id: players[playerID].player.id,
-          name: players[playerID].player.name
-        });
-      } else if (players[playerID].team === "O") {
-        oTeam.push({
-          id: players[playerID].player.id,
-          name: players[playerID].player.name
-        });
-      } else if (players[playerID].team === "spectator") {
+    for (const playerID in playersTeams) {
+      // console.log(playersTeams[playerID]);
+      if (playersTeams[playerID] === "X") {
+        xTeam.push(playerID);
+      } else if (playersTeams[playerID] === "O") {
+        oTeam.push(playerID);
+      } else if (playersTeams[playerID] === "spectator") {
         // console.log("should push to spectators");
-        spectators.push({
-          id: playerID,
-          name: players[playerID].player.name
-        });
+        spectators.push(playerID);
       }
     }
     return { xTeam: xTeam, oTeam: oTeam, spectators: spectators };
   }
   get data() {
-    let players = [];
-    for (const playerID in this.players) {
-      const thisPlayer = this.players[playerID];
-      players.push({
-        id: thisPlayer.player.id,
-        name: thisPlayer.player.name,
-        team: thisPlayer.team
-      });
-    }
+    // let players = [];
+    // for (const playerID in this.players) {
+    //   const thisPlayer = this.players[playerID];
+    //   players.push({
+    //     id: thisPlayer.player.id,
+    //     team: thisPlayer.team
+    //   });
+    // }
+    const playersTeams = Object.keys(this.playersTeams).reduce(
+      (playersTeamsObject, playerID) => {
+        playersTeamsObject[playerID] = this.playersTeams[playerID];
+        return playersTeamsObject;
+      },
+      {}
+    );
     return {
       id: this.id,
       type: "TicTacToe",
@@ -95,12 +89,12 @@ class TicTacToeGame {
       currentPlayer: this.currentPlayer,
       winner: this.winner,
       turnNumber: this.turnNumber,
-      players: players,
+      playersTeams: playersTeams,
       teams: this.teams
     };
   }
   setTeam(playerID, team) {
-    this.players[playerID].team = team;
+    this.playersTeams[playerID].team = team;
   }
   receivedSquare(newSquare) {
     //Handle receiving new squares from a player.
@@ -176,34 +170,32 @@ class Room {
     this.players = [player];
     const firstGame = new TicTacToeGame(this);
     this.games = { [firstGame.id]: firstGame }; //object of Games
-    this.wins = [
-      {
-        [player.id]: 0
-      }
-    ]; //wins of each player in that room
-
-    this.pushData();
+    this.playersRoomWins = {
+      [player.id]: 0
+    }; //wins of each player in that room
+    // this.pushData();
   }
   get playersInRoom() {
-    let playersInRoom = this.players.map(player => {
-      return {
-        name: player.name,
-        // team: player.team,
-        id: player.client.id
-      };
-    });
+    let playersInRoom = this.players.reduce((playersObject, player) => {
+      playersObject[player.id] = player.data;
+      return playersObject;
+    }, {});
     return playersInRoom;
   }
   get data() {
-    let gamesData = [];
-    for (const gameID in this.games) {
-      gamesData.push(this.games[gameID].data);
-    }
+    // let gamesData = [];
+    // for (const gameID in this.games) {
+    //   gamesData.push(this.games[gameID].data);
+    // }
+    const gamesData = Object.keys(this.games).reduce((gamesObject, gameID) => {
+      gamesObject[gameID] = this.games[gameID].data;
+      return gamesObject;
+    }, {});
     const data = {
       name: this.name,
       players: this.playersInRoom,
       games: gamesData,
-      wins: this.wins
+      playersRoomWins: this.playersRoomWins
     };
     return data;
   }
@@ -286,10 +278,12 @@ class Player {
       }
       let room = rooms.find(room => room.name === roomName);
       if (!room) {
+        // Join socketio room
         this.client.join(roomName);
         room = new Room(roomName, this);
         rooms.push(room);
         this.room = room;
+        room.pushData();
         emitRooms();
       } else {
         this.room = room;
@@ -399,10 +393,11 @@ io.on("connection", client => {
   });
 });
 
-//ENVIRONMENT === 'development' && setInterval(() => {
-//    console.log(allPlayers.map(player => player.name));
-//    console.log(rooms);
-//}, 5000);
+ENVIRONMENT === "development" &&
+  setInterval(() => {
+    console.log(allPlayers.map(player => player.data));
+    // console.log(rooms);
+  }, 5000);
 
 process.on("SIGINT", function() {
   console.log("\nShutting down, some one hit ctrl c");
